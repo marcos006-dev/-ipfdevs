@@ -1,7 +1,7 @@
 import rutasAuth from "./auth.routes.js";
-import rutasRegistrar from "./registrarPersonas.routes.js";
+import rutasAdministrativos from "./administrativos.routes.js";
 
 export const rutas = () => [
   rutasAuth,
-  rutasRegistrar,
+  rutasAdministrativos,
 ];

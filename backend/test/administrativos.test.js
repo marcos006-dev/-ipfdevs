@@ -1,25 +1,26 @@
 import supertest from "supertest";
 import { crearUsuario } from "../helpers/tests/crearUsuarios.js";
 import { getTokenTest } from "../helpers/tests/getToken.js";
-import { testPost } from "../helpers/tests/tests.js";
+import { testPost, testPut } from "../helpers/tests/tests.js";
 import { vaciarColecciones } from "../helpers/tests/vaciarColecciones.js";
 import { app, server } from "../index.js";
 
 const SERVER = supertest(app);
-const URL = "/api/usuarios";
+const URL = "/api/administrativos";
 
 const HEADERS = getTokenTest();
 
-afterAll(async () => {
+let id = afterAll(async () => {
   try {
     await vaciarColecciones();
-    await crearUsuario();
+    const { _id } = await crearUsuario();
+    id = _id;
   } catch (error) {
     console.log(error);
   }
 });
 
-describe(`POST REGISTRAR ${URL}`, () => {
+describe(`POST ADMINISTRATIVO ${URL}`, () => {
   const administrativoRegistrar = {
     nombre_persona: "Marcos",
     apellido_persona: "Franco",
@@ -167,7 +168,136 @@ describe(`POST REGISTRAR ${URL}`, () => {
   usuarioConRolPersonaInexistente.roles = { descripcion_rol: "alumne" };
   testPost(URL, "Debe retornar un 400 si se envia un rol de persona que no existe en la bd", usuarioConRolPersonaInexistente, 400, SERVER, HEADERS);
 
-  testPost(URL, "Debe retornar un status code 200 si el usuario se registra de forma exitosa", administrativoRegistrar, 200, SERVER, HEADERS);
+  testPost(URL, "Debe retornar un status code 200 si el usuario se registra de forma exitosa", administrativoRegistrar, 200, SERVER, HEADERS, true);
+});
+
+describe(`PUT ADMINISTRATIVO ${URL}`, () => {
+  const administrativoEditar = {
+    nombre_persona: "Marcoss",
+    apellido_persona: "Francoo",
+    dni_persona: "12345671",
+    cuil_persona: "12345678908",
+    fecha_nac_persona: "2022/09/01",
+    sexo_persona: "Masculino",
+    correo_persona: "correo24@gmail.com",
+    telefono_persona: "3704652810",
+    direccion_persona: {
+      manzana: "66",
+      casa: "13",
+      sector: "-",
+      lote: "-",
+      parcela: "-",
+    },
+    documentaciones: {
+      url_documento: "https://algunlado.com",
+      tipo_documento: "Domicilio",
+    },
+    inasistencias: {
+      fecha: "2022/09/20",
+    },
+    nombre_usuario: "marcosDAS",
+    password_usuario: "asdbf",
+    roles: {
+      descripcion_rol: "administrativo",
+      acceso_endpoint: ["notas", "post"],
+    },
+  };
+
+  testPut(`${URL}/${id}`, "Debe retornar un error al no enviar el token", administrativoEditar, 401, SERVER, {});
+
+  testPut(`${URL}/sadas`, "Debe retornar un error al no enviar un id de  mongo valido", administrativoEditar, 400, SERVER, HEADERS);
+
+  testPut(`${URL}/${id}`, "Debe retornar un error al enviar un id que no esta asociado a ningun registro en la bd", administrativoEditar, 400, SERVER, HEADERS);
+
+  const usuarioSinNombre = { ...administrativoEditar };
+  usuarioSinNombre.nombre_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia el nombre de la persona", usuarioSinNombre, 400, SERVER, HEADERS);
+
+  const usuarioSinApellido = { ...administrativoEditar };
+  usuarioSinApellido.apellido_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia el apellido de la persona", usuarioSinApellido, 400, SERVER, HEADERS);
+
+  const usuarioSinDni = { ...administrativoEditar };
+  usuarioSinDni.dni_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia el dni de la persona", usuarioSinDni, 400, SERVER, HEADERS);
+
+  const usuarioConDniLargo = { ...administrativoEditar };
+  usuarioConDniLargo.dni_persona = "123456789";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si el dni de la persona con una longitud superior a 8 digitos", usuarioConDniLargo, 400, SERVER, HEADERS);
+
+  const usuarioConDniCorto = { ...administrativoEditar };
+  usuarioConDniCorto.dni_persona = "1234569";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si el dni de la persona con una longitud menor a 8 digitos", usuarioConDniCorto, 400, SERVER, HEADERS);
+
+  const usuarioConDniRepetido = { ...administrativoEditar };
+  usuarioConDniRepetido.dni_persona = "12345678";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un dni ya guardado en la base de datos", usuarioConDniRepetido, 400, SERVER, HEADERS);
+
+  const usuarioSinFechaNac = { ...administrativoEditar };
+  usuarioSinFechaNac.fecha_nac_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia la fecha de nacimiento de la persona", usuarioSinFechaNac, 400, SERVER, HEADERS);
+
+  const usuarioConFechaNacInvalida = { ...administrativoEditar };
+  usuarioConFechaNacInvalida.fecha_nac_persona = "09/09/2022";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia la fecha de nacimiento de la persona con un formato equivocado", usuarioConFechaNacInvalida, 400, SERVER, HEADERS);
+
+  const usuarioSinCorreo = { ...administrativoEditar };
+  usuarioSinCorreo.correo_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia el correo de la persona", usuarioSinCorreo, 400, SERVER, HEADERS);
+
+  const usuarioConCorreoInvalido = { ...administrativoEditar };
+  usuarioConCorreoInvalido.correo_persona = "dasdsasdagmail.com";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un correo invalido", usuarioConCorreoInvalido, 400, SERVER, HEADERS);
+
+  const usuarioConCorreoYaRegistrado = { ...administrativoEditar };
+  usuarioConCorreoYaRegistrado.correo_persona = "correo1@gmail.com";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un correo ya registrado", usuarioConCorreoYaRegistrado, 400, SERVER, HEADERS);
+
+  const usuarioSinTelefono = { ...administrativoEditar };
+  usuarioSinTelefono.telefono_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia un numero de telefono", usuarioSinTelefono, 400, SERVER, HEADERS);
+
+  const usuarioConTelefonoIncompleto = { ...administrativoEditar };
+  usuarioConTelefonoIncompleto.telefono_persona = "370491122";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia un numero de telefono completo", usuarioConTelefonoIncompleto, 400, SERVER, HEADERS);
+
+  const usuarioConLetrasTelefono = { ...administrativoEditar };
+  usuarioConLetrasTelefono.telefono_persona = "aaaaaaaaa";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un numero de telefono con letras", usuarioConLetrasTelefono, 400, SERVER, HEADERS);
+
+  const usuarioConTelefonoYaGuardado = { ...administrativoEditar };
+  usuarioConTelefonoYaGuardado.telefono_persona = "3704652811";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un numero de telefono ya guardado en la base de datos", usuarioConTelefonoYaGuardado, 400, SERVER, HEADERS);
+
+  const usuarioSinDireccion = { ...administrativoEditar };
+  usuarioSinDireccion.direccion_persona = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia un objeto con los datos de direccion", usuarioSinDireccion, 400, SERVER, HEADERS);
+
+  const usuarioSinUserName = { ...administrativoEditar };
+  usuarioSinUserName.nombre_usuario = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia un nombre de usuario", usuarioSinUserName, 400, SERVER, HEADERS);
+
+  const usuarioConUserNameRegistrado = { ...administrativoEditar };
+  usuarioConUserNameRegistrado.nombre_usuario = "marcos";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un nombre de usuario ya registrado", usuarioConUserNameRegistrado, 400, SERVER, HEADERS);
+
+  const usuarioSinPassword = { ...administrativoEditar };
+  usuarioSinPassword.password_usuario = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia una contraseña", usuarioSinPassword, 400, SERVER, HEADERS);
+
+  const usuarioConPasswordCorto = { ...administrativoEditar };
+  usuarioConPasswordCorto.password_usuario = "123";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia una contraseña menor a 4 caracteres", usuarioConPasswordCorto, 400, SERVER, HEADERS);
+
+  const usuarioConRolPersonaVacia = { ...administrativoEditar };
+  usuarioConRolPersonaVacia.roles = "";
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si no se envia un rol de persona", usuarioConRolPersonaVacia, 400, SERVER, HEADERS);
+
+  const usuarioConRolPersonaInexistente = { ...administrativoEditar };
+  usuarioConRolPersonaInexistente.roles = { descripcion_rol: "administrative" };
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un rol de persona que no existe en la bd", usuarioConRolPersonaInexistente, 400, SERVER, HEADERS);
+
+  testPut(`${URL}/${id}`, "Debe retornar un 400 si se envia un rol de persona que no existe en la bd", administrativoEditar, 200, SERVER, HEADERS, true);
 });
 
 afterAll(async () => {

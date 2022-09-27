@@ -2,7 +2,7 @@ import { PersonaModel } from "../../models/Persona.model.js";
 
 export const crearUsuario = async () => {
   try {
-    await PersonaModel.create({
+    const usuarioCreado = await PersonaModel.create({
       nombre_persona: "Marcos",
       apellido_persona: "Franco",
       dni_persona: "12345678",
@@ -33,6 +33,7 @@ export const crearUsuario = async () => {
         acceso_endpoint: ["notas", "pots"],
       },
     });
+    return usuarioCreado;
   } catch (error) {
     return Promise.reject(error);
   }
