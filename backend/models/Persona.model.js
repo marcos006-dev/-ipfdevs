@@ -37,11 +37,6 @@ const PersonaSchema = new Schema({
     parcela: Schema.Types.String,
   },
 
-  tipo_persona: {
-    type: Schema.Types.String,
-    enum: ["Alumno", "Docente", "Personal Administrativo"],
-  },
-
   documentaciones: [{
     url_documento: Schema.Types.String,
     tipo_documento: {
@@ -59,13 +54,15 @@ const PersonaSchema = new Schema({
     ref: "Persona",
   }],
 
-  nombre_usuario: Schema.Types.String,
+  nombre_usuario: {
+    type: Schema.Types.String,
+    unique: true,
+  },
   password_usuario: Schema.Types.String,
 
   fecha_alta: {
-    type: Date,
-    default:
-    Date.now,
+    type: Schema.Types.Date,
+    default: Date.now,
   },
   activo: {
     type: Schema.Types.Boolean,
