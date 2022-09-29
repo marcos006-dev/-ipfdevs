@@ -68,3 +68,19 @@ export const testDelete = async (url, tituloTest, statusRespuesta, server, heade
     expect(response.type).toEqual("application/json");
   });
 };
+
+export const testActivar = async (url, tituloTest, statusRespuesta, server, headers, debug = false) => {
+  await test(tituloTest, async () => {
+    let response;
+    if (!headers) {
+      response = await server.patch(url);
+    } else {
+      response = await server.patch(url).set(headers);
+    }
+    if (debug) {
+      console.log(response.body);
+    }
+    expect(response.statusCode).toEqual(statusRespuesta);
+    expect(response.type).toEqual("application/json");
+  });
+};

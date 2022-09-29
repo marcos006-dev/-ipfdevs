@@ -1,6 +1,9 @@
 # LOG DE DESARROLLO
- ---
+
+---
+
 ### **Expedientes**
+
 1. 13-9-22: Se identificaron los requerimiento del sistema para el Instituto RANDOM 2022 ✔
 2. 13-9-22: Se pasaron los requerimientos a un word y se creo el diagrama de casos de uso ✔
 3. 14-9-22: Se comenzo el modelado para la base de datos. ✔
@@ -116,7 +119,9 @@
   },
 }
 ```
+
 ### Modelo de Aviso
+
 ```js
 {
   descripcion_aviso: {
@@ -136,6 +141,7 @@
 ```
 
 ### Modelo de Materia
+
 ```js
 {
   descripcion_materia: {
@@ -176,14 +182,16 @@
 }
 ```
 
-4. 15-9-22: Se crearon las colecciones de: *Usuarios*, *Notas*, *Materias*, *Personas*, *Calles*, *Barrios*. ✔
+4. 15-9-22: Se crearon los esquemas de: **_Usuarios_**, **_Notas_**, **_Materias_**, **_Personas_**, **_Calles_**, **_Barrios_**. ✔
 5. 16-9-22: Se fusiono el modelo de usuarios con personas, se agrego el atributo de horarios y de año lectivo al modelo de materias y se creo la colección de avisos. ✔
 6. 17-9-22: Se creo la cuenta de MongoDB Atlas y también se configura el usuario para la conexion. ✔
-7. 18-9-22: Se comenzo con los mockups para las interfaces del sistema, se creo la estructura base de carpetas para el *backend* y se instalaron las dependencias necesarias. ✔
-8. 20-9-22: Se comenzo con la creación de los test para el modelo de *personas*. ✔
-9. 22-9-22: Se quitaron los modelos de *Calles* y *Barrios*. ✔
+7. 18-9-22: Se comenzo con los mockups para las interfaces del sistema, se creo la estructura base de carpetas para el **_backend_** y se instalaron las dependencias necesarias. ✔
+8. 20-9-22: Se comenzo con la creación de los test para el modelo de **_Personas_**. ✔
+9. 22-9-22: Se quitaron los modelos de **_Calles_** y **_Barrios_**. ✔
 10. 23-9-22: Se completaron los test para la autentificación de un usuario y se agrego Json Web Token para el acceso a la API. ✔
-11. 24-9-22: Se completo el test del metodo POST para el modelo de *persona*. ✔
-12. 25-9-22: Se crearon los modelos de *Notas*, *Materias* y *Avisos*. ✔
-
-
+11. 24-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo POST para el modelo de **_Personas_**. ✔
+12. 25-9-22: Se crearon los modelos de **_Notas_**, **_Materias_** y **_Avisos_**. ✔
+13. 27-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo PUT para el modelo de **_Personas_**. ✔
+14. 28-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo GET y GET con ID para el modelo de **_Personas_**. ✔
+15. 28-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo DELETE y PATCH para el modelo de **_Personas_**. ✔
+16. 29-9-22: Se agrego middleware para verificar las rutas a la cuales tiene acceso un usuario. ✔

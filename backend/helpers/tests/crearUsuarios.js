@@ -1,8 +1,9 @@
 import { PersonaModel } from "../../models/Persona.model.js";
 
-export const crearUsuario = async () => {
+export const crearUsuario = async (_id) => {
   try {
     const usuarioCreado = await PersonaModel.create({
+      _id,
       nombre_persona: "Marcos",
       apellido_persona: "Franco",
       dni_persona: "12345678",
@@ -30,7 +31,7 @@ export const crearUsuario = async () => {
       password_usuario: "$2a$10$EpEgugumkVGnWpgpVw9bjeCpGbC1GhJTAhW0WG9qX/xFMFVKJvPA6",
       roles: {
         descripcion_rol: "alumno",
-        acceso_endpoint: ["notas", "pots"],
+        acceso_endpoint: ["administrativos"],
       },
     });
     return usuarioCreado;

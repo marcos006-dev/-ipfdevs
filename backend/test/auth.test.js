@@ -17,12 +17,12 @@ beforeAll(async () => {
 });
 
 describe(`POST AUTENTIFICAR ${URL}`, () => {
-  testPost(`${URL}/login`, "Debe retornar un 401 si no se envia el nombre de usuario", {
+  testPost(`${URL}/login`, "Debe retornar un 400 si no se envia el nombre de usuario", {
     nombre_usuario: "",
     password_usuario: "123456",
   }, 400, SERVER, {});
 
-  testPost(`${URL}/login`, "Debe retornar un 401 si no se envia la contraseña", {
+  testPost(`${URL}/login`, "Debe retornar un 400 si no se envia la contraseña", {
     nombre_usuario: "marcos",
     password_usuario: "",
   }, 400, SERVER, {});
@@ -30,7 +30,7 @@ describe(`POST AUTENTIFICAR ${URL}`, () => {
   testPost(`${URL}/login`, "Debe retornar un status code 200 si se envia las credenciales correctamente", {
     nombre_usuario: "marcos",
     password_usuario: "123456",
-  }, 200, SERVER, {}, true);
+  }, 200, SERVER, {});
 });
 
 afterAll(async () => {

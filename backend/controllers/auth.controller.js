@@ -10,7 +10,13 @@ export const loguearse = async (req, res) => {
 
     if (!usuario) {
       return res.status(401).json({
-        msg: "El usuario no existe",
+        msg: "Error al loguearse",
+      });
+    }
+
+    if (!usuario.activo) {
+      return res.status(401).json({
+        msg: "Error al loguearse",
       });
     }
 

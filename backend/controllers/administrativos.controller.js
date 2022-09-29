@@ -1,8 +1,35 @@
 import bcrypt from "bcryptjs";
-import { generarJwt } from "../helpers/generarJwt.js";
 import { PersonaModel } from "../models/Persona.model.js";
 
-export const registrarAdministrativos = async (req, res) => {
+export const getAdministrativos = async (req, res) => {
+  try {
+    const administrativos = await PersonaModel.find().select("_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario");
+
+    // console.log(administrativos);
+    return res.status(200).json(administrativos);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getAdministrativo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const administrativo = await PersonaModel.findById(id).select("_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario");
+
+    // console.log(administrativo);
+    return res.status(200).json(administrativo);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const postAdministrativo = async (req, res) => {
   const {
     nombre_persona,
     apellido_persona,
@@ -21,7 +48,7 @@ export const registrarAdministrativos = async (req, res) => {
   try {
     const passwordEncriptado = bcrypt.hashSync(password_usuario, 10);
 
-    const usuario = await PersonaModel.create({
+    await PersonaModel.create({
       nombre_persona,
       apellido_persona,
       dni_persona,
@@ -36,12 +63,12 @@ export const registrarAdministrativos = async (req, res) => {
       roles,
     });
 
-    const { _id, nombre_persona: NombrePersona, apellido_persona: apellidPersona } = usuario;
+    // const { _id, nombre_persona: NombrePersona, apellido_persona: apellidPersona } = usuario;
 
-    const token = await generarJwt({ _id, NombrePersona, apellidPersona });
+    // const token = await generarJwt({ _id, NombrePersona, apellidPersona });
 
     return res.status(200).json({
-      token,
+      msg: "Administrativo registrado correctamente",
     });
   } catch (error) {
     console.log(error);
@@ -50,7 +77,7 @@ export const registrarAdministrativos = async (req, res) => {
     });
   }
 };
-export const actualizarAdministrativos = async (req, res) => {
+export const putAdministrativo = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -86,7 +113,37 @@ export const actualizarAdministrativos = async (req, res) => {
     });
 
     return res.status(200).json({
-      mensaje: "Administrativo Actualizado",
+      msg: "Administrativo Actualizado",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const deleteAdministrativo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await PersonaModel.findByIdAndUpdate(id, { activo: false });
+    return res.status(200).json({
+      msg: "Administrativo Desactivado",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const activarAdministrativo = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await PersonaModel.findByIdAndUpdate(id, { activo: true });
+    return res.status(200).json({
+      msg: "Administrativo Activado",
     });
   } catch (error) {
     return res.status(500).json({

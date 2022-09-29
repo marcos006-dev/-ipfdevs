@@ -73,9 +73,12 @@ const PersonaSchema = new Schema({
     descripcion_rol: {
       type: Schema.Types.String,
       enum: ["alumno", "docente", "administrativo"],
+      required: true,
     },
     acceso_endpoint: {
-      type: Schema.Types.Array,
+      type: [Schema.Types.String],
+      enum: ["notas", "materias", "administrativos", "docentes", "alumnos", "avisos"],
+      required: true,
     },
   },
 });

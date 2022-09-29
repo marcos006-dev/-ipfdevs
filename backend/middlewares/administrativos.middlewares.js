@@ -1,7 +1,42 @@
 import { check, param } from "express-validator";
+import { Types } from "mongoose";
 import { validarFecha } from "../helpers/validarFechas.js";
 import { verificarCampos } from "../helpers/verificarCampos.js";
 import { PersonaModel } from "../models/Persona.model.js";
+
+export const getAdministrativosMidd = [verificarCampos];
+
+export const getAdministrativoMidd = [
+  param("id")
+    .custom((id) => {
+      // console.log(id);
+      if (!Types.ObjectId.isValid(id)) {
+        return Promise.reject(
+          "El id enviado no es un id valido de mongo",
+        );
+      }
+      return true;
+    })
+    .custom(
+      async (idAdministrativo) => {
+        // console.log(idAdministrativo);
+        try {
+          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
+          // console.log(administrativo);
+          if (administrativo === 0) {
+            return Promise.reject(
+              "El id enviado no pertenece a ningun registro en la bd",
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    ),
+  verificarCampos,
+];
 
 export const postAdministrativoMidd = [
   check("nombre_persona")
@@ -23,7 +58,7 @@ export const postAdministrativoMidd = [
     .withMessage("EL dni debe tener una longitud exacta de 8 digitos")
     .custom(async (dni_persona) => {
       try {
-        const administrativo = await PersonaModel.count({ dni_persona });
+        const administrativo = await PersonaModel.countDocuments({ dni_persona });
         if (administrativo > 0) {
           return Promise.reject(
             "El dni ingresado ya se encuentra registrado en la bd",
@@ -54,7 +89,7 @@ export const postAdministrativoMidd = [
     .withMessage("El correo enviado tiene un formato invalido")
     .custom(async (correo_persona) => {
       try {
-        const administrativo = await PersonaModel.count({ correo_persona });
+        const administrativo = await PersonaModel.countDocuments({ correo_persona });
         if (administrativo > 0) {
           return Promise.reject(
             "El correo ingresado ya se encuentra registrado en la bd",
@@ -76,7 +111,7 @@ export const postAdministrativoMidd = [
     )
     .custom(async (telefono_persona) => {
       try {
-        const administrativo = await PersonaModel.count({ telefono_persona });
+        const administrativo = await PersonaModel.countDocuments({ telefono_persona });
         if (administrativo > 0) {
           return Promise.reject(
             "El telefono ingresado ya se encuentra registrado en la bd",
@@ -185,7 +220,7 @@ export const postAdministrativoMidd = [
     .withMessage("El nombre de usuario para el administrativo es requerido")
     .custom(async (nombre_usuario) => {
       try {
-        const administrativoRegistrado = await PersonaModel.count({ nombre_usuario });
+        const administrativoRegistrado = await PersonaModel.countDocuments({ nombre_usuario });
 
         if (administrativoRegistrado > 0) {
           return Promise.reject(
@@ -209,11 +244,23 @@ export const postAdministrativoMidd = [
 export const putAdministrativoMidd = [
 
   param("id")
-    .isMongoId("El id enviado no es un id valido de mongo")
+    .custom((id) => {
+      // console.log(id);
+      if (!Types.ObjectId.isValid(id)) {
+        return Promise.reject(
+          "El id enviado no es un id valido de mongo",
+        );
+      }
+      return true;
+    })
     .custom(
       async (idAdministrativo) => {
+        // console.log(idAdministrativo);
         try {
-          const administrativo = await PersonaModel.count({ _id: idAdministrativo });
+          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
+          // console.log(administrativo);
           if (administrativo === 0) {
             return Promise.reject(
               "El id enviado no pertenece a ningun registro en la bd",
@@ -244,7 +291,11 @@ export const putAdministrativoMidd = [
     .custom(async (dni_persona, { req }) => {
       try {
         const idAdministrativo = req.params.id;
-        const administrativo = await PersonaModel.count({ dni_persona, _id: { $ne: idAdministrativo } });
+
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
+        // console.log(idAdministrativo);
+        const administrativo = await PersonaModel.countDocuments({ dni_persona, _id: { $ne: idAdministrativo } });
+        // console.log(administrativo);
         if (administrativo > 0) {
           return Promise.reject(
             "El dni ingresado ya se encuentra registrado en la bd",
@@ -277,7 +328,9 @@ export const putAdministrativoMidd = [
       try {
         const idAdministrativo = req.params.id;
 
-        const administrativo = await PersonaModel.count({ correo_persona, _id: { $ne: idAdministrativo } });
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+        const administrativo = await PersonaModel.countDocuments({ correo_persona, _id: { $ne: idAdministrativo } });
 
         // console.log(administrativo);
 
@@ -304,7 +357,9 @@ export const putAdministrativoMidd = [
       try {
         const idAdministrativo = req.params.id;
 
-        const usuario = await PersonaModel.count({ telefono_persona, _id: { $ne: idAdministrativo } });
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+        const usuario = await PersonaModel.countDocuments({ telefono_persona, _id: { $ne: idAdministrativo } });
         if (usuario > 0) {
           return Promise.reject(
             "El telefono ingresado ya se encuentra registrado en la bd",
@@ -378,8 +433,11 @@ export const putAdministrativoMidd = [
     .custom(async (nombre_usuario, { req }) => {
       const idAdministrativo = req.params.id;
 
+      if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+      // console.log(idAdministrativo);
       try {
-        const administrativoRegistrado = await PersonaModel.count({ nombre_usuario, _id: { $ne: idAdministrativo } });
+        const administrativoRegistrado = await PersonaModel.countDocuments({ nombre_usuario, _id: { $ne: idAdministrativo } });
         // console.log(administrativoRegistrado);
         if (administrativoRegistrado > 0) {
           return Promise.reject(
@@ -397,5 +455,71 @@ export const putAdministrativoMidd = [
     .withMessage("La contraseña es requerida")
     .isLength({ min: 4, max: 20 })
     .withMessage("La contraseña debe tener un minimo de 4 caracteres y maximo de 20"),
+  verificarCampos,
+];
+
+export const deleteAdministrativoMidd = [
+
+  param("id")
+    .custom((id) => {
+      // console.log(id);
+      if (!Types.ObjectId.isValid(id)) {
+        return Promise.reject(
+          "El id enviado no es un id valido de mongo",
+        );
+      }
+      return true;
+    })
+    .custom(
+      async (idAdministrativo) => {
+        // console.log(idAdministrativo);
+        try {
+          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
+          // console.log(administrativo);
+          if (administrativo === 0) {
+            return Promise.reject(
+              "El id enviado no pertenece a ningun registro en la bd",
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    ),
+  verificarCampos,
+];
+
+export const activarAdministrativoMidd = [
+
+  param("id")
+    .custom((id) => {
+      // console.log(id);
+      if (!Types.ObjectId.isValid(id)) {
+        return Promise.reject(
+          "El id enviado no es un id valido de mongo",
+        );
+      }
+      return true;
+    })
+    .custom(
+      async (idAdministrativo) => {
+        // console.log(idAdministrativo);
+        try {
+          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+
+          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
+          // console.log(administrativo);
+          if (administrativo === 0) {
+            return Promise.reject(
+              "El id enviado no pertenece a ningun registro en la bd",
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    ),
   verificarCampos,
 ];
