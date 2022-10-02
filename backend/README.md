@@ -59,7 +59,7 @@
     fecha: Schema.Types.Date,
   }],
 
-  _id_materia: [{
+  _materia: [{
     type: Schema.Types.ObjectId,
     ref: "Persona",
   }],
@@ -95,12 +95,12 @@
 
 ```js
 {
-  _id_materia: [{
+  _materia: [{
     type: Schema.Types.ObjectId,
     ref: "materias",
   }],
 
-  _id_persona: [{
+  _persona: [{
     type: Schema.Types.ObjectId,
     ref: "personas",
   }],
@@ -133,7 +133,7 @@
     enum: ["general", "particular"],
   },
 
-  _id_persona: [{
+  _persona: [{
     type: Schema.Types.ObjectId,
     ref: "personas",
   }],
@@ -195,4 +195,5 @@
 14. 28-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo GET y GET con ID para el modelo de **_Personas_**. ✔
 15. 28-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo DELETE y PATCH para el modelo de **_Personas_**. ✔
 16. 29-9-22: Se agrego middleware para verificar las rutas a la cuales tiene acceso un usuario. ✔
-17. 1-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Materias_**. ✔
+17. 1-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Materias_**. ✔
+18. 2-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Notas_**. ✔

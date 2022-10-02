@@ -1,4 +1,4 @@
-import { PersonaModel } from "../models/Persona.model";
+import { PersonaModel } from "../models/Persona.model.js";
 
 export const verificarRoles = async (req, res, next) => {
   try {

@@ -4,14 +4,12 @@ export default function verificarToken(req, res, next) {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).send({
-      success: false,
       message: "No se envio un token.",
     });
   }
   jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        success: false,
         message: "Envio un token no valido.",
       });
     }

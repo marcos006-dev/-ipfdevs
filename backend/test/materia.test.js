@@ -30,7 +30,7 @@ beforeAll(async () => {
   }
 });
 
-describe.skip(`GET ${URL}`, () => {
+describe(`GET ${URL}`, () => {
   testGet(URL, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(URL, "Debe retornar un 401 si el administrativo no posee los permisos necesarios", 401, SERVER, {
@@ -42,7 +42,7 @@ describe.skip(`GET ${URL}`, () => {
   testGet(URL, "Debe retornar un status-code 200", 200, SERVER, HEADERS);
 });
 
-describe.skip(`GET ${URL}/:id`, () => {
+describe(`GET ${URL}/:id`, () => {
   testGet(`${URL}/${_idMateria}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(`${URL}/6335ccec8c88484ac3dc5cd7`, "Si no existe debe retornar un json con un mensaje de id no existe en la bd", 400, SERVER, HEADERS);

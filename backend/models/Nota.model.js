@@ -1,18 +1,18 @@
 import { Schema, model } from "mongoose";
 
 const NotaSchema = new Schema({
-  _id_materia: [{
+  _materia: [{
     type: Schema.Types.ObjectId,
-    ref: "materias",
+    ref: "Materia",
   }],
 
-  _id_persona: [{
+  _persona: [{
     type: Schema.Types.ObjectId,
-    ref: "personas",
+    ref: "Persona",
   }],
 
   descripcion_nota: {
-    type: Schema.Types.Decimal128,
+    type: Schema.Types.Number,
   },
 
   tipo_nota: {
@@ -22,6 +22,11 @@ const NotaSchema = new Schema({
 
   descripcion_materia: {
     type: Schema.Types.String,
+  },
+
+  estado_nota: {
+    type: Schema.Types.String,
+    enum: ["publicado", "en revision"],
   },
 });
 

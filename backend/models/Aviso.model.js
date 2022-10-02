@@ -10,9 +10,9 @@ const AvisoSchema = new Schema({
     enum: ["general", "particular"],
   },
 
-  _id_persona: [{
+  _persona: [{
     type: Schema.Types.ObjectId,
-    ref: "personas",
+    ref: "Persona",
   }],
 });
 

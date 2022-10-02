@@ -19,7 +19,6 @@ export const crearUsuario = async (_id) => {
         lote: "Schema.Types.String",
         parcela: "Schema.Types.String",
       },
-      tipo_persona: "Alumno",
       documentaciones: [{
         url_documento: "https://algunlado.com",
         tipo_documento: "Domicilio",
@@ -31,7 +30,7 @@ export const crearUsuario = async (_id) => {
       password_usuario: "$2a$10$EpEgugumkVGnWpgpVw9bjeCpGbC1GhJTAhW0WG9qX/xFMFVKJvPA6",
       roles: {
         descripcion_rol: "alumno",
-        acceso_endpoint: ["administrativos", "materias"],
+        acceso_endpoint: ["administrativos", "materias", "notas"],
       },
     });
     return usuarioCreado;

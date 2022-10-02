@@ -1,4 +1,4 @@
-import { MateriaModel } from "../models/Materia.model";
+import { MateriaModel } from "../models/Materia.model.js";
 
 export const getMaterias = async (req, res) => {
   try {
@@ -73,7 +73,7 @@ export const putMateria = async (req, res) => {
     });
 
     return res.status(200).json({
-      msg: "Administrativo Actualizado",
+      msg: "Materia Actualizado",
     });
   } catch (error) {
     return res.status(500).json({

@@ -49,9 +49,9 @@ const PersonaSchema = new Schema({
     fecha: Schema.Types.Date,
   }],
 
-  _id_materia: [{
+  _materia: [{
     type: Schema.Types.ObjectId,
-    ref: "Persona",
+    ref: "Materia",
   }],
 
   nombre_usuario: {
