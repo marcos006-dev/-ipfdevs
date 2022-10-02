@@ -197,3 +197,5 @@
 16. 29-9-22: Se agrego middleware para verificar las rutas a la cuales tiene acceso un usuario. ✔
 17. 1-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Materias_**. ✔
 18. 2-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Notas_**. ✔
+18. 3-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Avisos_**. ✔
+
