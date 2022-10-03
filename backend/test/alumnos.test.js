@@ -23,6 +23,7 @@ const HEADERS = getTokenTest({ _id: _idUsuario, nombre_persona: "Marcos", apelli
 // 2 - Consultar sus notas
 // 3 - Avisos
 // 4 - Cargar sus documentaciones
+// 5 - Consultar sus horarios
 
 beforeAll(async () => {
   try {
