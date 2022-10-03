@@ -30,7 +30,7 @@ export const crearUsuario = async (_id) => {
       password_usuario: "$2a$10$EpEgugumkVGnWpgpVw9bjeCpGbC1GhJTAhW0WG9qX/xFMFVKJvPA6",
       roles: {
         descripcion_rol: "alumno",
-        acceso_endpoint: ["administrativos", "materias", "notas", "avisos"],
+        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos"],
       },
     });
     return usuarioCreado;

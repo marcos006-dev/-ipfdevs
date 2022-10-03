@@ -2,6 +2,7 @@ import { check, param } from "express-validator";
 import { Types } from "mongoose";
 import { validarFecha } from "../helpers/validarFechas.js";
 import { verificarCampos } from "../helpers/verificarCampos.js";
+import { MateriaModel } from "../models/Materia.model.js";
 import { PersonaModel } from "../models/Persona.model.js";
 
 export const getAdministrativosMidd = [verificarCampos];
@@ -213,6 +214,46 @@ export const postAdministrativoMidd = [
   //       return Promise.reject(error);
   //     }
   //   }),
+  check("_materia")
+    .custom((_materia, { req }) => {
+      try {
+        const { descripcion_rol } = req.body.roles;
+
+        if (_materia.length > 0 && descripcion_rol === "administrativo") {
+          return Promise.reject(
+            "No se pueden cargar materias a un administrativo",
+          );
+        }
+
+        if (_materia.length === 0 && descripcion_rol !== "administrativo") {
+          return Promise.reject(
+            "Se deben enviar materias",
+          );
+        }
+
+        _materia.forEach(async ({ _idMateria }) => {
+          // validar si es un id valido de mongo
+          if (!Types.ObjectId.isValid(_idMateria)) {
+            return Promise.reject(
+              "El id enviado no es un id valido de mongo",
+            );
+          }
+
+          // verificar si existe el id en la db
+          const resultMaterias = await MateriaModel.countDocuments({ _id: _idMateria });
+
+          if (resultMaterias === 0) {
+            return Promise.reject(
+              "El id de materia enviado no coincide con los registros del sistema",
+            );
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        return Promise.reject(error);
+      }
+      return true;
+    }),
   check("nombre_usuario")
     .exists()
     .not()
@@ -424,6 +465,53 @@ export const putAdministrativoMidd = [
       } catch (error) {
         return Promise.reject(error);
       }
+    }),
+  check("_materia")
+    .custom((_materia, { req }) => {
+      try {
+        const isArray = (_materia instanceof Array);
+        if (!isArray) {
+          return Promise.reject(
+            "Se debe mandar al menos un array vacio",
+          );
+        }
+
+        const { descripcion_rol } = req.body.roles;
+
+        if (_materia.length > 0 && descripcion_rol === "administrativo") {
+          return Promise.reject(
+            "No se pueden cargar materias a un administrativo",
+          );
+        }
+
+        if (_materia.length === 0 && descripcion_rol !== "administrativo") {
+          return Promise.reject(
+            "Se deben enviar materias",
+          );
+        }
+
+        _materia.forEach(async ({ _idMateria }) => {
+          // validar si es un id valido de mongo
+          if (!Types.ObjectId.isValid(_idMateria)) {
+            return Promise.reject(
+              "El id enviado no es un id valido de mongo",
+            );
+          }
+
+          // verificar si existe el id en la db
+          const resultMaterias = await MateriaModel.countDocuments({ _id: _idMateria });
+
+          if (resultMaterias === 0) {
+            return Promise.reject(
+              "El id de materia enviado no coincide con los registros del sistema",
+            );
+          }
+        });
+      } catch (error) {
+        console.log(error);
+        return Promise.reject(error);
+      }
+      return true;
     }),
   check("nombre_usuario")
     .exists()
