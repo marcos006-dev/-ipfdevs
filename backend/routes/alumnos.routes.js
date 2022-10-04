@@ -1,12 +1,15 @@
 import { Router } from "express";
-import { getAlumnos } from "../controllers/alumnos.middlewares.js";
-import { getAlumnosMidd } from "../middlewares/alumnos.middlewares.js";
+import { getAvisoAlumno, getInasistenciaAlumno, getNotaAlumno } from "../controllers/alumnos.controllers.js";
+import { getAvisoAlumnoMidd, getInasistenciaAlumnoMidd, getNotaAlumnoMidd } from "../middlewares/alumnos.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
 
 const router = Router();
 
-router.get("/alumnos", verificarToken, verificarRoles, getAlumnosMidd, getAlumnos);
+router.get("/inasistencias-alumnos/:id", verificarToken, verificarRoles, getInasistenciaAlumnoMidd, getInasistenciaAlumno);
+
+router.get("/notas-alumnos/:id", verificarToken, verificarRoles, getNotaAlumnoMidd, getNotaAlumno);
+router.get("/avisos-alumnos/:id", verificarToken, verificarRoles, getAvisoAlumnoMidd, getAvisoAlumno);
 // router.get("/alumnos/:id", verificarToken, verificarRoles, getAdministrativoMidd, getAdministrativo);
 // router.post("/administrativos", verificarToken, verificarRoles, postAdministrativoMidd, postAdministrativo);
 // router.put("/administrativos/:id", verificarToken, verificarRoles, putAdministrativoMidd, putAdministrativo);
