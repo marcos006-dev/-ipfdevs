@@ -2,6 +2,7 @@ import { check, param } from "express-validator";
 import { Types } from "mongoose";
 import { verificarCampos } from "../helpers/verificarCampos.js";
 import { AvisoModel } from "../models/Aviso.model.js";
+import { MateriaModel } from "../models/Materia.model.js";
 
 export const getAvisosMidd = [verificarCampos];
 
@@ -45,6 +46,31 @@ export const postAvisoMidd = [
     .withMessage("La descripcion es requerida")
     .isLength({ min: 10 })
     .withMessage("El aviso debe ser mayor a 10 caracteres"),
+  check("_materia")
+    .custom((id) => {
+      if (!Types.ObjectId.isValid(id)) {
+        return Promise.reject(
+          "El id enviado no es un id valido de mongo",
+        );
+      }
+      return true;
+    })
+    .custom(
+      async (idAviso) => {
+        try {
+          if (!Types.ObjectId.isValid(idAviso)) return;
+
+          const aviso = await MateriaModel.countDocuments({ _id: idAviso });
+          if (aviso === 0) {
+            return Promise.reject(
+              "El id enviado no pertenece a ningun registro en la bd",
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    ),
   verificarCampos,
 ];
 
@@ -82,6 +108,31 @@ export const putAvisoMidd = [
     .withMessage("La descripcion es requerida")
     .isLength({ min: 10 })
     .withMessage("El aviso debe ser mayor a 10 caracteres"),
+  // check("_materia")
+  //   .custom((id) => {
+  //     if (!Types.ObjectId.isValid(id)) {
+  //       return Promise.reject(
+  //         "El id enviado no es un id valido de mongo",
+  //       );
+  //     }
+  //     return true;
+  //   })
+  //   .custom(
+  //     async (idAviso) => {
+  //       try {
+  //         if (!Types.ObjectId.isValid(idAviso)) return;
+
+  //         const aviso = await MateriaModel.countDocuments({ _id: idAviso });
+  //         if (aviso === 0) {
+  //           return Promise.reject(
+  //             "El id enviado no pertenece a ningun registro en la bd",
+  //           );
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     },
+  //   ),
   verificarCampos,
 ];
 export const deleteAvisoMidd = [

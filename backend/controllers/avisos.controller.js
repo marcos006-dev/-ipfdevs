@@ -35,6 +35,7 @@ export const postAviso = async (req, res) => {
     const _persona = req.decoded._id;
     const {
       descripcion_aviso,
+      _materia,
     } = req.body;
 
     const { roles } = await PersonaModel.findOne({ _id: _persona });
@@ -45,6 +46,7 @@ export const postAviso = async (req, res) => {
       descripcion_aviso,
       tipo_aviso,
       _persona,
+      _materia,
     });
 
     // console.log(aviso);
@@ -60,24 +62,25 @@ export const postAviso = async (req, res) => {
 
 export const putAviso = async (req, res) => {
   try {
-    // eslint-disable-next-line no-underscore-dangle
-    const _persona = req.decoded._id;
+    // const _persona = req.decoded._id;
 
     const { id } = req.params;
 
     const {
       descripcion_aviso,
+      // _materia,
     } = req.body;
 
-    const { roles } = await PersonaModel.findOne({ _id: _persona });
+    // const { roles } = await PersonaModel.findOne({ _id: _persona });
 
     // console.log(roles);
-    const tipo_aviso = roles.descripcion_rol === "docente" ? "particular" : "general";
+    // const tipo_aviso = roles.descripcion_rol === "docente" ? "particular" : "general";
 
     await AvisoModel.findByIdAndUpdate(id, {
       descripcion_aviso,
-      tipo_aviso,
-      _persona,
+      // tipo_aviso,
+      // _persona,
+      // _materia,
     });
 
     // console.log(aviso);

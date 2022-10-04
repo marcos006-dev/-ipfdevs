@@ -14,6 +14,10 @@ const AvisoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Persona",
   }],
+  _materia: [{
+    type: Schema.Types.ObjectId,
+    ref: "Materia",
+  }],
 
   fecha_alta: {
     type: Schema.Types.Date,

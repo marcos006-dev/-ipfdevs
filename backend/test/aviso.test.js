@@ -10,12 +10,14 @@ import {
 import { vaciarColecciones } from "../helpers/tests/vaciarColecciones.js";
 import { app, server } from "../index.js";
 import { crearAvisos } from "../helpers/tests/crearAvisos.js";
+import { crearMaterias } from "../helpers/tests/crearMaterias.js";
 
 const SERVER = supertest(app);
 const URL = "/api/avisos";
 
 const _idUsuario = mongoose.Types.ObjectId();
 const _idAviso = mongoose.Types.ObjectId();
+const _idMateria = mongoose.Types.ObjectId();
 
 const HEADERS = getTokenTest({ _id: _idUsuario, nombre_persona: "Marcos", apellido_persona: "Franco" });
 
@@ -23,7 +25,8 @@ beforeAll(async () => {
   try {
     await vaciarColecciones();
     await crearUsuario(_idUsuario);
-    await crearAvisos(_idAviso, _idUsuario);
+    await crearMaterias(_idMateria);
+    await crearAvisos(_idAviso, _idUsuario, _idMateria);
   } catch (error) {
     console.log(error);
   }
@@ -52,6 +55,7 @@ describe(`GET ${URL}/:id`, () => {
 describe(`POST AVISO ${URL}`, () => {
   const avisoCrear = {
     descripcion_aviso: "Nuevo aviso",
+    _materia: _idMateria,
   };
 
   testPost(URL, "Debe retornar un error al no enviar el token", avisoCrear, 401, SERVER, {});
@@ -66,7 +70,7 @@ describe(`POST AVISO ${URL}`, () => {
 describe(`PUT AVISO ${URL}`, () => {
   const avisoEditar = {
     descripcion_aviso: "Actualizado aviso",
-    _persona: _idUsuario,
+    // _materia: _idMateria,
   };
 
   testPut(`${URL}/${_idAviso}`, "Debe retornar un error al no enviar el token", avisoEditar, 401, SERVER, {});

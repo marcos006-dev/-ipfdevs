@@ -31,18 +31,21 @@ export const getNotaAlumno = async (req, res) => {
 
 export const getAvisoAlumno = async (req, res) => {
   try {
+    const idAlumno = req.params.id;
+
+    console.log(idAlumno);
     // buscar los avisos y obtener los docentes que la publicaron
 
-    const usuarioIdPublicaciones = await AvisoModel.find().select("_persona");
+    const alumno = await PersonaModel.findById(idAlumno).select("_materia -_id");
 
-    // console.log(usuarioIdPublicaciones);
+    console.log(alumno);
 
     // buscar los docentes por medio del id y obtener las materias
 
     // const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
 
     // console.log(notas);
-    return res.status(200).json(usuarioIdPublicaciones);
+    return res.status(200).json(alumno);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
