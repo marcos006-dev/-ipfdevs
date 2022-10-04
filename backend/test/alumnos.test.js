@@ -12,6 +12,7 @@ import { vaciarColecciones } from "../helpers/tests/vaciarColecciones.js";
 import { app, server } from "../index.js";
 import { crearMaterias } from "../helpers/tests/crearMaterias.js";
 import { crearNotas } from "../helpers/tests/crearNotas.js";
+import { crearAvisos } from "../helpers/tests/crearAvisos.js";
 
 const SERVER = supertest(app);
 const URL = "/api";
@@ -19,6 +20,7 @@ const URL = "/api";
 const _idUsuario = mongoose.Types.ObjectId();
 const _idMateria = mongoose.Types.ObjectId();
 const _idNota = mongoose.Types.ObjectId();
+const _idAviso = mongoose.Types.ObjectId();
 
 const HEADERS = getTokenTest({ _id: _idUsuario, nombre_persona: "Marcos", apellido_persona: "Franco" });
 
@@ -34,11 +36,12 @@ beforeAll(async () => {
     await crearUsuario(_idUsuario);
     await crearMaterias(_idMateria);
     await crearNotas(_idNota, _idMateria, _idUsuario);
+    await crearAvisos(_idAviso, _idUsuario);
   } catch (error) {
     console.log(error);
   }
 });
-describe(`GET INASISTENCIAS ${URL}/inasistencias-alumnos/${_idUsuario}`, () => {
+describe.skip(`GET INASISTENCIAS ${URL}/inasistencias-alumnos/${_idUsuario}`, () => {
   testGet(`${URL}/inasistencias-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(`${URL}/inasistencias-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
@@ -50,7 +53,7 @@ describe(`GET INASISTENCIAS ${URL}/inasistencias-alumnos/${_idUsuario}`, () => {
   testGet(`${URL}/inasistencias-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS);
 });
 
-describe(`GET NOTAS ${URL}/notas-alumnos/${_idUsuario}`, () => {
+describe.skip(`GET NOTAS ${URL}/notas-alumnos/${_idUsuario}`, () => {
   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
@@ -63,7 +66,7 @@ describe(`GET NOTAS ${URL}/notas-alumnos/${_idUsuario}`, () => {
 });
 
 describe(`GET AVISOS ${URL}/avisos-alumnos/${_idUsuario}`, () => {
-  testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
+  testGet(`${URL}/avisos-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(`${URL}/avisos-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
     authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOnsiX2lkIjoiNjMzNWUyOWU4MTM2OGJlNDg5MDcwMjljIiwibm9tYnJlX3BlcnNvbmEiOiJNYXJjb3MiLCJhcGVsbGlkb19wZXJzb25hIjoiRnJhbmNvIn0sImlhdCI6MTY2NDQ3NTgwNn0.m0eqZXVuQ8RKLim9zaAs_3QqQ-rlZcx-LaX-1JcFn4Y",

@@ -9,7 +9,7 @@ const router = Router();
 router.get("/inasistencias-alumnos/:id", verificarToken, verificarRoles, getInasistenciaAlumnoMidd, getInasistenciaAlumno);
 
 router.get("/notas-alumnos/:id", verificarToken, verificarRoles, getNotaAlumnoMidd, getNotaAlumno);
-router.get("/avisos-alumnos/:id", verificarToken, verificarRoles, getAvisoAlumnoMidd, getAvisoAlumno);
+router.get("/avisos-alumnos/:id", verificarToken, verificarRoles, getAvisoAlumno);
 // router.get("/alumnos/:id", verificarToken, verificarRoles, getAdministrativoMidd, getAdministrativo);
 // router.post("/administrativos", verificarToken, verificarRoles, postAdministrativoMidd, postAdministrativo);
 // router.put("/administrativos/:id", verificarToken, verificarRoles, putAdministrativoMidd, putAdministrativo);

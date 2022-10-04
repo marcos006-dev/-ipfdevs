@@ -14,6 +14,11 @@ const AvisoSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Persona",
   }],
+
+  fecha_alta: {
+    type: Schema.Types.Date,
+    default: Date.now,
+  },
 });
 
 export const AvisoModel = model("Aviso", AvisoSchema);

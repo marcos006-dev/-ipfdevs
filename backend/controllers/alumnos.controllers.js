@@ -1,4 +1,5 @@
 // import bcrypt from "bcryptjs";
+import { AvisoModel } from "../models/Aviso.model.js";
 import { NotaModel } from "../models/Nota.model.js";
 import { PersonaModel } from "../models/Persona.model.js";
 
@@ -30,11 +31,20 @@ export const getNotaAlumno = async (req, res) => {
 
 export const getAvisoAlumno = async (req, res) => {
   try {
-    const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
+    // buscar los avisos y obtener los docentes que la publicaron
 
-    console.log(notas);
-    return res.status(200).json(notas);
+    const usuarioIdPublicaciones = await AvisoModel.find().select("_persona");
+
+    // console.log(usuarioIdPublicaciones);
+
+    // buscar los docentes por medio del id y obtener las materias
+
+    // const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
+
+    // console.log(notas);
+    return res.status(200).json(usuarioIdPublicaciones);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: error.message,
     });
