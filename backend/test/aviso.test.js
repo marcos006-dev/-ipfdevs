@@ -55,7 +55,7 @@ describe(`GET ${URL}/:id`, () => {
 describe(`POST AVISO ${URL}`, () => {
   const avisoCrear = {
     descripcion_aviso: "Nuevo aviso",
-    _materia: _idMateria,
+    _materia: [],
   };
 
   testPost(URL, "Debe retornar un error al no enviar el token", avisoCrear, 401, SERVER, {});
@@ -66,7 +66,7 @@ describe(`POST AVISO ${URL}`, () => {
 
   const avisoConIdMateriaInvalido = { ...avisoCrear };
   avisoConIdMateriaInvalido._materia = "";
-  testPost(URL, "Debe retornar un 400 si se envia un aviso con id materia invalida", avisoConIdMateriaInvalido, 400, SERVER, HEADERS, true);
+  testPost(URL, "Debe retornar un 400 si se envia un aviso con id materia invalida", avisoConIdMateriaInvalido, 400, SERVER, HEADERS);
 
   testPost(URL, "Debe retornar un status code 200 si se crea el aviso de forma exitosa", avisoCrear, 200, SERVER, HEADERS);
 });
@@ -74,7 +74,7 @@ describe(`POST AVISO ${URL}`, () => {
 describe(`PUT AVISO ${URL}`, () => {
   const avisoEditar = {
     descripcion_aviso: "Actualizado aviso",
-    _materia: _idMateria,
+    _materia: [],
   };
 
   testPut(`${URL}/${_idAviso}`, "Debe retornar un error al no enviar el token", avisoEditar, 401, SERVER, {});
