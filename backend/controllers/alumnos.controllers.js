@@ -33,19 +33,25 @@ export const getAvisoAlumno = async (req, res) => {
   try {
     const idAlumno = req.params.id;
 
-    console.log(idAlumno);
+    // console.log(idAlumno);
     // buscar los avisos y obtener los docentes que la publicaron
 
-    const alumno = await PersonaModel.findById(idAlumno).select("_materia -_id");
+    const { _materia } = await PersonaModel.findById(idAlumno).select("_materia -_id");
+    const avisosAlumno = {
+      avisoGeneral: [],
+      avisoParticular: [],
+    };
 
-    console.log(alumno);
+    // avisos particulares
+    avisosAlumno.avisoParticular = await AvisoModel.find({ _materia: { $in: _materia } }).select("descripcion_aviso tipo_aviso fecha_alta -_id").sort({ fecha_alta: "desc" });
 
-    // buscar los docentes por medio del id y obtener las materias
+    // avisos generales
 
-    // const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
+    avisosAlumno.avisoGeneral = await AvisoModel.find({ tipo_aviso: "general" }).select("descripcion_aviso tipo_aviso fecha_alta -_id").sort({ fecha_alta: "desc" });
 
-    // console.log(notas);
-    return res.status(200).json(alumno);
+    console.log(avisosAlumno.avisoGeneral);
+
+    return res.status(200).json(avisosAlumno);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
