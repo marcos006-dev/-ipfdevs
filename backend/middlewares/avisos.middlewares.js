@@ -3,6 +3,7 @@ import { Types } from "mongoose";
 import { verificarCampos } from "../helpers/verificarCampos.js";
 import { AvisoModel } from "../models/Aviso.model.js";
 import { MateriaModel } from "../models/Materia.model.js";
+import { PersonaModel } from "../models/Persona.model.js";
 
 export const getAvisosMidd = [verificarCampos];
 
@@ -47,30 +48,56 @@ export const postAvisoMidd = [
     .isLength({ min: 10 })
     .withMessage("El aviso debe ser mayor a 10 caracteres"),
   check("_materia")
-    .custom((id) => {
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idAviso) => {
-        try {
-          if (!Types.ObjectId.isValid(idAviso)) return;
+    .custom(async (idMateria, { req }) => {
+      // console.log(id);
 
-          const aviso = await MateriaModel.countDocuments({ _id: idAviso });
-          if (aviso === 0) {
+      try {
+        // console.log(idMateria);
+
+        // eslint-disable-next-line no-underscore-dangle
+        const id = req.decoded._id;
+
+        // obtener rol usuario
+
+        const { roles } = await PersonaModel.findById(id).select("roles");
+
+        // console.log(roles);
+        // si es docente se debe solicitar que se envie la materia
+
+        if (roles.descripcion_rol === "docente") {
+          if (!idMateria) {
             return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
+              "Se deben enviar ids validos de materias",
             );
           }
-        } catch (error) {
-          console.log(error);
+
+          if (!Types.ObjectId.isValid(idMateria)) {
+            return Promise.reject(
+              "El id enviado no es un id valido de mongo",
+            );
+          }
+
+          // y la materia debe existir en la db
+
+          const materia = await MateriaModel.countDocuments({ _id: idMateria });
+          if (materia === 0) {
+            return Promise.reject(
+              "El id enviado no pertenece a ningun registro de materia en la bd",
+            );
+          }
+        } else {
+          req.body.idMateria = [];
         }
-      },
-    ),
+        console.log(req.body.idMateria);
+        // y esta debe ser valida el object id
+      } catch (error) {
+        return Promise.reject(
+          "Se deben enviar un array con ids validos de materias",
+        );
+      }
+
+      return true;
+    }),
   verificarCampos,
 ];
 
@@ -97,7 +124,9 @@ export const putAvisoMidd = [
             );
           }
         } catch (error) {
-          console.log(error);
+          return Promise.reject(
+            "Se deben enviar un array con ids validos de materias",
+          );
         }
       },
     ),
@@ -108,31 +137,58 @@ export const putAvisoMidd = [
     .withMessage("La descripcion es requerida")
     .isLength({ min: 10 })
     .withMessage("El aviso debe ser mayor a 10 caracteres"),
-  // check("_materia")
-  //   .custom((id) => {
-  //     if (!Types.ObjectId.isValid(id)) {
-  //       return Promise.reject(
-  //         "El id enviado no es un id valido de mongo",
-  //       );
-  //     }
-  //     return true;
-  //   })
-  //   .custom(
-  //     async (idAviso) => {
-  //       try {
-  //         if (!Types.ObjectId.isValid(idAviso)) return;
+  check("_materia")
+    .custom(async (idMateria, { req }) => {
+      // console.log(idMateria);
 
-  //         const aviso = await MateriaModel.countDocuments({ _id: idAviso });
-  //         if (aviso === 0) {
-  //           return Promise.reject(
-  //             "El id enviado no pertenece a ningun registro en la bd",
-  //           );
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     },
-  //   ),
+      try {
+        const isArray = (idMateria instanceof Array);
+        // console.log(isArray);
+        if (!isArray || !idMateria) {
+          console.log("entro");
+          return Promise.reject(
+            "Se deben enviar un array con ids validos de materias",
+          );
+        }
+
+        // eslint-disable-next-line no-underscore-dangle
+        const id = req.decoded._id;
+        // console.log(req.decoded);
+        // obtener rol usuario
+
+        const { roles } = await PersonaModel.findById(id).select("roles");
+
+        // console.log(roles);
+        // si es docente se debe solicitar que se envie la materia
+
+        if (roles.descripcion_rol === "docente") {
+          if (!Types.ObjectId.isValid(idMateria)) {
+            return Promise.reject(
+              "El id enviado no es un id valido de mongo",
+            );
+          }
+
+          // y la materia debe existir en la db
+
+          const materia = await MateriaModel.countDocuments({ _id: idMateria });
+          if (materia === 0) {
+            return Promise.reject(
+              "El id enviado no pertenece a ningun registro de materia en la bd",
+            );
+          }
+        } else {
+          req.body.idMateria = [];
+        }
+
+        // y esta debe ser valida el object id
+      } catch (error) {
+        return Promise.reject(
+          "Se deben enviar un array con ids validos de materias",
+        );
+      }
+
+      return true;
+    }),
   verificarCampos,
 ];
 export const deleteAvisoMidd = [

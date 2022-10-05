@@ -38,6 +38,7 @@ export const postAviso = async (req, res) => {
       _materia,
     } = req.body;
 
+    console.log(_materia);
     const { roles } = await PersonaModel.findOne({ _id: _persona });
 
     const tipo_aviso = roles.descripcion_rol === "docente" ? "particular" : "general";

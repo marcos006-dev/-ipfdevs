@@ -64,13 +64,17 @@ describe(`POST AVISO ${URL}`, () => {
   avisoConDescripcionInvalido.descripcion_aviso = "";
   testPost(URL, "Debe retornar un 400 si se envia un aviso con descripcion invalida", avisoConDescripcionInvalido, 400, SERVER, HEADERS);
 
+  const avisoConIdMateriaInvalido = { ...avisoCrear };
+  avisoConIdMateriaInvalido._materia = "";
+  testPost(URL, "Debe retornar un 400 si se envia un aviso con id materia invalida", avisoConIdMateriaInvalido, 400, SERVER, HEADERS, true);
+
   testPost(URL, "Debe retornar un status code 200 si se crea el aviso de forma exitosa", avisoCrear, 200, SERVER, HEADERS);
 });
 
 describe(`PUT AVISO ${URL}`, () => {
   const avisoEditar = {
     descripcion_aviso: "Actualizado aviso",
-    // _materia: _idMateria,
+    _materia: _idMateria,
   };
 
   testPut(`${URL}/${_idAviso}`, "Debe retornar un error al no enviar el token", avisoEditar, 401, SERVER, {});
@@ -83,6 +87,10 @@ describe(`PUT AVISO ${URL}`, () => {
   avisoConDescripcionInvalido.descripcion_aviso = "";
 
   testPut(`${URL}/${_idAviso}`, "Debe retornar un 400 si se envia un aviso con descripcion invalida", avisoConDescripcionInvalido, 400, SERVER, HEADERS);
+
+  const avisoConIdMateriaInvalido = { ...avisoEditar };
+  avisoConIdMateriaInvalido._materia = "";
+  testPost(URL, "Debe retornar un 400 si se envia un aviso con id materia invalida y si es docente", avisoConIdMateriaInvalido, 400, SERVER, HEADERS);
 
   testPut(`${URL}/${_idAviso}`, "Debe retornar un 200 si se actualiza correctamente el registro de aviso", avisoEditar, 200, SERVER, HEADERS);
 });
