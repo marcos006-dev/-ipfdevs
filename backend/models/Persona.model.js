@@ -41,7 +41,7 @@ const PersonaSchema = new Schema({
     url_documento: Schema.Types.String,
     tipo_documento: {
       type: Schema.Types.String,
-      enum: ["Analitico", "Domicilio"],
+      enum: ["analitico", "domicilio"],
     },
   }],
 
@@ -77,7 +77,7 @@ const PersonaSchema = new Schema({
     },
     acceso_endpoint: {
       type: [Schema.Types.String],
-      enum: ["notas", "materias", "administrativos", "docentes", "alumnos", "avisos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos"],
+      enum: ["notas", "materias", "administrativos", "docentes", "alumnos", "avisos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos"],
       required: true,
     },
   },

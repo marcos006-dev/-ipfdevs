@@ -49,7 +49,7 @@ export const getAvisoAlumno = async (req, res) => {
 
     avisosAlumno.avisoGeneral = await AvisoModel.find({ tipo_aviso: "general" }).select("descripcion_aviso tipo_aviso fecha_alta -_id").sort({ fecha_alta: "desc" });
 
-    console.log(avisosAlumno.avisoGeneral);
+    // console.log(avisosAlumno.avisoGeneral);
 
     return res.status(200).json(avisosAlumno);
   } catch (error) {
@@ -60,17 +60,65 @@ export const getAvisoAlumno = async (req, res) => {
   }
 };
 
-// export const getAlumno = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+export const getTiposDocumAlumno = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-//     const alumno = await PersonaModel.findById(id).select("_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario");
+    const tiposDocumentos = await PersonaModel.schema.path("documentaciones.0.tipo_documento").enumValues;
 
-//     // console.log(alumno);
-//     return res.status(200).json(alumno);
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: error.message,
-//     });
-//   }
-// };
+    // buscar si el alumno ya posee esos documentos
+
+    const { documentaciones } = await PersonaModel.findById(id);
+
+    const documentosAlumno = {};
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < tiposDocumentos.length; i++) {
+      // eslint-disable-next-line no-plusplus
+      for (let j = 0; j < documentaciones.length; j++) {
+        if (tiposDocumentos[i] === documentaciones[j].tipo_documento) {
+          documentosAlumno[tiposDocumentos[i]] = documentaciones[j];
+        } else {
+          documentosAlumno[tiposDocumentos[i]] = {};
+        }
+      }
+    }
+    return res.status(200).json(documentosAlumno);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const putTiposDocumAlumno = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { documentos } = req.body;
+
+    await PersonaModel.findByIdAndUpdate(id, { documentaciones: [...documentos] });
+
+    return res.status(200).json("documentosAlumno");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getHorariosAlumno = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { _materia } = await PersonaModel.findById(id).select("_materias -_id").populate({ path: "_materia", select: "descripcion_materia horarios -_id" });
+
+    console.log({ horarios: _materia });
+    return res.status(200).json({ horarios: _materia });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

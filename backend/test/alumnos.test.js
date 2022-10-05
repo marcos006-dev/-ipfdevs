@@ -98,7 +98,7 @@ beforeAll(async () => {
       },
       documentaciones: [{
         url_documento: "https://algunlado.com",
-        tipo_documento: "Domicilio",
+        tipo_documento: "domicilio",
       }],
       inasistencias: [{
         fecha: "2022/09/20",
@@ -112,7 +112,7 @@ beforeAll(async () => {
       password_usuario: "$2a$10$EpEgugumkVGnWpgpVw9bjeCpGbC1GhJTAhW0WG9qX/xFMFVKJvPA6",
       roles: {
         descripcion_rol: "alumno",
-        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos"],
+        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos"],
       },
     });
 
@@ -132,7 +132,7 @@ beforeAll(async () => {
     console.log(error);
   }
 });
-describe.skip(`GET INASISTENCIAS ${URL}/inasistencias-alumnos/${_idUsuario}`, () => {
+describe(`GET INASISTENCIAS ${URL}`, () => {
   testGet(`${URL}/inasistencias-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(`${URL}/inasistencias-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
@@ -144,7 +144,7 @@ describe.skip(`GET INASISTENCIAS ${URL}/inasistencias-alumnos/${_idUsuario}`, ()
   testGet(`${URL}/inasistencias-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS);
 });
 
-describe.skip(`GET NOTAS ${URL}/notas-alumnos/${_idUsuario}`, () => {
+describe(`GET NOTAS ${URL}/notas-alumnos/${_idUsuario}`, () => {
   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
@@ -163,37 +163,59 @@ describe(`GET AVISOS ${URL}/avisos-alumnos/${_idUsuario}`, () => {
     authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOnsiX2lkIjoiNjMzNWUyOWU4MTM2OGJlNDg5MDcwMjljIiwibm9tYnJlX3BlcnNvbmEiOiJNYXJjb3MiLCJhcGVsbGlkb19wZXJzb25hIjoiRnJhbmNvIn0sImlhdCI6MTY2NDQ3NTgwNn0.m0eqZXVuQ8RKLim9zaAs_3QqQ-rlZcx-LaX-1JcFn4Y",
   });
 
-  testGet(`${URL}/avisos-alumnos/${_idUsuario}`, "Debe retornar un json con los registros de avisos para los alumnos", 200, SERVER, HEADERS, true);
+  testGet(`${URL}/avisos-alumnos/${_idUsuario}`, "Debe retornar un json con los registros de avisos para los alumnos", 200, SERVER, HEADERS);
 
-  testGet(`${URL}/avisos-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS, true);
+  testGet(`${URL}/avisos-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS);
 });
 
-// describe(`GET NOTAS ${URL}/notas-alumnos/${_idUsuario}`, () => {
-//   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
+describe(`GET TIPOS DOCUMENTACIONES ${URL}`, () => {
+  testGet(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
 
-//   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
-//     authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOnsiX2lkIjoiNjMzNWUyOWU4MTM2OGJlNDg5MDcwMjljIiwibm9tYnJlX3BlcnNvbmEiOiJNYXJjb3MiLCJhcGVsbGlkb19wZXJzb25hIjoiRnJhbmNvIn0sImlhdCI6MTY2NDQ3NTgwNn0.m0eqZXVuQ8RKLim9zaAs_3QqQ-rlZcx-LaX-1JcFn4Y",
-//   });
+  testGet(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
+    authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOnsiX2lkIjoiNjMzNWUyOWU4MTM2OGJlNDg5MDcwMjljIiwibm9tYnJlX3BlcnNvbmEiOiJNYXJjb3MiLCJhcGVsbGlkb19wZXJzb25hIjoiRnJhbmNvIn0sImlhdCI6MTY2NDQ3NTgwNn0.m0eqZXVuQ8RKLim9zaAs_3QqQ-rlZcx-LaX-1JcFn4Y",
+  });
 
-//   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un json con los registros de alumnos", 200, SERVER, HEADERS, true);
+  testGet(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un json con los registros de tipos-docum para los alumnos", 200, SERVER, HEADERS);
 
-//   testGet(`${URL}/notas-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS, true);
-// });
+  testGet(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS);
+});
 
-// const usuarioConUrlDocumentoVacio = { ...administrativoRegistrar };
-// usuarioConUrlDocumentoVacio.documentaciones = {
-//   url_documento: "",
-//   tipo_documento: "Analiticoo",
-// };
-// testPost(URL, "Debe retornar un 400 si se envia un objeto con la url de documento vacio", usuarioConUrlDocumentoVacio, 400, SERVER, HEADERS);
+describe(`PUT TIPOS DOCUMENTACIONES ${URL}`, () => {
+  const editarDocumentacion = {
+    documentos: [
+      {
+        url_documento: "https://thumbs.dreamstime.com/b/document-icon-vector-stack-paper-sheets-illustration-131104983.jpg",
+        tipo_documento: "analitico",
+      },
+      {
+        url_documento: "https://thumbs.dreamstime.com/b/document-icon-vector-stack-paper-sheets-illustration-131104983.jpg",
+        tipo_documento: "domicilio",
+      },
+    ],
+  };
 
-// const usuarioConInasistenciaVacia = { ...administrativoRegistrar };
-// usuarioConInasistenciaVacia.inasistencias = "";
-// testPost(URL, "Debe retornar un 400 si se envia un objeto vacio como inasistencia", usuarioConInasistenciaVacia, 400, SERVER, HEADERS);
+  testPut(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", editarDocumentacion, 401, SERVER, {});
 
-// const usuarioConInasistenciaIncorrecta = { ...administrativoRegistrar };
-// usuarioConInasistenciaIncorrecta.inasistencias = { fecha: "2022/19/01" };
-// testPost(URL, "Debe retornar un 400 si se envia una fecha invalida como inasistencia", usuarioConInasistenciaIncorrecta, 400, SERVER, HEADERS);
+  testPut(`${URL}/tipos-docum-alumnos/6335c1c5cd6b7182c6dd7b8b`, "Debe retornar un error al enviar un id que no esta asociado a ningun registro en la bd", editarDocumentacion, 400, SERVER, HEADERS);
+
+  const notaConIdMateriaInexistente = { ...editarDocumentacion };
+  notaConIdMateriaInexistente.documentos = "";
+  testPut(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un 400 si se envia la propiedad de documentos vacio", notaConIdMateriaInexistente, 400, SERVER, HEADERS);
+
+  testPut(`${URL}/tipos-docum-alumnos/${_idUsuario}`, "Debe retornar un 200 si se actualiza correctamente los documentos de la persona", editarDocumentacion, 200, SERVER, HEADERS);
+});
+
+describe(`GET HORARIOS ${URL}`, () => {
+  testGet(`${URL}/horarios-alumnos/${_idUsuario}`, "Debe retornar un error al no enviar el token", 401, SERVER, {});
+
+  testGet(`${URL}/horarios-alumnos/${_idUsuario}`, "Debe retornar un 401 si el alumno no posee los permisos necesarios", 401, SERVER, {
+    authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOnsiX2lkIjoiNjMzNWUyOWU4MTM2OGJlNDg5MDcwMjljIiwibm9tYnJlX3BlcnNvbmEiOiJNYXJjb3MiLCJhcGVsbGlkb19wZXJzb25hIjoiRnJhbmNvIn0sImlhdCI6MTY2NDQ3NTgwNn0.m0eqZXVuQ8RKLim9zaAs_3QqQ-rlZcx-LaX-1JcFn4Y",
+  });
+
+  testGet(`${URL}/horarios-alumnos/${_idUsuario}`, "Debe retornar un json con los registros de horarios para los alumnos", 200, SERVER, HEADERS);
+
+  testGet(`${URL}/horarios-alumnos/${_idUsuario}`, "Debe retornar un status-code 200", 200, SERVER, HEADERS);
+});
 
 afterAll(async () => {
   server.close();
