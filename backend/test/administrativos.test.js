@@ -72,7 +72,7 @@ describe(`POST ADMINISTRATIVO ${URL}`, () => {
     },
     documentaciones: {
       url_documento: "https://algunlado.com",
-      tipo_documento: "Domicilio",
+      tipo_documento: "domicilio",
     },
     inasistencias: {
       fecha: "2022/09/20",
@@ -210,7 +210,7 @@ describe(`PUT ADMINISTRATIVO ${URL}`, () => {
     },
     documentaciones: {
       url_documento: "https://algunlado.com",
-      tipo_documento: "Domicilio",
+      tipo_documento: "domicilio",
     },
     inasistencias: {
       fecha: "2022/09/20",
