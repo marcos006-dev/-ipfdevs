@@ -195,6 +195,8 @@
 14. 28-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo GET y GET con ID para el modelo de **_Personas_**. ✔
 15. 28-9-22: Se completo el desarrollo de los tests para el tipo de usuario ADMINISTRATIVO del metodo DELETE y PATCH para el modelo de **_Personas_**. ✔
 16. 29-9-22: Se agrego middleware para verificar las rutas a la cuales tiene acceso un usuario. ✔
-17. 1-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Materias_**. ✔
-18. 2-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Notas_**. ✔
-19. 3-9-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Avisos_**. ✔
+17. 1-10-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Materias_**. ✔
+18. 2-10-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Notas_**. ✔
+19. 3-10-22: Se completo el desarrollo de los tests para los metodos GET, GET con ID, POST, PUT, PATCH, DELETE para el modelo de **_Avisos_**. ✔
+20. 5-10-22: Se completo el desarrollo de los tests para para un tipo de usuario **Alumno**
+21. 8-10-22: Se completo el desarrollo de los tests para para un tipo de usuario **Docente**
