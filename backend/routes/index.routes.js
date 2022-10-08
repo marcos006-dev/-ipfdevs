@@ -4,6 +4,7 @@ import rutasMaterias from "./materias.routes.js";
 import rutasNotas from "./notas.routes.js";
 import rutasAvisos from "./avisos.routes.js";
 import rutasAlumnos from "./alumnos.routes.js";
+import rutasDocentes from "./docentes.routes.js";
 
 export const rutas = () => [
   rutasAuth,
@@ -12,4 +13,5 @@ export const rutas = () => [
   rutasNotas,
   rutasAvisos,
   rutasAlumnos,
+  rutasDocentes,
 ];

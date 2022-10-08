@@ -349,6 +349,10 @@ describe(`ACTIVAR ${URL}/:id`, () => {
   testActivar(`${URL}/${_idUsuario}`, "Debe retornar un status-code 200 al activar un administrativo", 200, SERVER, HEADERS);
 });
 
+// CARGAR INASISTENCIAS
+
+// EDITAR INASISTENCIAS
+
 afterAll(async () => {
   server.close();
 });
