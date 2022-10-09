@@ -10,13 +10,17 @@ export const loguearse = async (req, res) => {
 
     if (!usuario) {
       return res.status(401).json({
-        msg: "Error al loguearse",
+        errors: [{
+          msg: "Error al loguearse",
+        }],
       });
     }
 
     if (!usuario.activo) {
       return res.status(401).json({
-        msg: "Error al loguearse",
+        errors: [{
+          msg: "Error al loguearse",
+        }],
       });
     }
 
@@ -27,7 +31,9 @@ export const loguearse = async (req, res) => {
 
     if (!passwordEncriptado) {
       return res.status(401).json({
-        msg: "El password no es valido",
+        errors: [{
+          msg: "El password no es valido",
+        }],
       });
     }
 
@@ -40,8 +46,8 @@ export const loguearse = async (req, res) => {
     });
   } catch (error) {
     // console.log(error);
-    return res.status(500).json({
-      message: error.message,
-    });
+    return res.status(500).json([{
+      msg: error.message,
+    }]);
   }
 };

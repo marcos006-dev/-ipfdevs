@@ -353,6 +353,8 @@ describe(`ACTIVAR ${URL}/:id`, () => {
 
 // EDITAR INASISTENCIAS
 
+// OBTENER CARRERAS
+
 afterAll(async () => {
   server.close();
 });

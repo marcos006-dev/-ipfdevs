@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 // import { crearUsuario } from "../helpers/tests/crearUsuarios.js";
 import { getTokenTest } from "../helpers/tests/getToken.js";
 import {
-  testActivar,
   testDelete, testGet, testPost, testPut,
 } from "../helpers/tests/tests.js";
 import { vaciarColecciones } from "../helpers/tests/vaciarColecciones.js";
@@ -259,10 +258,6 @@ describe(`DELETE ${URL}/eliminar-notas/${_idNota}`, () => {
 
   testDelete(`${URL}/eliminar-notas/${_idNota}`, "Debe retornar un status-code 200 al borrar una nota", 200, SERVER, HEADERS);
 });
-
-// CREAR AVISOS
-// EDITAR AVISOS
-// ELIMINAR AVISOS
 
 afterAll(async () => {
   server.close();

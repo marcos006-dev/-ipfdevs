@@ -1,5 +1,5 @@
-import { AvisoModel } from "../models/Aviso.model";
-import { PersonaModel } from "../models/Persona.model";
+import { AvisoModel } from "../models/Aviso.model.js";
+import { PersonaModel } from "../models/Persona.model.js";
 
 export const getAvisos = async (req, res) => {
   try {
