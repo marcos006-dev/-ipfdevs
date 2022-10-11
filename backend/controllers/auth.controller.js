@@ -10,17 +10,21 @@ export const loguearse = async (req, res) => {
 
     if (!usuario) {
       return res.status(401).json({
-        errors: [{
-          msg: "Error al loguearse",
-        }],
+        errors: [
+          {
+            msg: "Error al loguearse",
+          },
+        ],
       });
     }
 
     if (!usuario.activo) {
       return res.status(401).json({
-        errors: [{
-          msg: "Error al loguearse",
-        }],
+        errors: [
+          {
+            msg: "Error al loguearse",
+          },
+        ],
       });
     }
 
@@ -31,23 +35,83 @@ export const loguearse = async (req, res) => {
 
     if (!passwordEncriptado) {
       return res.status(401).json({
-        errors: [{
-          msg: "El password no es valido",
-        }],
+        errors: [
+          {
+            msg: "El password no es valido",
+          },
+        ],
       });
     }
 
-    const { _id, nombre_persona, apellido_persona } = usuario;
+    const {
+      _id, nombre_persona, apellido_persona, roles,
+    } = usuario;
 
-    const token = await generarJwt({ _id, nombre_persona, apellido_persona });
+    const token = await generarJwt({
+      _id,
+      nombre_persona,
+      apellido_persona,
+    });
 
     return res.status(200).json({
       token,
+      userData: {
+        nombre_persona,
+        apellido_persona,
+        rol: roles.descripcion_rol,
+      },
     });
   } catch (error) {
     // console.log(error);
-    return res.status(500).json([{
-      msg: error.message,
-    }]);
+    return res.status(500).json([
+      {
+        msg: error.message,
+      },
+    ]);
+  }
+};
+
+export const getDataUser = async (req, res) => {
+  const { _id } = req.decoded;
+  // console.log(dataToken);
+  try {
+    const usuarioData = await PersonaModel.findOne({ _id });
+
+    if (!usuarioData) {
+      return res.status(401).json({
+        errors: [
+          {
+            msg: "Error al obtener los datos",
+          },
+        ],
+      });
+    }
+
+    if (!usuarioData.activo) {
+      return res.status(401).json({
+        errors: [
+          {
+            msg: "Error al obtener los datos",
+          },
+        ],
+      });
+    }
+
+    const { nombre_persona, apellido_persona, roles } = usuarioData;
+
+    return res.status(200).json({
+      userData: {
+        nombre_persona,
+        apellido_persona,
+        rol: roles.descripcion_rol,
+      },
+    });
+  } catch (error) {
+    // console.log(error);
+    return res.status(500).json([
+      {
+        msg: error.message,
+      },
+    ]);
   }
 };

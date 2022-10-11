@@ -2,7 +2,9 @@ import { MateriaModel } from "../models/Materia.model.js";
 
 export const getMaterias = async (req, res) => {
   try {
-    const materias = await MateriaModel.find().select("_id descripcion_materia nombre_carrera horarios anio_lectivos anio_lectivo");
+    const materias = await MateriaModel.find().select(
+      "_id descripcion_materia nombre_carrera horarios anio_lectivo activo",
+    );
 
     // console.log(materias);
     return res.status(200).json(materias);
@@ -17,7 +19,9 @@ export const getMateria = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const materia = await MateriaModel.findById(id).select("_id descripcion_materia nombre_carrera horarios anio_lectivos anio_lectivo");
+    const materia = await MateriaModel.findById(id).select(
+      "_id descripcion_materia nombre_carrera horarios anio_lectivo activo",
+    );
 
     // console.log(materia);
     return res.status(200).json(materia);
@@ -31,10 +35,7 @@ export const getMateria = async (req, res) => {
 export const postMateria = async (req, res) => {
   try {
     const {
-      descripcion_materia,
-      nombre_carrera,
-      horarios,
-      anio_lectivo,
+      descripcion_materia, nombre_carrera, horarios, anio_lectivo,
     } = req.body;
 
     await MateriaModel.create({
@@ -59,10 +60,7 @@ export const putMateria = async (req, res) => {
   try {
     const { id } = req.params;
     const {
-      descripcion_materia,
-      nombre_carrera,
-      horarios,
-      anio_lectivo,
+      descripcion_materia, nombre_carrera, horarios, anio_lectivo,
     } = req.body;
 
     await MateriaModel.findByIdAndUpdate(id, {
