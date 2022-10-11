@@ -52,7 +52,7 @@ export default function (state = initialState, action) {
         erroresMaterias: [],
       };
     case FETCH_MATERIAS_FALLIDO:
-      console.log(payload);
+      // console.log(payload);
       return {
         ...state,
         loadingMaterias: false,
