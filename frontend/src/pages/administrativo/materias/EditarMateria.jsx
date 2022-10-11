@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import * as Yup from 'yup';
 import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
@@ -171,6 +171,11 @@ const EditarMateria = () => {
                 <button type="submit" className="btn btn-warning mb-3">
                   Editar
                 </button>
+                <NavLink to="/materias">
+                  <button className="btn btn-info mb-3 ms-2">
+                    Volver Atras
+                  </button>
+                </NavLink>
                 {materia.editandoDatosMaterias && <Spinner />}
 
                 {materia.erroresEditarMateria?.length > 0 &&

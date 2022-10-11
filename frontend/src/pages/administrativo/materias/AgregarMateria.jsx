@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from 'formik';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
 import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
@@ -146,7 +147,11 @@ const AgregarMateria = () => {
                 <button type="submit" className="btn btn-success mb-3">
                   Guardar
                 </button>
-
+                <NavLink to="/materias">
+                  <button className="btn btn-info mb-3 ms-2">
+                    Volver Atras
+                  </button>
+                </NavLink>
                 {materia.enviandoDatosMaterias && <Spinner />}
 
                 {materia.erroresGuardadoMateria?.length > 0 &&

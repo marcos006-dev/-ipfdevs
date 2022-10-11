@@ -59,6 +59,7 @@ const TablaMaterias = ({ dataMaterias }) => {
                   key={materia._id}
                   state={materia}
                   to="/activar-materia"
+                  style={{ backgroundColor: 'blue' }}
                   className="btn btn-secondary"
                 >
                   Activar
@@ -92,10 +93,10 @@ const HomeMaterias = () => {
                 Nueva Materia
               </NavLink>
               <div className="table-responsive">
-                {loadingMaterias && <Spinner/>}
+                {loadingMaterias && <Spinner />}
 
                 {erroresMaterias.length > 0 &&
-                  erroresMaterias.map(({errors}, i) => (
+                  erroresMaterias.map(({ errors }, i) => (
                     <Alerta
                       clase={'alert-danger mt-2'}
                       key={i}
