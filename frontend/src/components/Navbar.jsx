@@ -17,11 +17,7 @@ const Navbar = ({ handleChangeToggle }) => {
           <i className="fa fa-hashtag"></i>
         </h2>
       </a>
-      <a
-        href="#"
-        className="sidebar-toggler flex-shrink-0"
-        onClick={handleChangeToggle}
-      >
+      <a className="sidebar-toggler flex-shrink-0" onClick={handleChangeToggle}>
         <i className="fa fa-bars"></i>
       </a>
 

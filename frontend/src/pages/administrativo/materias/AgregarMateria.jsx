@@ -7,59 +7,16 @@ import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
 import { postDataMateria } from '../../../redux/actions/administrativos/materiasAction';
-
-const HorarioSemana = ({
-  horariosSemana,
-  dia,
-  handleChangeHorariosSemana,
-  handleChange,
-}) => {
-  return (
-    <div className="mb-3">
-      <label className="form-label">Horario para el dia: {dia}</label>
-
-      {horariosSemana.map((horario, i) => (
-        <div className="form-check" key={i}>
-          <Field
-            className="form-check-input"
-            type="checkbox"
-            value={horario}
-            id={`${horario}-${dia}`}
-            name={dia}
-            onChange={(e) => {
-              handleChange(e);
-              handleChangeHorariosSemana(e);
-            }}
-          />
-          <label className="form-check-label" htmlFor={`${horario}-${dia}`}>
-            {horario}
-          </label>
-        </div>
-      ))}
-      <MensajeErrorInput name={dia} />
-    </div>
-  );
-};
+// import HorarioSemana from './HorarioSemana';
+import HorariosMaterias from './HorariosMaterias';
 
 const AgregarMateria = () => {
   const [diasSemanaSelected, setDiasSemanaSelected] = useState([]);
   const [horariosSemanaSelected, setHorariosSemanaSelected] = useState([]);
+  const [horariosError, setHorariosError] = useState(false);
 
   const materia = useSelector((state) => state.materias);
   const dispatch = useDispatch();
-
-  const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'];
-  const horariosSemana = [
-    '09:40 a 10:00',
-    '10:00 a 10:40',
-    '10:40 a 11:20',
-    '11:20 a 12:00',
-    '12:00 a 14:00',
-    '14:00 a 14:40',
-    '14:40 a 15:20',
-    '15:20 a 16:00',
-    '16:00 a 17:00',
-  ];
 
   // esquema de validacion
   const schemaAgregarMateria = Yup.object({
@@ -71,57 +28,29 @@ const AgregarMateria = () => {
     descripcion_anio: Yup.string().required('Este campo es requerido'),
   });
 
-  // escuchador de cambios para los dias de la semana
-  const handleChangeDiaSemanaSelected = (e) => {
-    const diaSelected = e.target.value;
-
-    if (e.target.checked) {
-      setDiasSemanaSelected([...diasSemanaSelected, e.target.value]);
-    } else {
-      const newDiasSemanaSelected = diasSemanaSelected.filter(
-        (dia) => dia !== diaSelected
-      );
-
-      const horarios = horariosSemanaSelected.filter(
-        (horario) => horario.dia_semana !== diaSelected
-      );
-      // console.log(horarios);
-      setDiasSemanaSelected(newDiasSemanaSelected);
-      setHorariosSemanaSelected(horarios);
-    }
-  };
-
-  const handleChangeHorariosSemana = (e) => {
-    const diaSemana = e.target.name;
-    const horarioSemana = e.target.value;
-
-    if (e.target.checked) {
-      setHorariosSemanaSelected([
-        ...horariosSemanaSelected,
-        {
-          dia_semana: diaSemana,
-          horario_semana: horarioSemana,
-        },
-      ]);
-    } else {
-      const horarios = horariosSemanaSelected.filter((horario) => {
-        if (
-          Object.entries(horario).toString() !==
-          Object.entries({
-            dia_semana: diaSemana,
-            horario_semana: horarioSemana,
-          }).toString()
-        ) {
-          return horario;
-        }
-      });
-      setHorariosSemanaSelected(horarios);
-    }
-  };
-
   // funcion de envio de formulario
   const handleSubmit = (values) => {
     const { descripcion_materia, nombre_carrera, descripcion_anio } = values;
+
+    // verificar si hay concodancia entre los dias de semena seleccionados y los horarios
+    const diasSemanaEditar = [];
+    horariosSemanaSelected.filter(({ dia_semana }) => {
+      const isDuplicate = diasSemanaEditar.includes(dia_semana);
+
+      if (!isDuplicate) {
+        diasSemanaEditar.push(dia_semana);
+        return true;
+      }
+      return false;
+    });
+
+    for (let i = 0; i < diasSemanaSelected.length; i++) {
+      if (!diasSemanaEditar.includes(diasSemanaSelected[i])) {
+        setHorariosError(true);
+        return;
+      }
+    }
+    setHorariosError(false);
 
     const materiaGuardar = {
       descripcion_materia,
@@ -187,39 +116,15 @@ const AgregarMateria = () => {
                   </Field>
                   <MensajeErrorInput name="nombre_carrera" />
                 </div>
-                <div className="mb-3">
-                  <label className="form-label">Dia de la Semana</label>
 
-                  {diasSemana.map((dia, i) => (
-                    <div className="form-check" key={i}>
-                      <Field
-                        className="form-check-input"
-                        type="checkbox"
-                        value={dia}
-                        id={dia}
-                        name="dia_semana"
-                        onChange={(e) => {
-                          handleChangeDiaSemanaSelected(e);
-                          handleChange(e);
-                        }}
-                      />
-                      <label className="form-check-label" htmlFor={dia}>
-                        {dia}
-                      </label>
-                    </div>
-                  ))}
-                  <MensajeErrorInput name="dia_semana" />
-                </div>
-
-                {diasSemanaSelected.map((dia, i) => (
-                  <HorarioSemana
-                    horariosSemana={horariosSemana}
-                    dia={dia}
-                    key={i}
-                    handleChangeHorariosSemana={handleChangeHorariosSemana}
-                    handleChange={handleChange}
-                  />
-                ))}
+                <HorariosMaterias
+                  diasSemanaSelected={diasSemanaSelected}
+                  setDiasSemanaSelected={setDiasSemanaSelected}
+                  horariosSemanaSelected={horariosSemanaSelected}
+                  setHorariosSemanaSelected={setHorariosSemanaSelected}
+                  horariosError={horariosError}
+                  handleChange={handleChange}
+                />
 
                 <div className="mb-3">
                   <label htmlFor="descripcion_anio" className="form-label">
@@ -244,8 +149,8 @@ const AgregarMateria = () => {
 
                 {materia.enviandoDatosMaterias && <Spinner />}
 
-                {materia.erroresMaterias?.length > 0 &&
-                  materia.erroresMaterias.map((error, i) => (
+                {materia.erroresGuardadoMateria?.length > 0 &&
+                  materia.erroresGuardadoMateria.map((error, i) => (
                     <Alerta
                       clase={'alert-danger'}
                       key={i}
@@ -253,7 +158,7 @@ const AgregarMateria = () => {
                     />
                   ))}
 
-                {materia.guardadoExistoso && (
+                {materia.guardadoExistosoMateria && (
                   <Alerta
                     clase={'alert-success'}
                     mensaje={'Materia agregada correctamente'}

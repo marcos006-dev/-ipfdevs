@@ -1,6 +1,9 @@
 import { BASE_URL } from '../../../utils/getBaseUrl';
 import { getHeadersFetch } from '../../../utils/getHeadersFetch';
 import {
+  EDITAR_MATERIA_EXITOSO,
+  EDITAR_MATERIA_FALLIDO,
+  EDITAR_MATERIA_REQUEST,
   FETCH_MATERIAS_EXITOSO,
   FETCH_MATERIAS_FALLIDO,
   FETCH_MATERIAS_REQUEST,
@@ -24,9 +27,10 @@ export const fetchMateriaExito = (dataMaterias) => {
 };
 
 export const fetchMateriaFallido = (error) => {
+  // console.log(error)
   return {
     type: FETCH_MATERIAS_FALLIDO,
-    payload: error.errors,
+    payload: error,
   };
 };
 
@@ -98,6 +102,50 @@ export const postDataMateria = (materia) => {
     } catch (error) {
       console.log(error);
       dispatch(guardarMateriaFallido(error.error));
+    }
+  };
+};
+
+// EDITAR UNA MATERIA
+export const editarMateriaRequest = () => {
+  return {
+    type: EDITAR_MATERIA_REQUEST,
+  };
+};
+
+export const editarMateriaExito = (materiaEditar) => {
+  return {
+    type: EDITAR_MATERIA_EXITOSO,
+    payload: materiaEditar,
+  };
+};
+
+export const editarMateriaFallido = (error) => {
+  return {
+    type: EDITAR_MATERIA_FALLIDO,
+    payload: error.errors,
+  };
+};
+
+export const putDataMateria = (id, materia) => {
+  return async (dispatch) => {
+    try {
+      dispatch(editarMateriaRequest());
+
+      const response = await fetch(`${BASE_URL}/materias/${id}`, {
+        method: 'PUT',
+        headers: getHeadersFetch(),
+        body: JSON.stringify(materia),
+      });
+
+      const materiaEditarResult = await response.json();
+      if (!response.ok) {
+        return dispatch(editarMateriaFallido(materiaEditarResult));
+      }
+      dispatch(editarMateriaExito());
+    } catch (error) {
+      console.log(error);
+      dispatch(editarMateriaFallido(error.error));
     }
   };
 };

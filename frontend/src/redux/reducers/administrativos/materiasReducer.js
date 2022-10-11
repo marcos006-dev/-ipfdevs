@@ -1,4 +1,7 @@
 import {
+  EDITAR_MATERIA_EXITOSO,
+  EDITAR_MATERIA_FALLIDO,
+  EDITAR_MATERIA_REQUEST,
   FETCH_MATERIAS_EXITOSO,
   FETCH_MATERIAS_FALLIDO,
   FETCH_MATERIAS_REQUEST,
@@ -12,7 +15,11 @@ const initialState = {
   erroresMaterias: [],
   loadingMaterias: false,
   enviandoDatosMaterias: false,
-  guardadoExistoso: false,
+  guardadoExistosoMateria: false,
+  erroresGuardadoMateria: [],
+  editandoDatosMaterias: false,
+  editadoExistosoMateria: false,
+  erroresEditarMateria: [],
 };
 
 export default function (state = initialState, action) {
@@ -33,6 +40,7 @@ export default function (state = initialState, action) {
         erroresMaterias: [],
       };
     case FETCH_MATERIAS_FALLIDO:
+      console.log(payload);
       return {
         ...state,
         loadingMaterias: false,
@@ -44,22 +52,43 @@ export default function (state = initialState, action) {
       return {
         ...state,
         enviandoDatosMaterias: true,
-        erroresMaterias: [],
+        erroresGuardadoMateria: [],
       };
 
     case GUARDAR_MATERIA_EXITOSO:
       return {
         ...state,
         enviandoDatosMaterias: false,
-        guardadoExistoso: true,
-        erroresMaterias: [],
+        guardadoExistosoMateria: true,
+        erroresGuardadoMateria: [],
       };
     case GUARDAR_MATERIA_FALLIDO:
       return {
         ...state,
         enviandoDatosMaterias: false,
-        guardadoExistoso: false,
-        erroresMaterias: payload,
+        guardadoExistosoMateria: false,
+        erroresGuardadoMateria: payload,
+      };
+    case EDITAR_MATERIA_REQUEST:
+      return {
+        ...state,
+        editandoDatosMaterias: true,
+        erroresEditarMateria: [],
+      };
+
+    case EDITAR_MATERIA_EXITOSO:
+      return {
+        ...state,
+        editandoDatosMaterias: false,
+        editadoExistosoMateria: true,
+        erroresEditarMateria: [],
+      };
+    case EDITAR_MATERIA_FALLIDO:
+      return {
+        ...state,
+        editandoDatosMaterias: false,
+        editadoExistosoMateria: false,
+        erroresEditarMateria: payload,
       };
     default:
       return state;

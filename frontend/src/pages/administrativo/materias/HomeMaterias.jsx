@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Alerta from '../../../components/Alerta';
+import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
 import { getDataMaterias } from '../../../redux/actions/administrativos/materiasAction';
 
@@ -25,12 +26,8 @@ const TablaMaterias = ({ dataMaterias }) => {
             <td>
               <NavLink
                 key={materia._id}
-                to={{
-                  pathname: '/materias/detalle',
-                  aboutProps: {
-                    materia,
-                  },
-                }}
+                state={materia}
+                to="/materias/detalle"
                 className="btn btn-info"
               >
                 Detalle
@@ -39,12 +36,8 @@ const TablaMaterias = ({ dataMaterias }) => {
             <td>
               <NavLink
                 key={materia._id}
-                to={{
-                  pathname: '/materias/editar',
-                  aboutProps: {
-                    materia,
-                  },
-                }}
+                state={materia}
+                to="/materias/editar"
                 className="btn btn-warning"
               >
                 Editar
@@ -55,12 +48,8 @@ const TablaMaterias = ({ dataMaterias }) => {
               {materia.activo ? (
                 <NavLink
                   key={materia._id}
-                  to={{
-                    pathname: '/desativar-materia',
-                    aboutProps: {
-                      materia,
-                    },
-                  }}
+                  state={materia}
+                  to="/desativar-materia"
                   className="btn btn-danger"
                 >
                   Desactivar
@@ -68,12 +57,8 @@ const TablaMaterias = ({ dataMaterias }) => {
               ) : (
                 <NavLink
                   key={materia._id}
-                  to={{
-                    pathname: '/activar-materia',
-                    aboutProps: {
-                      materia,
-                    },
-                  }}
+                  state={materia}
+                  to="/activar-materia"
                   className="btn btn-secondary"
                 >
                   Activar
@@ -107,21 +92,19 @@ const HomeMaterias = () => {
                 Nueva Materia
               </NavLink>
               <div className="table-responsive">
-                {loadingMaterias && <h3>Cargando Materias</h3>}
+                {loadingMaterias && <Spinner/>}
 
                 {erroresMaterias.length > 0 &&
-                  erroresMaterias.map((error, i) => (
+                  erroresMaterias.map(({errors}, i) => (
                     <Alerta
-                      clase={'alert-danger'}
+                      clase={'alert-danger mt-2'}
                       key={i}
-                      mensaje={error.msg}
+                      mensaje={errors.msg}
                     />
                   ))}
 
-                {dataMaterias.length > 0 ? (
+                {dataMaterias.length > 0 && (
                   <TablaMaterias dataMaterias={dataMaterias} />
-                ) : (
-                  <Alerta clase="alert-danger" mensaje="No hay materias" />
                 )}
               </div>
             </div>
