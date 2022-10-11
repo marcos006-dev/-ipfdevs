@@ -4,72 +4,141 @@ import { NavLink } from 'react-router-dom';
 import Alerta from '../../../components/Alerta';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataMaterias } from '../../../redux/actions/administrativos/materiasAction';
+import {
+  activarMateria,
+  desactivarMateria,
+  getDataMaterias,
+} from '../../../redux/actions/administrativos/materiasAction';
+import Swal from 'sweetalert2';
 
 const TablaMaterias = ({ dataMaterias }) => {
-  return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th scope="col">Descripcion Materia</th>
-          <th scope="col">Carrera</th>
-          <th scope="col">Detalle</th>
-          <th scope="col">Editar</th>
-          <th scope="col">Dar de Baja</th>
-        </tr>
-      </thead>
-      <tbody>
-        {dataMaterias.map((materia) => (
-          <tr key={materia._id}>
-            <td>{materia.descripcion_materia}</td>
-            <td>{materia.nombre_carrera}</td>
-            <td>
-              <NavLink
-                key={materia._id}
-                state={materia}
-                to="/materias/detalle"
-                className="btn btn-info"
-              >
-                Detalle
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                key={materia._id}
-                state={materia}
-                to="/materias/editar"
-                className="btn btn-warning"
-              >
-                Editar
-              </NavLink>
-            </td>
+  const dispatch = useDispatch();
+  const materia = useSelector((state) => state.materias);
 
-            <td>
-              {materia.activo ? (
-                <NavLink
-                  key={materia._id}
-                  state={materia}
-                  to="/desativar-materia"
-                  className="btn btn-danger"
-                >
-                  Desactivar
-                </NavLink>
-              ) : (
-                <NavLink
-                  key={materia._id}
-                  state={materia}
-                  to="/activar-materia"
-                  style={{ backgroundColor: 'blue' }}
-                  className="btn btn-secondary"
-                >
-                  Activar
-                </NavLink>
-              )}
-            </td>
+  const handleChangeActiveMateria = (id) => {
+    Swal.fire({
+      title: '¿Desea activar esta materia?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si activar!',
+      cancelButtonText: 'No, cancelar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(activarMateria(id));
+        // dispatch(getDataMaterias());
+      }
+    });
+  };
+
+  const handleChangeDesactivateMateria = (id) => {
+    Swal.fire({
+      title: '¿Desea desactivar esta materia?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si desactivar!',
+      cancelButtonText: 'No, cancelar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(desactivarMateria(id));
+        // dispatch(getDataMaterias());
+      }
+    });
+  };
+
+  return (
+    <>
+      <table className="table">
+        <thead>
+          <tr>
+            <th scope="col">Descripcion Materia</th>
+            <th scope="col">Carrera</th>
+            <th scope="col">Detalle</th>
+            <th scope="col">Editar</th>
+            <th scope="col">Otras Opciones</th>
           </tr>
+        </thead>
+        <tbody>
+          {dataMaterias.map((materia) => (
+            <tr key={materia._id}>
+              <td>{materia.descripcion_materia}</td>
+              <td>{materia.nombre_carrera}</td>
+              <td>
+                <NavLink
+                  key={materia._id}
+                  state={materia}
+                  to="/materias/detalle"
+                  className="btn btn-info"
+                >
+                  Detalle
+                </NavLink>
+              </td>
+              <td>
+                <NavLink
+                  key={materia._id}
+                  state={materia}
+                  to="/materias/editar"
+                  className="btn btn-warning"
+                >
+                  Editar
+                </NavLink>
+              </td>
+
+              <td>
+                {materia.activo ? (
+                  <NavLink
+                    key={materia._id}
+                    className="btn btn-danger"
+                    onClick={() => handleChangeDesactivateMateria(materia._id)}
+                  >
+                    Desactivar
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    key={materia._id}
+                    style={{ backgroundColor: 'blue' }}
+                    className="btn btn-secondary"
+                    onClick={() => handleChangeActiveMateria(materia._id)}
+                  >
+                    Activar
+                  </NavLink>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {materia.activandoDatosMateria && <Spinner />}
+
+      {materia.erroresActivarMateria?.length > 0 &&
+        materia.erroresActivarMateria.map((error, i) => (
+          <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />
         ))}
-      </tbody>
-    </table>
+
+      {materia.activadoExistosoMateria && (
+        <Alerta
+          clase={'alert-success'}
+          mensaje={'Materia activada correctamente'}
+        />
+      )}
+
+      {materia.desactivandoDatosMateria && <Spinner />}
+
+      {materia.erroresDesactivarMateria?.length > 0 &&
+        materia.erroresDesactivarMateria.map((error, i) => (
+          <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />
+        ))}
+
+      {materia.desactivadoExistosoMateria && (
+        <Alerta
+          clase={'alert-success'}
+          mensaje={'Materia desactivada correctamente'}
+        />
+      )}
+    </>
   );
 };
 

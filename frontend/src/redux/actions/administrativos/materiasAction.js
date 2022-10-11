@@ -1,6 +1,12 @@
 import { BASE_URL } from '../../../utils/getBaseUrl';
 import { getHeadersFetch } from '../../../utils/getHeadersFetch';
 import {
+  ACTIVAR_MATERIA_EXITOSO,
+  ACTIVAR_MATERIA_FALLIDO,
+  ACTIVAR_MATERIA_REQUEST,
+  DESACTIVAR_MATERIA_EXITOSO,
+  DESACTIVAR_MATERIA_FALLIDO,
+  DESACTIVAR_MATERIA_REQUEST,
   EDITAR_MATERIA_EXITOSO,
   EDITAR_MATERIA_FALLIDO,
   EDITAR_MATERIA_REQUEST,
@@ -146,6 +152,94 @@ export const putDataMateria = (id, materia) => {
     } catch (error) {
       console.log(error);
       dispatch(editarMateriaFallido(error.error));
+    }
+  };
+};
+
+// ACTIVAR UNA MATERIA
+export const activarMateriaRequest = () => {
+  return {
+    type: ACTIVAR_MATERIA_REQUEST,
+  };
+};
+
+export const activarMateriaExito = () => {
+  return {
+    type: ACTIVAR_MATERIA_EXITOSO,
+  };
+};
+
+export const activarMateriaFallido = (error) => {
+  return {
+    type: ACTIVAR_MATERIA_FALLIDO,
+    payload: error.errors,
+  };
+};
+
+export const activarMateria = (id) => {
+  return async (dispatch) => {
+    try {
+      dispatch(activarMateriaRequest());
+
+      const response = await fetch(`${BASE_URL}/materias/${id}`, {
+        method: 'PATCH',
+        headers: getHeadersFetch(),
+      });
+
+      const materiaActivar = await response.json();
+      // console.log(materiaActivar);
+      if (!response.ok) {
+        return dispatch(activarMateriaFallido(materiaActivar));
+      }
+      dispatch(activarMateriaExito());
+      dispatch(getDataMaterias());
+    } catch (error) {
+      console.log(error);
+      dispatch(activarMateriaFallido(error.error));
+    }
+  };
+};
+
+// DESACTIVAR UNA MATERIA
+export const desactivarMateriaRequest = () => {
+  return {
+    type: DESACTIVAR_MATERIA_REQUEST,
+  };
+};
+
+export const desactivarMateriaExito = () => {
+  return {
+    type: DESACTIVAR_MATERIA_EXITOSO,
+  };
+};
+
+export const desactivarMateriaFallido = (error) => {
+  return {
+    type: DESACTIVAR_MATERIA_FALLIDO,
+    payload: error.errors,
+  };
+};
+
+export const desactivarMateria = (id) => {
+  return async (dispatch) => {
+    try {
+      dispatch(desactivarMateriaRequest());
+
+      const response = await fetch(`${BASE_URL}/materias/${id}`, {
+        method: 'DELETE',
+        headers: getHeadersFetch(),
+      });
+
+      const materiaDesactivar = await response.json();
+      // console.log(materiaDesactivar);
+      if (!response.ok) {
+        return dispatch(desactivarMateriaFallido(materiaDesactivar));
+      }
+      dispatch(desactivarMateriaExito());
+      dispatch(getDataMaterias());
+    } catch (error) {
+      console.log(error);
+      dispatch(desactivarMateriaFallido(error.error));
     }
   };
 };
