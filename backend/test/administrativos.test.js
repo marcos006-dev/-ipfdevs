@@ -18,6 +18,7 @@ const URL = "/api/administrativos";
 const _idUsuario = mongoose.Types.ObjectId();
 const _idMateria = mongoose.Types.ObjectId();
 
+console.log(_idMateria);
 const HEADERS = getTokenTest({ _id: _idUsuario, nombre_persona: "Marcos", apellido_persona: "Franco" });
 beforeAll(async () => {
   try {
@@ -79,11 +80,8 @@ describe(`POST ADMINISTRATIVO ${URL}`, () => {
     },
     _materia: [],
     nombre_usuario: "marcosDAS",
-    password_usuario: "asdbf",
-    roles: {
-      descripcion_rol: "administrativo",
-      acceso_endpoint: ["administrativos"],
-    },
+    // password_usuario: "asdbf",
+    roles: "administrativo",
   };
 
   testPost(URL, "Debe retornar un error al no enviar el token", administrativoRegistrar, 401, SERVER);
@@ -172,20 +170,20 @@ describe(`POST ADMINISTRATIVO ${URL}`, () => {
   usuarioConUserNameRegistrado.nombre_usuario = "marcos";
   testPost(URL, "Debe retornar un 400 si se envia un nombre de usuario ya registrado", usuarioConUserNameRegistrado, 400, SERVER, HEADERS);
 
-  const usuarioSinPassword = { ...administrativoRegistrar };
-  usuarioSinPassword.password_usuario = "";
-  testPost(URL, "Debe retornar un 400 si no se envia una contraseña", usuarioSinPassword, 400, SERVER, HEADERS);
+  // const usuarioSinPassword = { ...administrativoRegistrar };
+  // usuarioSinPassword.password_usuario = "";
+  // testPost(URL, "Debe retornar un 400 si no se envia una contraseña", usuarioSinPassword, 400, SERVER, HEADERS);
 
-  const usuarioConPasswordCorto = { ...administrativoRegistrar };
-  usuarioConPasswordCorto.password_usuario = "123";
-  testPost(URL, "Debe retornar un 400 si se envia una contraseña menor a 4 caracteres", usuarioConPasswordCorto, 400, SERVER, HEADERS);
+  // const usuarioConPasswordCorto = { ...administrativoRegistrar };
+  // usuarioConPasswordCorto.password_usuario = "123";
+  // testPost(URL, "Debe retornar un 400 si se envia una contraseña menor a 4 caracteres", usuarioConPasswordCorto, 400, SERVER, HEADERS);
 
   const usuarioConRolPersonaVacia = { ...administrativoRegistrar };
   usuarioConRolPersonaVacia.roles = "";
   testPost(URL, "Debe retornar un 400 si no se envia un rol de persona", usuarioConRolPersonaVacia, 400, SERVER, HEADERS);
 
   const usuarioConRolPersonaInexistente = { ...administrativoRegistrar };
-  usuarioConRolPersonaInexistente.roles = { descripcion_rol: "alumne" };
+  usuarioConRolPersonaInexistente.roles = "alumne";
   testPost(URL, "Debe retornar un 400 si se envia un rol de persona que no existe en la bd", usuarioConRolPersonaInexistente, 400, SERVER, HEADERS);
 
   testPost(URL, "Debe retornar un status code 200 si el usuario se registra de forma exitosa", administrativoRegistrar, 200, SERVER, HEADERS);
@@ -217,11 +215,8 @@ describe(`PUT ADMINISTRATIVO ${URL}`, () => {
     },
     _materia: [],
     nombre_usuario: "marcosDASs",
-    password_usuario: "asdbf",
-    roles: {
-      descripcion_rol: "administrativo",
-      acceso_endpoint: ["administrativos", "materias"],
-    },
+    // password_usuario: "asdbf",
+    roles: "administrativo",
   };
 
   testPut(`${URL}/${_idUsuario}`, "Debe retornar un error al no enviar el token", administrativoEditar, 401, SERVER, {});
@@ -314,20 +309,20 @@ describe(`PUT ADMINISTRATIVO ${URL}`, () => {
   usuarioConUserNameRegistrado.nombre_usuario = "marcosDAS";
   testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si se envia un nombre de usuario ya registrado", usuarioConUserNameRegistrado, 400, SERVER, HEADERS);
 
-  const usuarioSinPassword = { ...administrativoEditar };
-  usuarioSinPassword.password_usuario = "";
-  testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si no se envia una contraseña", usuarioSinPassword, 400, SERVER, HEADERS);
+  // const usuarioSinPassword = { ...administrativoEditar };
+  // usuarioSinPassword.password_usuario = "";
+  // testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si no se envia una contraseña", usuarioSinPassword, 400, SERVER, HEADERS);
 
-  const usuarioConPasswordCorto = { ...administrativoEditar };
-  usuarioConPasswordCorto.password_usuario = "123";
-  testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si se envia una contraseña menor a 4 caracteres", usuarioConPasswordCorto, 400, SERVER, HEADERS);
+  // const usuarioConPasswordCorto = { ...administrativoEditar };
+  // usuarioConPasswordCorto.password_usuario = "123";
+  // testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si se envia una contraseña menor a 4 caracteres", usuarioConPasswordCorto, 400, SERVER, HEADERS);
 
   const usuarioConRolPersonaVacia = { ...administrativoEditar };
   usuarioConRolPersonaVacia.roles = "";
   testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si no se envia un rol de persona", usuarioConRolPersonaVacia, 400, SERVER, HEADERS);
 
   const usuarioConRolPersonaInexistente = { ...administrativoEditar };
-  usuarioConRolPersonaInexistente.roles = { descripcion_rol: "administrative" };
+  usuarioConRolPersonaInexistente.roles = "administrative";
   testPut(`${URL}/${_idUsuario}`, "Debe retornar un 400 si se envia un rol de persona que no existe en la bd", usuarioConRolPersonaInexistente, 400, SERVER, HEADERS);
 
   testPut(`${URL}/${_idUsuario}`, "Debe retornar un 200 si se actualiza correctamente el registro", administrativoEditar, 200, SERVER, HEADERS);

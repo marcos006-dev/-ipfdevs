@@ -32,6 +32,36 @@ export const getMateria = async (req, res) => {
   }
 };
 
+export const getMateriasCarrera = async (req, res) => {
+  try {
+    const { carrera } = req.params;
+
+    const materiasCarrera = await MateriaModel.find({ nombre_carrera: carrera, activo: true }).select(
+      "_id descripcion_materia nombre_carrera horarios",
+    );
+
+    // console.log(materiasCarrera);
+    return res.status(200).json(materiasCarrera);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getCarreras = async (req, res) => {
+  try {
+    const carreras = MateriaModel.schema.path("nombre_carrera").enumValues;
+
+    // console.log(carreras);
+    return res.status(200).json(carreras);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const postMateria = async (req, res) => {
   try {
     const {

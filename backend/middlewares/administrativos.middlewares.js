@@ -18,24 +18,24 @@ export const getAdministrativoMidd = [
       }
       return true;
     })
-    .custom(
-      async (idAdministrativo) => {
-        // console.log(idAdministrativo);
-        try {
-          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+    .custom(async (idAdministrativo) => {
+      // console.log(idAdministrativo);
+      try {
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
 
-          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
-          // console.log(administrativo);
-          if (administrativo === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
+        const administrativo = await PersonaModel.countDocuments({
+          _id: idAdministrativo,
+        });
+        // console.log(administrativo);
+        if (administrativo === 0) {
+          return Promise.reject(
+            "El id enviado no pertenece a ningun registro en la bd",
+          );
         }
-      },
-    ),
+      } catch (error) {
+        console.log(error);
+      }
+    }),
   verificarCampos,
 ];
 
@@ -59,10 +59,33 @@ export const postAdministrativoMidd = [
     .withMessage("EL dni debe tener una longitud exacta de 8 digitos")
     .custom(async (dni_persona) => {
       try {
-        const administrativo = await PersonaModel.countDocuments({ dni_persona });
+        const administrativo = await PersonaModel.countDocuments({
+          dni_persona,
+        });
         if (administrativo > 0) {
           return Promise.reject(
             "El dni ingresado ya se encuentra registrado en la bd",
+          );
+        }
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }),
+  check("cuil_persona")
+    .exists()
+    .not()
+    .isEmpty()
+    .withMessage("El cuil del administrativo es requerido")
+    .isLength({ min: 11, max: 11 })
+    .withMessage("EL dni debe tener una longitud exacta de 8 digitos")
+    .custom(async (cuil_persona) => {
+      try {
+        const administrativo = await PersonaModel.countDocuments({
+          cuil_persona,
+        });
+        if (administrativo > 0) {
+          return Promise.reject(
+            "El cuil ingresado ya se encuentra registrado en la bd",
           );
         }
       } catch (error) {
@@ -73,14 +96,14 @@ export const postAdministrativoMidd = [
     .exists()
     .not()
     .isEmpty()
-    .withMessage("La fecha nacimiento del administrativo es requerido")
-    .custom(async (fecha_nacimiento_persona) => {
-      if (!validarFecha(fecha_nacimiento_persona)) {
-        return Promise.reject(
-          "La fecha de nacimiento ingresada tiene un formato invalido",
-        );
-      }
-    }),
+    .withMessage("La fecha nacimiento del administrativo es requerido"),
+  // .custom(async (fecha_nacimiento_persona) => {
+  //   if (!validarFecha(fecha_nacimiento_persona)) {
+  //     return Promise.reject(
+  //       "La fecha de nacimiento ingresada tiene un formato invalido",
+  //     );
+  //   }
+  // }),
   check("correo_persona")
     .exists()
     .not()
@@ -90,7 +113,9 @@ export const postAdministrativoMidd = [
     .withMessage("El correo enviado tiene un formato invalido")
     .custom(async (correo_persona) => {
       try {
-        const administrativo = await PersonaModel.countDocuments({ correo_persona });
+        const administrativo = await PersonaModel.countDocuments({
+          correo_persona,
+        });
         if (administrativo > 0) {
           return Promise.reject(
             "El correo ingresado ya se encuentra registrado en la bd",
@@ -112,7 +137,9 @@ export const postAdministrativoMidd = [
     )
     .custom(async (telefono_persona) => {
       try {
-        const administrativo = await PersonaModel.countDocuments({ telefono_persona });
+        const administrativo = await PersonaModel.countDocuments({
+          telefono_persona,
+        });
         if (administrativo > 0) {
           return Promise.reject(
             "El telefono ingresado ya se encuentra registrado en la bd",
@@ -165,9 +192,11 @@ export const postAdministrativoMidd = [
     .not()
     .isEmpty()
     .withMessage("El rol del administrativo es requerido")
-    .custom(async ({ descripcion_rol }) => {
+    .custom(async (descripcion_rol) => {
       try {
-        const opcionesPersonas = PersonaModel.schema.path("roles.descripcion_rol").enumValues;
+        const opcionesPersonas = PersonaModel.schema.path(
+          "roles.descripcion_rol",
+        ).enumValues;
         if (!opcionesPersonas.includes(descripcion_rol)) {
           return Promise.reject(
             "El rol enviado no coincide los permitidos por el sistema",
@@ -214,46 +243,43 @@ export const postAdministrativoMidd = [
   //       return Promise.reject(error);
   //     }
   //   }),
-  check("_materia")
-    .custom((_materia, { req }) => {
-      try {
-        const { descripcion_rol } = req.body.roles;
+  check("_materia").custom((_materia, { req }) => {
+    try {
+      const descripcion_rol = req.body.roles;
 
-        if (_materia.length > 0 && descripcion_rol === "administrativo") {
-          return Promise.reject(
-            "No se pueden cargar materias a un administrativo",
-          );
-        }
-
-        if (_materia.length === 0 && descripcion_rol !== "administrativo") {
-          return Promise.reject(
-            "Se deben enviar materias",
-          );
-        }
-
-        _materia.forEach(async ({ _idMateria }) => {
-          // validar si es un id valido de mongo
-          if (!Types.ObjectId.isValid(_idMateria)) {
-            return Promise.reject(
-              "El id enviado no es un id valido de mongo",
-            );
-          }
-
-          // verificar si existe el id en la db
-          const resultMaterias = await MateriaModel.countDocuments({ _id: _idMateria });
-
-          if (resultMaterias === 0) {
-            return Promise.reject(
-              "El id de materia enviado no coincide con los registros del sistema",
-            );
-          }
-        });
-      } catch (error) {
-        console.log(error);
-        return Promise.reject(error);
+      if (_materia.length > 0 && descripcion_rol === "administrativo") {
+        return Promise.reject(
+          "No se pueden cargar materias a un administrativo",
+        );
       }
-      return true;
-    }),
+
+      if (_materia.length === 0 && descripcion_rol !== "administrativo") {
+        return Promise.reject("Se deben enviar materias");
+      }
+
+      _materia.forEach(async (idMateria) => {
+        // validar si es un id valido de mongo
+        if (!Types.ObjectId.isValid(idMateria)) {
+          return Promise.reject("El id enviado no es un id valido de mongo");
+        }
+
+        // verificar si existe el id en la db
+        const resultMaterias = await MateriaModel.countDocuments({
+          _id: idMateria,
+        });
+
+        if (resultMaterias === 0) {
+          return Promise.reject(
+            "El id de materia enviado no coincide con los registros del sistema",
+          );
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+    return true;
+  }),
   check("nombre_usuario")
     .exists()
     .not()
@@ -272,18 +298,17 @@ export const postAdministrativoMidd = [
         return Promise.reject(error);
       }
     }),
-  check("password_usuario")
-    .exists()
-    .not()
-    .isEmpty()
-    .withMessage("La contraseña es requerida")
-    .isLength({ min: 4, max: 20 })
-    .withMessage("La contraseña debe tener un minimo de 4 caracteres y maximo de 20"),
+  // check("password_usuario")
+  //   .exists()
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage("La contraseña es requerida")
+  //   .isLength({ min: 4, max: 20 })
+  //   .withMessage("La contraseña debe tener un minimo de 4 caracteres y maximo de 20"),
   verificarCampos,
 ];
 
 export const putAdministrativoMidd = [
-
   param("id")
     .custom((id) => {
       // console.log(id);
@@ -294,24 +319,24 @@ export const putAdministrativoMidd = [
       }
       return true;
     })
-    .custom(
-      async (idAdministrativo) => {
-        // console.log(idAdministrativo);
-        try {
-          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+    .custom(async (idAdministrativo) => {
+      // console.log(idAdministrativo);
+      try {
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
 
-          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
-          // console.log(administrativo);
-          if (administrativo === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
+        const administrativo = await PersonaModel.countDocuments({
+          _id: idAdministrativo,
+        });
+        // console.log(administrativo);
+        if (administrativo === 0) {
+          return Promise.reject(
+            "El id enviado no pertenece a ningun registro en la bd",
+          );
         }
-      },
-    ),
+      } catch (error) {
+        console.log(error);
+      }
+    }),
   check("nombre_persona")
     .exists()
     .not()
@@ -335,7 +360,10 @@ export const putAdministrativoMidd = [
 
         if (!Types.ObjectId.isValid(idAdministrativo)) return;
         // console.log(idAdministrativo);
-        const administrativo = await PersonaModel.countDocuments({ dni_persona, _id: { $ne: idAdministrativo } });
+        const administrativo = await PersonaModel.countDocuments({
+          dni_persona,
+          _id: { $ne: idAdministrativo },
+        });
         // console.log(administrativo);
         if (administrativo > 0) {
           return Promise.reject(
@@ -346,18 +374,45 @@ export const putAdministrativoMidd = [
         return Promise.reject(error);
       }
     }),
+  check("cuil_persona")
+    .exists()
+    .not()
+    .isEmpty()
+    .withMessage("El cuil del administrativo es requerid0")
+    .isLength({ min: 11, max: 11 })
+    .withMessage("EL dni debe tener una longitud exacta de 8 digitos")
+    .custom(async (cuil_persona, { req }) => {
+      try {
+        const idAdministrativo = req.params.id;
+
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
+        // console.log(idAdministrativo);
+        const administrativo = await PersonaModel.countDocuments({
+          cuil_persona,
+          _id: { $ne: idAdministrativo },
+        });
+        // console.log(administrativo);
+        if (administrativo > 0) {
+          return Promise.reject(
+            "El cuil ingresado ya se encuentra registrado en la bd",
+          );
+        }
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }),
   check("fecha_nac_persona")
     .exists()
     .not()
     .isEmpty()
-    .withMessage("La fecha nacimiento del administrativo es requerido")
-    .custom(async (fecha_nacimiento_persona) => {
-      if (!validarFecha(fecha_nacimiento_persona)) {
-        return Promise.reject(
-          "La fecha de nacimiento ingresada tiene un formato invalido",
-        );
-      }
-    }),
+    .withMessage("La fecha nacimiento del administrativo es requerido"),
+  // .custom(async (fecha_nacimiento_persona) => {
+  //   if (!validarFecha(fecha_nacimiento_persona)) {
+  //     return Promise.reject(
+  //       "La fecha de nacimiento ingresada tiene un formato invalido",
+  //     );
+  //   }
+  // }),
   check("correo_persona")
     .exists()
     .not()
@@ -371,7 +426,10 @@ export const putAdministrativoMidd = [
 
         if (!Types.ObjectId.isValid(idAdministrativo)) return;
 
-        const administrativo = await PersonaModel.countDocuments({ correo_persona, _id: { $ne: idAdministrativo } });
+        const administrativo = await PersonaModel.countDocuments({
+          correo_persona,
+          _id: { $ne: idAdministrativo },
+        });
 
         // console.log(administrativo);
 
@@ -400,7 +458,10 @@ export const putAdministrativoMidd = [
 
         if (!Types.ObjectId.isValid(idAdministrativo)) return;
 
-        const usuario = await PersonaModel.countDocuments({ telefono_persona, _id: { $ne: idAdministrativo } });
+        const usuario = await PersonaModel.countDocuments({
+          telefono_persona,
+          _id: { $ne: idAdministrativo },
+        });
         if (usuario > 0) {
           return Promise.reject(
             "El telefono ingresado ya se encuentra registrado en la bd",
@@ -453,9 +514,11 @@ export const putAdministrativoMidd = [
     .not()
     .isEmpty()
     .withMessage("El rol de la persona es requerida")
-    .custom(async ({ descripcion_rol }) => {
+    .custom(async (descripcion_rol) => {
       try {
-        const opcionesPersonas = PersonaModel.schema.path("roles.descripcion_rol").enumValues;
+        const opcionesPersonas = PersonaModel.schema.path(
+          "roles.descripcion_rol",
+        ).enumValues;
         // console.log(descripcion_rol);
         if (!opcionesPersonas.includes(descripcion_rol)) {
           return Promise.reject(
@@ -466,53 +529,50 @@ export const putAdministrativoMidd = [
         return Promise.reject(error);
       }
     }),
-  check("_materia")
-    .custom((_materia, { req }) => {
-      try {
-        const isArray = (_materia instanceof Array);
-        if (!isArray) {
-          return Promise.reject(
-            "Se debe mandar al menos un array vacio",
-          );
-        }
-
-        const { descripcion_rol } = req.body.roles;
-
-        if (_materia.length > 0 && descripcion_rol === "administrativo") {
-          return Promise.reject(
-            "No se pueden cargar materias a un administrativo",
-          );
-        }
-
-        if (_materia.length === 0 && descripcion_rol !== "administrativo") {
-          return Promise.reject(
-            "Se deben enviar materias",
-          );
-        }
-
-        _materia.forEach(async ({ _idMateria }) => {
-          // validar si es un id valido de mongo
-          if (!Types.ObjectId.isValid(_idMateria)) {
-            return Promise.reject(
-              "El id enviado no es un id valido de mongo",
-            );
-          }
-
-          // verificar si existe el id en la db
-          const resultMaterias = await MateriaModel.countDocuments({ _id: _idMateria });
-
-          if (resultMaterias === 0) {
-            return Promise.reject(
-              "El id de materia enviado no coincide con los registros del sistema",
-            );
-          }
-        });
-      } catch (error) {
-        console.log(error);
-        return Promise.reject(error);
+  check("_materia").custom((_materia, { req }) => {
+    try {
+      const isArray = _materia instanceof Array;
+      if (!isArray) {
+        return Promise.reject("Se debe mandar al menos un array vacio");
       }
-      return true;
-    }),
+
+      const descripcion_rol = req.body.roles;
+
+      if (_materia.length > 0 && descripcion_rol === "administrativo") {
+        return Promise.reject(
+          "No se pueden cargar materias a un administrativo",
+        );
+      }
+
+      if (_materia.length === 0 && descripcion_rol !== "administrativo") {
+        return Promise.reject("Se deben enviar materias");
+      }
+
+      _materia.forEach(async ({ _idMateria }) => {
+        // validar si es un id valido de mongo
+        if (!Types.ObjectId.isValid(_idMateria)) {
+          return Promise.reject(
+            "El id enviado no es un id valido de mongo",
+          );
+        }
+
+        // verificar si existe el id en la db
+        const resultMaterias = await MateriaModel.countDocuments({
+          _id: _idMateria,
+        });
+
+        if (resultMaterias === 0) {
+          return Promise.reject(
+            "El id de materia enviado no coincide con los registros del sistema",
+          );
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+    return true;
+  }),
   check("nombre_usuario")
     .exists()
     .not()
@@ -525,7 +585,10 @@ export const putAdministrativoMidd = [
 
       // console.log(idAdministrativo);
       try {
-        const administrativoRegistrado = await PersonaModel.countDocuments({ nombre_usuario, _id: { $ne: idAdministrativo } });
+        const administrativoRegistrado = await PersonaModel.countDocuments({
+          nombre_usuario,
+          _id: { $ne: idAdministrativo },
+        });
         // console.log(administrativoRegistrado);
         if (administrativoRegistrado > 0) {
           return Promise.reject(
@@ -536,18 +599,17 @@ export const putAdministrativoMidd = [
         return Promise.reject(error);
       }
     }),
-  check("password_usuario")
-    .exists()
-    .not()
-    .isEmpty()
-    .withMessage("La contraseña es requerida")
-    .isLength({ min: 4, max: 20 })
-    .withMessage("La contraseña debe tener un minimo de 4 caracteres y maximo de 20"),
+  // check("password_usuario")
+  //   .exists()
+  //   .not()
+  //   .isEmpty()
+  //   .withMessage("La contraseña es requerida")
+  //   .isLength({ min: 4, max: 20 })
+  //   .withMessage("La contraseña debe tener un minimo de 4 caracteres y maximo de 20"),
   verificarCampos,
 ];
 
 export const deleteAdministrativoMidd = [
-
   param("id")
     .custom((id) => {
       // console.log(id);
@@ -558,29 +620,28 @@ export const deleteAdministrativoMidd = [
       }
       return true;
     })
-    .custom(
-      async (idAdministrativo) => {
-        // console.log(idAdministrativo);
-        try {
-          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+    .custom(async (idAdministrativo) => {
+      // console.log(idAdministrativo);
+      try {
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
 
-          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
-          // console.log(administrativo);
-          if (administrativo === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
+        const administrativo = await PersonaModel.countDocuments({
+          _id: idAdministrativo,
+        });
+        // console.log(administrativo);
+        if (administrativo === 0) {
+          return Promise.reject(
+            "El id enviado no pertenece a ningun registro en la bd",
+          );
         }
-      },
-    ),
+      } catch (error) {
+        console.log(error);
+      }
+    }),
   verificarCampos,
 ];
 
 export const activarAdministrativoMidd = [
-
   param("id")
     .custom((id) => {
       // console.log(id);
@@ -591,23 +652,23 @@ export const activarAdministrativoMidd = [
       }
       return true;
     })
-    .custom(
-      async (idAdministrativo) => {
-        // console.log(idAdministrativo);
-        try {
-          if (!Types.ObjectId.isValid(idAdministrativo)) return;
+    .custom(async (idAdministrativo) => {
+      // console.log(idAdministrativo);
+      try {
+        if (!Types.ObjectId.isValid(idAdministrativo)) return;
 
-          const administrativo = await PersonaModel.countDocuments({ _id: idAdministrativo });
-          // console.log(administrativo);
-          if (administrativo === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
+        const administrativo = await PersonaModel.countDocuments({
+          _id: idAdministrativo,
+        });
+        // console.log(administrativo);
+        if (administrativo === 0) {
+          return Promise.reject(
+            "El id enviado no pertenece a ningun registro en la bd",
+          );
         }
-      },
-    ),
+      } catch (error) {
+        console.log(error);
+      }
+    }),
   verificarCampos,
 ];

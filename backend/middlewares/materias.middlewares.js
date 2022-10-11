@@ -4,7 +4,21 @@ import { verificarCampos } from "../helpers/verificarCampos.js";
 import { MateriaModel } from "../models/Materia.model.js";
 
 export const getMateriasMidd = [verificarCampos];
-
+export const getCarrerasMidd = [verificarCampos];
+export const getMateriasCarrerasMidd = [
+  param("carrera")
+    .custom((carrera) => {
+      // console.log(id);
+      const carreras = MateriaModel.schema.path("nombre_carrera").enumValues;
+      if (!carreras.includes(carrera)) {
+        return Promise.reject(
+          "La carrera enviada no existe en la bd",
+        );
+      }
+      return true;
+    }),
+  verificarCampos,
+];
 export const getMateriaMidd = [
   param("id")
     .custom((id) => {
