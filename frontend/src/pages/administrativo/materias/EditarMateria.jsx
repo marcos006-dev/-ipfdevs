@@ -7,7 +7,10 @@ import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { putDataMateria } from '../../../redux/actions/administrativos/materiasAction';
+import {
+  limpiarMensajesMateria,
+  putDataMateria,
+} from '../../../redux/actions/administrativos/materiasAction';
 import HorariosMaterias from './HorariosMaterias';
 
 const EditarMateria = () => {
@@ -16,7 +19,9 @@ const EditarMateria = () => {
   const [horariosError, setHorariosError] = useState(false);
   const { state } = useLocation();
 
-  const materia = useSelector((state) => state.materias);
+  const { loadingMaterias, erroresMaterias, mensajesMaterias } = useSelector(
+    (state) => state.materias
+  );
   const dispatch = useDispatch();
 
   // esquema de validacion
@@ -91,6 +96,10 @@ const EditarMateria = () => {
 
     setDiasSemanaSelected(diasSemanaUnicos);
     setHorariosSemanaSelected(state.horarios);
+
+    return () => {
+      dispatch(limpiarMensajesMateria());
+    };
   }, []);
 
   return (
@@ -176,10 +185,10 @@ const EditarMateria = () => {
                     Volver Atras
                   </button>
                 </NavLink>
-                {materia.editandoDatosMaterias && <Spinner />}
+                {loadingMaterias && <Spinner />}
 
-                {materia.erroresEditarMateria?.length > 0 &&
-                  materia.erroresEditarMateria.map((error, i) => (
+                {erroresMaterias?.length > 0 &&
+                  erroresMaterias.map((error, i) => (
                     <Alerta
                       clase={'alert-danger'}
                       key={i}
@@ -187,11 +196,8 @@ const EditarMateria = () => {
                     />
                   ))}
 
-                {materia.editadoExistosoMateria && (
-                  <Alerta
-                    clase={'alert-success'}
-                    mensaje={'Materia editada correctamente'}
-                  />
+                {mensajesMaterias && (
+                  <Alerta clase={'alert-success'} mensaje={mensajesMaterias} />
                 )}
               </Form>
             )}

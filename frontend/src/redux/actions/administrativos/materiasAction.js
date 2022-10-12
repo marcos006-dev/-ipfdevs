@@ -16,6 +16,7 @@ import {
   GUARDAR_MATERIA_EXITOSO,
   GUARDAR_MATERIA_FALLIDO,
   GUARDAR_MATERIA_REQUEST,
+  LIMPIAR_MENSAJES_MATERIAS,
 } from '../../types';
 
 // OBTENER LISTADO DE MATERIAS
@@ -243,3 +244,17 @@ export const desactivarMateria = (id) => {
     }
   };
 };
+
+// limpiar mensajes
+export const limpiarMensajesMateria = () => {
+  return {
+    type: LIMPIAR_MENSAJES_MATERIAS,
+  };
+};
+
+// restart materias
+// export const restartMaterias = () => {
+//   return {
+//     type: RESET_MATERIAS,
+//   };
+// };

@@ -8,12 +8,12 @@ import {
   activarMateria,
   desactivarMateria,
   getDataMaterias,
+  limpiarMensajesMateria,
 } from '../../../redux/actions/administrativos/materiasAction';
 import Swal from 'sweetalert2';
 
 const TablaMaterias = ({ dataMaterias }) => {
   const dispatch = useDispatch();
-  const materia = useSelector((state) => state.materias);
 
   const handleChangeActiveMateria = (id) => {
     Swal.fire({
@@ -27,7 +27,6 @@ const TablaMaterias = ({ dataMaterias }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(activarMateria(id));
-        // dispatch(getDataMaterias());
       }
     });
   };
@@ -44,7 +43,6 @@ const TablaMaterias = ({ dataMaterias }) => {
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(desactivarMateria(id));
-        // dispatch(getDataMaterias());
       }
     });
   };
@@ -111,44 +109,20 @@ const TablaMaterias = ({ dataMaterias }) => {
           ))}
         </tbody>
       </table>
-      {materia.activandoDatosMateria && <Spinner />}
-
-      {materia.erroresActivarMateria?.length > 0 &&
-        materia.erroresActivarMateria.map((error, i) => (
-          <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />
-        ))}
-
-      {materia.activadoExistosoMateria && (
-        <Alerta
-          clase={'alert-success'}
-          mensaje={'Materia activada correctamente'}
-        />
-      )}
-
-      {materia.desactivandoDatosMateria && <Spinner />}
-
-      {materia.erroresDesactivarMateria?.length > 0 &&
-        materia.erroresDesactivarMateria.map((error, i) => (
-          <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />
-        ))}
-
-      {materia.desactivadoExistosoMateria && (
-        <Alerta
-          clase={'alert-success'}
-          mensaje={'Materia desactivada correctamente'}
-        />
-      )}
     </>
   );
 };
 
 const HomeMaterias = () => {
-  const { dataMaterias, erroresMaterias, loadingMaterias } = useSelector(
-    (state) => state.materias
-  );
+  const { dataMaterias, erroresMaterias, loadingMaterias, mensajesMaterias } =
+    useSelector((state) => state.materias);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDataMaterias());
+    return () => {
+      dispatch(limpiarMensajesMateria());
+      // dispatch(restartMaterias());
+    };
   }, []);
 
   return (
@@ -169,12 +143,16 @@ const HomeMaterias = () => {
                     <Alerta
                       clase={'alert-danger mt-2'}
                       key={i}
-                      mensaje={errors.msg}
+                      mensaje={errors?.msg}
                     />
                   ))}
 
                 {dataMaterias.length > 0 && (
                   <TablaMaterias dataMaterias={dataMaterias} />
+                )}
+
+                {mensajesMaterias && (
+                  <Alerta clase={'alert-success'} mensaje={mensajesMaterias} />
                 )}
               </div>
             </div>

@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -7,7 +7,10 @@ import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { postDataMateria } from '../../../redux/actions/administrativos/materiasAction';
+import {
+  limpiarMensajesMateria,
+  postDataMateria,
+} from '../../../redux/actions/administrativos/materiasAction';
 // import HorarioSemana from './HorarioSemana';
 import HorariosMaterias from './HorariosMaterias';
 
@@ -16,7 +19,9 @@ const AgregarMateria = () => {
   const [horariosSemanaSelected, setHorariosSemanaSelected] = useState([]);
   const [horariosError, setHorariosError] = useState(false);
 
-  const materia = useSelector((state) => state.materias);
+  const { loadingMaterias, erroresMaterias, mensajesMaterias } = useSelector(
+    (state) => state.materias
+  );
   const dispatch = useDispatch();
 
   // esquema de validacion
@@ -67,6 +72,12 @@ const AgregarMateria = () => {
     // console.log(materiaGuardar);
     dispatch(postDataMateria(materiaGuardar));
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(limpiarMensajesMateria());
+    };
+  }, []);
 
   return (
     <Container>
@@ -152,10 +163,10 @@ const AgregarMateria = () => {
                     Volver Atras
                   </button>
                 </NavLink>
-                {materia.enviandoDatosMaterias && <Spinner />}
+                {loadingMaterias && <Spinner />}
 
-                {materia.erroresGuardadoMateria?.length > 0 &&
-                  materia.erroresGuardadoMateria.map((error, i) => (
+                {erroresMaterias?.length > 0 &&
+                  erroresMaterias.map((error, i) => (
                     <Alerta
                       clase={'alert-danger'}
                       key={i}
@@ -163,11 +174,8 @@ const AgregarMateria = () => {
                     />
                   ))}
 
-                {materia.guardadoExistosoMateria && (
-                  <Alerta
-                    clase={'alert-success'}
-                    mensaje={'Materia agregada correctamente'}
-                  />
+                {mensajesMaterias && (
+                  <Alerta clase={'alert-success'} mensaje={mensajesMaterias} />
                 )}
               </Form>
             )}

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 const Alerta = ({ clase, mensaje }) => {
   return (
-    <div className={`alert ${clase} alert-dismissible fade show`} role="alert">
+    <div className={`alert ${clase} alert-dismissible show`} role="alert">
       <i className="fa fa-exclamation-circle me-2"></i>
       {mensaje}
       <button
@@ -13,6 +13,8 @@ const Alerta = ({ clase, mensaje }) => {
       ></button>
     </div>
   );
+
+  return;
 };
 
 export default Alerta;

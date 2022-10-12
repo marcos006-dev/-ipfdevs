@@ -14,24 +14,14 @@ import {
   GUARDAR_MATERIA_EXITOSO,
   GUARDAR_MATERIA_FALLIDO,
   GUARDAR_MATERIA_REQUEST,
+  LIMPIAR_MENSAJES_MATERIAS,
 } from '../../types';
 
 const initialState = {
   dataMaterias: [],
   erroresMaterias: [],
   loadingMaterias: false,
-  enviandoDatosMaterias: false,
-  guardadoExistosoMateria: false,
-  erroresGuardadoMateria: [],
-  editandoDatosMaterias: false,
-  editadoExistosoMateria: false,
-  erroresEditarMateria: [],
-  activandoDatosMateria: false,
-  activadoExistosoMateria: false,
-  erroresActivarMateria: [],
-  desactivandoDatosMateria: false,
-  desactivadoExistosoMateria: false,
-  erroresDesactivarMateria: [],
+  mensajesMaterias: '',
 };
 
 export default function (state = initialState, action) {
@@ -52,7 +42,6 @@ export default function (state = initialState, action) {
         erroresMaterias: [],
       };
     case FETCH_MATERIAS_FALLIDO:
-      // console.log(payload);
       return {
         ...state,
         loadingMaterias: false,
@@ -63,83 +52,84 @@ export default function (state = initialState, action) {
     case GUARDAR_MATERIA_REQUEST:
       return {
         ...state,
-        enviandoDatosMaterias: true,
-        erroresGuardadoMateria: [],
+        loadingMaterias: true,
+        erroresMaterias: [],
       };
 
     case GUARDAR_MATERIA_EXITOSO:
       return {
         ...state,
-        enviandoDatosMaterias: false,
-        guardadoExistosoMateria: true,
-        erroresGuardadoMateria: [],
+        loadingMaterias: false,
+        erroresMaterias: [],
+        mensajesMaterias: 'Materia guardada correctamente',
       };
     case GUARDAR_MATERIA_FALLIDO:
       return {
         ...state,
-        enviandoDatosMaterias: false,
-        guardadoExistosoMateria: false,
-        erroresGuardadoMateria: payload,
+        loadingMaterias: false,
+        erroresMaterias: payload,
       };
     case EDITAR_MATERIA_REQUEST:
       return {
         ...state,
-        editandoDatosMaterias: true,
-        erroresEditarMateria: [],
+        loadingMaterias: true,
+        erroresMaterias: [],
       };
 
     case EDITAR_MATERIA_EXITOSO:
       return {
         ...state,
-        editandoDatosMaterias: false,
-        editadoExistosoMateria: true,
-        erroresEditarMateria: [],
+        loadingMaterias: false,
+        erroresMaterias: [],
+        mensajesMaterias: 'Materia editada correctamente',
       };
     case EDITAR_MATERIA_FALLIDO:
       return {
         ...state,
-        editandoDatosMaterias: false,
-        editadoExistosoMateria: false,
-        erroresEditarMateria: payload,
+        loadingMaterias: false,
+        erroresMaterias: payload,
       };
     case ACTIVAR_MATERIA_REQUEST:
       return {
         ...state,
-        activandoDatosMateria: true,
+        loadingMaterias: true,
       };
 
     case ACTIVAR_MATERIA_EXITOSO:
       return {
         ...state,
-        activandoDatosMateria: false,
-        activadoExistosoMateria: true,
+        loadingMaterias: false,
+        mensajesMaterias: 'Materia activada correctamente',
       };
     case ACTIVAR_MATERIA_FALLIDO:
       return {
         ...state,
-        activandoDatosMateria: false,
-        activadoExistosoMateria: false,
-        erroresActivarMateria: payload,
+        loadingMaterias: false,
+        erroresMaterias: payload,
       };
 
     case DESACTIVAR_MATERIA_REQUEST:
       return {
         ...state,
-        desactivandoDatosMateria: true,
+        loadingMaterias: true,
       };
 
     case DESACTIVAR_MATERIA_EXITOSO:
       return {
         ...state,
-        desactivandoDatosMateria: false,
-        desactivadoExistosoMateria: true,
+        loadingMaterias: false,
+        mensajesMaterias: 'Materia desactivada correctamente',
       };
     case DESACTIVAR_MATERIA_FALLIDO:
       return {
         ...state,
-        desactivandoDatosMateria: false,
-        desactivadoExistosoMateria: false,
-        erroresDesactivarMateria: [],
+        loadingMaterias: false,
+        erroresMaterias: [],
+      };
+    case LIMPIAR_MENSAJES_MATERIAS:
+      return {
+        ...state,
+        mensajesMaterias: '',
       };
     default:
       return state;
