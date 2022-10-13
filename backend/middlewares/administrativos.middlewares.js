@@ -1,6 +1,6 @@
 import { check, param } from "express-validator";
 import { Types } from "mongoose";
-import { validarFecha } from "../helpers/validarFechas.js";
+// import { validarFecha } from "../helpers/validarFechas.js";
 import { verificarCampos } from "../helpers/verificarCampos.js";
 import { MateriaModel } from "../models/Materia.model.js";
 import { PersonaModel } from "../models/Persona.model.js";
@@ -260,7 +260,9 @@ export const postAdministrativoMidd = [
       _materia.forEach(async (idMateria) => {
         // validar si es un id valido de mongo
         if (!Types.ObjectId.isValid(idMateria)) {
-          return Promise.reject("El id enviado no es un id valido de mongo");
+          return Promise.reject(
+            "El id enviado no es un id valido de mongo",
+          );
         }
 
         // verificar si existe el id en la db
@@ -309,31 +311,30 @@ export const postAdministrativoMidd = [
 ];
 
 export const putAdministrativoMidd = [
-  param("id")
-    .custom(async (id) => {
-      console.log(id);
-      try {
-        // console.log(id);
-        if (!Types.ObjectId.isValid(id)) {
-          return Promise.reject(
-            "El id enviado no es un id valido de mongo",
-          );
-        }
-
-        const administrativo = await PersonaModel.countDocuments({
-          _id: id,
-        });
-        // console.log(administrativo);
-        if (administrativo === 0) {
-          return Promise.reject(
-            "El id enviado no pertenece a ningun registro en la bd",
-          );
-        }
-        // return true;
-      } catch (error) {
-        console.log(error);
+  param("id").custom(async (id) => {
+    console.log(id);
+    try {
+      // console.log(id);
+      if (!Types.ObjectId.isValid(id)) {
+        return Promise.reject(
+          "El id enviado no es un id valido de mongo",
+        );
       }
-    }),
+
+      const administrativo = await PersonaModel.countDocuments({
+        _id: id,
+      });
+      // console.log(administrativo);
+      if (administrativo === 0) {
+        return Promise.reject(
+          "El id enviado no pertenece a ningun registro en la bd",
+        );
+      }
+      // return true;
+    } catch (error) {
+      console.log(error);
+    }
+  }),
   check("nombre_persona")
     .exists()
     .not()
@@ -612,7 +613,9 @@ export const deleteAdministrativoMidd = [
       try {
         // console.log(id);
         if (!Types.ObjectId.isValid(id)) {
-          return Promise.reject("El id enviado no es un id valido de mongo");
+          return Promise.reject(
+            "El id enviado no es un id valido de mongo",
+          );
         }
         return true;
       } catch (error) {
