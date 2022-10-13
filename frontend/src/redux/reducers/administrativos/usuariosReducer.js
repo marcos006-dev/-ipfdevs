@@ -22,9 +22,6 @@ const initialState = {
   erroresUsuarios: [],
   loadingUsuarios: false,
   mensajeUsuarios: '',
-  // enviandoDatosUsuario: false,
-  // guardadoExistosoUsuario: false,
-  // erroresGuardadoUsuario: [],
 };
 
 export default function (state = initialState, action) {

@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import AgregarAviso from '../pages/administrativo/avisos/AgregarAviso';
+import EditarAviso from '../pages/administrativo/avisos/EditarAviso';
+import HomeAvisos from '../pages/administrativo/avisos/HomeAvisos';
 import HomeAdministrativo from '../pages/administrativo/home/HomeAdministrativo';
 import AgregarMateria from '../pages/administrativo/materias/AgregarMateria';
 import DetalleMateria from '../pages/administrativo/materias/DetalleMateria';
 import EditarMateria from '../pages/administrativo/materias/EditarMateria';
 import HomeMaterias from '../pages/administrativo/materias/HomeMaterias';
 import AgregarUsuario from '../pages/administrativo/usuarios/AgregarUsuario';
-import DetalleUsuario from '../pages/administrativo/usuarios/DetalleUsuario';
 import EditarUsuario from '../pages/administrativo/usuarios/EditarUsuario';
 import HomeUsuarios from '../pages/administrativo/usuarios/HomeUsuarios';
 import Login from '../pages/auth/Login';
@@ -24,7 +26,9 @@ const RoutesAdministrativos = () => {
       <Route path="/usuarios" element={<HomeUsuarios />} />
       <Route path="/usuarios/agregar" element={<AgregarUsuario />} />
       <Route path="/usuarios/editar" element={<EditarUsuario />} />
-      <Route path="/usuarios/detalle" element={<DetalleUsuario />} />
+      <Route path="/avisos" element={<HomeAvisos />} />
+      <Route path="/avisos/agregar" element={<AgregarAviso />} />
+      <Route path="/avisos/editar" element={<EditarAviso />} />
 
       <Route path="*" element={<HomeAdministrativo />} />
     </Routes>

@@ -14,7 +14,7 @@ import Alerta from '../../../components/Alerta';
 
 const TablaUsuarios = ({ dataUsuarios }) => {
   const dispatch = useDispatch();
-  const usuarios = useSelector((state) => state.usuarios);
+  // const usuarios = useSelector((state) => state.usuarios);
 
   const handleChangeActiveUsuario = (id) => {
     Swal.fire({
@@ -71,16 +71,6 @@ const TablaUsuarios = ({ dataUsuarios }) => {
               </td>
               <td>{usuario.dni_persona}</td>
               <td>{usuario.roles.descripcion_rol}</td>
-              {/* <td>
-                <NavLink
-                  key={usuario._id}
-                  state={usuario}
-                  to="/usuarios/detalle"
-                  className="btn btn-info"
-                >
-                  Detalle
-                </NavLink>
-              </td> */}
               <td>
                 <NavLink
                   key={usuario._id}
