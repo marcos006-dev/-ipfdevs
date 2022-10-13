@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from 'formik';
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
@@ -9,50 +9,61 @@ import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
 import {
   limpiarMensajesAvisos,
-  postDataAviso,
+  putDataAviso,
 } from '../../../redux/actions/administrativos/avisosActions';
+import { getDataMateriasDocentes } from '../../../redux/actions/administrativos/materiasAction';
+import AvisoMaterias from './AvisoMaterias';
 
-const AgregarAviso = () => {
+const EditarAvisoDocente = () => {
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  if (!state) return navigate('/enviar-avisos');
+  // console.log(state._materia);
   const { loadingAvisos, erroresAvisos, mensajeAvisos } = useSelector(
     (state) => state.avisosAdministrativos
   );
 
+  const [materiasSelected, setMateriasSelected] = useState(state._materia);
   const dispatch = useDispatch();
   // esquema de validacion
   const schemaAgregarAviso = Yup.object({
     descripcion_aviso: Yup.string().required('Este campo es requerido'),
+    _materia: Yup.array()
+      .required('Este campo es requerido')
+      .min(1, 'Se debe seleccionar almenos 1 una materia'),
   });
 
   const handleSubmit = (values) => {
-    const { descripcion_aviso } = values;
+    const { descripcion_aviso, _materia } = values;
 
-    const avisoRegistrar = {
+    const avisoEditar = {
       descripcion_aviso,
-      _materia: [],
+      _materia,
     };
-    // console.log(avisoRegistrar);
-    dispatch(postDataAviso(avisoRegistrar));
+    // console.log(avisoEditar);
+    dispatch(putDataAviso(state._id, avisoEditar));
   };
 
   useEffect(() => {
+    dispatch(getDataMateriasDocentes());
     return () => {
       dispatch(limpiarMensajesAvisos());
     };
   }, []);
-
   return (
     <Container>
       <div className="col-sm-12 col-xl-12">
         <div className="bg-light rounded h-100 p-4">
-          <h3 className="mb-4">Nuevo Aviso</h3>
+          <h3 className="mb-4">Editar Aviso</h3>
           <Formik
             initialValues={{
-              descripcion_aviso: '',
+              descripcion_aviso: state.descripcion_aviso,
+              _materia: state._materia,
             }}
             validationSchema={schemaAgregarAviso}
             onSubmit={handleSubmit}
           >
-            {() => (
+            {({ handleChange }) => (
               <Form>
                 <div className="mb-3">
                   <label htmlFor="descripcion_aviso" className="form-label">
@@ -68,11 +79,15 @@ const AgregarAviso = () => {
                   />
                   <MensajeErrorInput name="descripcion_aviso" />
                 </div>
-
-                <button type="submit" className="btn btn-success mb-3">
-                  Guardar
+                <AvisoMaterias
+                  materiasSelected={materiasSelected}
+                  setMateriasSelected={setMateriasSelected}
+                  handleChange={handleChange}
+                />
+                <button type="submit" className="btn btn-warning mb-3">
+                  Editar
                 </button>
-                <NavLink to="/avisos">
+                <NavLink to="/enviar-avisos">
                   <button className="btn btn-info mb-3 ms-2">
                     Volver Atras
                   </button>
@@ -100,4 +115,4 @@ const AgregarAviso = () => {
   );
 };
 
-export default AgregarAviso;
+export default EditarAvisoDocente;

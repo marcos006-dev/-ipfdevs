@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from 'formik';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -11,30 +11,37 @@ import {
   limpiarMensajesAvisos,
   postDataAviso,
 } from '../../../redux/actions/administrativos/avisosActions';
+import { getDataMateriasDocentes } from '../../../redux/actions/administrativos/materiasAction';
+import AvisoMaterias from './AvisoMaterias';
 
-const AgregarAviso = () => {
+const AgregarAvisoDocente = () => {
   const { loadingAvisos, erroresAvisos, mensajeAvisos } = useSelector(
     (state) => state.avisosAdministrativos
   );
 
+  const [materiasSelected, setMateriasSelected] = useState([]);
   const dispatch = useDispatch();
   // esquema de validacion
   const schemaAgregarAviso = Yup.object({
     descripcion_aviso: Yup.string().required('Este campo es requerido'),
+    _materia: Yup.array()
+      .required('Este campo es requerido')
+      .min(1, 'Se debe seleccionar almenos 1 una materia'),
   });
 
   const handleSubmit = (values) => {
-    const { descripcion_aviso } = values;
+    const { descripcion_aviso, _materia } = values;
 
     const avisoRegistrar = {
       descripcion_aviso,
-      _materia: [],
+      _materia,
     };
     // console.log(avisoRegistrar);
     dispatch(postDataAviso(avisoRegistrar));
   };
 
   useEffect(() => {
+    dispatch(getDataMateriasDocentes());
     return () => {
       dispatch(limpiarMensajesAvisos());
     };
@@ -48,11 +55,12 @@ const AgregarAviso = () => {
           <Formik
             initialValues={{
               descripcion_aviso: '',
+              _materia: [],
             }}
             validationSchema={schemaAgregarAviso}
             onSubmit={handleSubmit}
           >
-            {() => (
+            {({ handleChange }) => (
               <Form>
                 <div className="mb-3">
                   <label htmlFor="descripcion_aviso" className="form-label">
@@ -68,11 +76,15 @@ const AgregarAviso = () => {
                   />
                   <MensajeErrorInput name="descripcion_aviso" />
                 </div>
-
+                <AvisoMaterias
+                  materiasSelected={materiasSelected}
+                  setMateriasSelected={setMateriasSelected}
+                  handleChange={handleChange}
+                />
                 <button type="submit" className="btn btn-success mb-3">
                   Guardar
                 </button>
-                <NavLink to="/avisos">
+                <NavLink to="/enviar-avisos">
                   <button className="btn btn-info mb-3 ms-2">
                     Volver Atras
                   </button>
@@ -100,4 +112,4 @@ const AgregarAviso = () => {
   );
 };
 
-export default AgregarAviso;
+export default AgregarAvisoDocente;

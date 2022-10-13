@@ -17,6 +17,7 @@ import {
   GUARDAR_MATERIA_FALLIDO,
   GUARDAR_MATERIA_REQUEST,
   LIMPIAR_MENSAJES_MATERIAS,
+  RESET_MATERIAS,
 } from '../../types';
 
 // OBTENER LISTADO DE MATERIAS
@@ -252,9 +253,60 @@ export const limpiarMensajesMateria = () => {
   };
 };
 
+// OBTENER LISTADO DE MATERIAS DOCENTES
+export const fetchMateriaDocenteRequest = () => {
+  return {
+    type: FETCH_MATERIAS_REQUEST,
+  };
+};
+
+export const fetchMateriaDocenteExito = (dataMateriasDocentes) => {
+  return {
+    type: FETCH_MATERIAS_EXITOSO,
+    payload: dataMateriasDocentes,
+  };
+};
+
+export const fetchMateriaDocenteFallido = (error) => {
+  // console.log(error)
+  return {
+    type: FETCH_MATERIAS_FALLIDO,
+    payload: error,
+  };
+};
+
+export const getDataMateriasDocentes = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(fetchMateriaRequest());
+
+      const response = await fetch(`${BASE_URL}/materias-docentes`, {
+        headers: getHeadersFetch(),
+      });
+
+      const dataMateriasDocentes = await response.json();
+      if (dataMateriasDocentes.length === 0) {
+        return dispatch(
+          fetchMateriaFallido([
+            {
+              errors: {
+                msg: 'No posee materias asociadas cargadas',
+              },
+            },
+          ])
+        );
+      }
+      dispatch(fetchMateriaExito(dataMateriasDocentes._materia));
+    } catch (error) {
+      console.log(error);
+      dispatch(fetchMateriaFallido(error.error));
+    }
+  };
+};
+
 // restart materias
-// export const restartMaterias = () => {
-//   return {
-//     type: RESET_MATERIAS,
-//   };
-// };
+export const restartMaterias = () => {
+  return {
+    type: RESET_MATERIAS,
+  };
+};

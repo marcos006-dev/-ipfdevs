@@ -174,7 +174,7 @@ export const borrarAvisoFallido = (error) => {
   };
 };
 
-export const borrarAviso = (id) => {
+export const borrarAviso = (id, rol) => {
   return async (dispatch) => {
     try {
       dispatch(borrarAvisoRequest());
@@ -184,16 +184,71 @@ export const borrarAviso = (id) => {
         headers: getHeadersFetch(),
       });
 
+      console.log(rol === 'docente');
       const avisoBorrarResult = await response.json();
       // console.log(avisoBorrarResult);
       if (!response.ok) {
         return dispatch(borrarAvisoFallido(avisoBorrarResult));
       }
       dispatch(borrarAvisoExito());
-      dispatch(getDataAvisos());
+      if (rol === 'docente') {
+        dispatch(getDataAvisosDocente());
+      } else {
+        dispatch(getDataAvisos());
+      }
     } catch (error) {
       console.log(error);
       dispatch(borrarAvisoFallido(error.error));
+    }
+  };
+};
+
+// OBTENER LISTADO DE AVISOS PARA UN DOCENTE
+// export const getAvisoRequest = () => {
+//   return {
+//     type: GET_AVISO_BY_ID_REQUEST,
+//   };
+// };
+
+// export const getAvisoExito = (dataAviso) => {
+//   return {
+//     type: GET_AVISO_BY_ID_EXITOSO,
+//     payload: dataAviso,
+//   };
+// };
+
+// export const getAvisoFallido = (error) => {
+//   return {
+//     type: GET_AVISO_BY_ID_FALLIDO,
+//     payload: error,
+//   };
+// };
+
+export const getDataAvisosDocente = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(getAvisosRequest());
+
+      const response = await fetch(`${BASE_URL}/avisos-docentes`, {
+        headers: getHeadersFetch(),
+      });
+
+      const dataAvisos = await response.json();
+      if (dataAvisos.length === 0) {
+        return dispatch(
+          getAvisosFallido([
+            {
+              errors: {
+                msg: 'No hay avisos cargados',
+              },
+            },
+          ])
+        );
+      }
+      dispatch(getAvisosExito(dataAvisos));
+    } catch (error) {
+      console.log(error);
+      dispatch(getAvisosFallido(error.error));
     }
   };
 };

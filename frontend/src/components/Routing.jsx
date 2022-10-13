@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import AgregarAvisoDocente from '../pages/docente/avisos/AgregarAviso';
+import EditarAvisoDocente from '../pages/docente/avisos/EditarAviso';
+import HomeAvisosDocentes from '../pages/docente/avisos/HomeAvisos';
 import AgregarAviso from '../pages/administrativo/avisos/AgregarAviso';
 import EditarAviso from '../pages/administrativo/avisos/EditarAviso';
 import HomeAvisos from '../pages/administrativo/avisos/HomeAvisos';
@@ -39,6 +42,9 @@ const RoutesDocentes = () => {
   return (
     <Routes>
       <Route path="/inicio-docentes" element={<HomeAdministrativo />} />
+      <Route path="/enviar-avisos" element={<HomeAvisosDocentes />} />
+      <Route path="/enviar-avisos/agregar" element={<AgregarAvisoDocente />} />
+      <Route path="/enviar-avisos/editar" element={<EditarAvisoDocente />} />
       <Route path="*" element={<HomeAdministrativo />} />
     </Routes>
   );
