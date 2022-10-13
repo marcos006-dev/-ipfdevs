@@ -3,14 +3,14 @@ import {
   deleteNotasDocente, getMateriasDocente, postNotasDocente, putNotasDocente,
 } from "../controllers/docentes.controller.js";
 import {
-  deleteNotasDocenteMidd, getMateriasDocenteMidd, postNotasDocenteMidd, putNotasDocenteMidd,
+  deleteNotasDocenteMidd, postNotasDocenteMidd, putNotasDocenteMidd,
 } from "../middlewares/docentes.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
 
 const router = Router();
 
-router.get("/materias-docentes/:id", verificarToken, verificarRoles, getMateriasDocenteMidd, getMateriasDocente);
+router.get("/materias-docentes", verificarToken, verificarRoles, getMateriasDocente);
 
 router.post("/cargar-notas", verificarToken, verificarRoles, postNotasDocenteMidd, postNotasDocente);
 

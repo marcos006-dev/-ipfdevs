@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   deleteAviso,
-  getAviso, getAvisos, postAviso, putAviso,
+  getAviso, getAvisoDocentes, getAvisos, postAviso, putAviso,
 } from "../controllers/avisos.controller.js";
 import {
   deleteAvisoMidd,
@@ -14,6 +14,7 @@ const router = Router();
 
 router.get("/avisos", verificarToken, verificarRoles, getAvisosMidd, getAvisos);
 router.get("/avisos/:id", verificarToken, verificarRoles, getAvisoMidd, getAviso);
+router.get("/avisos-docentes", verificarToken, verificarRoles, getAvisoDocentes);
 router.post("/avisos", verificarToken, verificarRoles, postAvisoMidd, postAviso);
 router.put("/avisos/:id", verificarToken, verificarRoles, putAvisoMidd, putAviso);
 router.delete("/avisos/:id", verificarToken, verificarRoles, deleteAvisoMidd, deleteAviso);

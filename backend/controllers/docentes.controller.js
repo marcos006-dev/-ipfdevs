@@ -4,8 +4,8 @@ import { PersonaModel } from "../models/Persona.model.js";
 
 export const getMateriasDocente = async (req, res) => {
   try {
-    const { id } = req.params;
-    const materias = await PersonaModel.findById(id).select("_materia -_id").populate({ path: "_materia", select: "descripcion_materia horarios _id" });
+    const { _id } = req.decoded;
+    const materias = await PersonaModel.findById(_id).select("_materia -_id").populate({ path: "_materia", select: "descripcion_materia horarios _id" });
 
     // console.log(materias);
     return res.status(200).json(materias);

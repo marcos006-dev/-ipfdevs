@@ -312,7 +312,7 @@ export const postAdministrativoMidd = [
 
 export const putAdministrativoMidd = [
   param("id").custom(async (id) => {
-    console.log(id);
+    // console.log(id);
     try {
       // console.log(id);
       if (!Types.ObjectId.isValid(id)) {

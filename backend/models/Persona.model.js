@@ -77,7 +77,7 @@ const PersonaSchema = new Schema({
     },
     acceso_endpoint: {
       type: [Schema.Types.String],
-      enum: ["notas", "materias", "administrativos", "docentes", "alumnos", "avisos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas", "materias-carrera", "carreras"],
+      enum: ["notas", "materias", "administrativos", "docentes", "alumnos", "avisos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas", "materias-carrera", "carreras", "avisos-docentes"],
       required: true,
     },
   },

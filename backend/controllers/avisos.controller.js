@@ -3,7 +3,12 @@ import { PersonaModel } from "../models/Persona.model.js";
 
 export const getAvisos = async (req, res) => {
   try {
-    const avisos = await AvisoModel.find().select("_id descripcion_aviso tipo_aviso _persona").populate({ path: "_persona", select: "nombre_persona apellido_persona" });
+    const avisos = await AvisoModel.find()
+      .select("_id descripcion_aviso tipo_aviso _persona")
+      .populate({
+        path: "_persona",
+        select: "nombre_persona apellido_persona",
+      });
 
     // console.log(avisos);
     return res.status(200).json(avisos);
@@ -18,10 +23,35 @@ export const getAviso = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const aviso = await AvisoModel.findById(id).select("_id descripcion_aviso tipo_aviso _persona").populate({ path: "_persona", select: "nombre_persona apellido_persona" });
+    const aviso = await AvisoModel.findById(id)
+      .select("_id descripcion_aviso tipo_aviso _persona")
+      .populate({
+        path: "_persona",
+        select: "nombre_persona apellido_persona",
+      });
 
     // console.log(aviso);
     return res.status(200).json(aviso);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getAvisoDocentes = async (req, res) => {
+  try {
+    // eslint-disable-next-line no-underscore-dangle
+    const { _id } = req.decoded;
+    const avisoById = await AvisoModel.find({ _persona: _id })
+      .select("_id descripcion_aviso tipo_aviso _materia _persona")
+      .populate({
+        path: "_persona",
+        select: "nombre_persona apellido_persona",
+      });
+
+    // console.log(avisoById);
+    return res.status(200).json(avisoById);
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -33,10 +63,7 @@ export const postAviso = async (req, res) => {
   try {
     // eslint-disable-next-line no-underscore-dangle
     const _persona = req.decoded._id;
-    const {
-      descripcion_aviso,
-      _materia,
-    } = req.body;
+    const { descripcion_aviso, _materia } = req.body;
 
     // console.log(`Materias ${_materia}`);
     const { roles } = await PersonaModel.findOne({ _id: _persona });
@@ -69,7 +96,7 @@ export const putAviso = async (req, res) => {
 
     const {
       descripcion_aviso,
-      // _materia,
+      _materia,
     } = req.body;
 
     // const { roles } = await PersonaModel.findOne({ _id: _persona });
@@ -79,9 +106,9 @@ export const putAviso = async (req, res) => {
 
     await AvisoModel.findByIdAndUpdate(id, {
       descripcion_aviso,
+      _materia,
       // tipo_aviso,
       // _persona,
-      // _materia,
     });
 
     // console.log(aviso);

@@ -7,7 +7,7 @@ export const getInasistenciaAlumno = async (req, res) => {
   try {
     const inasistencias = await PersonaModel.find().select("_id inasistencias");
 
-    console.log(inasistencias);
+    // console.log(inasistencias);
     return res.status(200).json(inasistencias);
   } catch (error) {
     return res.status(500).json({
@@ -20,7 +20,7 @@ export const getNotaAlumno = async (req, res) => {
   try {
     const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
 
-    console.log(notas);
+    // console.log(notas);
     return res.status(200).json(notas);
   } catch (error) {
     return res.status(500).json({
@@ -114,7 +114,7 @@ export const getHorariosAlumno = async (req, res) => {
 
     const { _materia } = await PersonaModel.findById(id).select("_materias -_id").populate({ path: "_materia", select: "descripcion_materia horarios -_id" });
 
-    console.log({ horarios: _materia });
+    // console.log({ horarios: _materia });
     return res.status(200).json({ horarios: _materia });
   } catch (error) {
     return res.status(500).json({
