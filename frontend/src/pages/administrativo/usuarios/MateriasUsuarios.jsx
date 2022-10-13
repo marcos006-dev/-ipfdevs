@@ -2,19 +2,19 @@ import { Field } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
+import { getDataCarreras } from '../../../redux/actions/administrativos/carrerasAction';
 import { getDataMaterias } from '../../../redux/actions/administrativos/materiasAction';
-import { getDataCarreras } from '../../../redux/actions/administrativos/usuariosAction';
 
 const MateriasUsuarios = ({
   handleChange,
   tipoUser,
   materias,
   setMaterias,
+  carrera,
+  setCarrera,
 }) => {
-  const { dataCarreras } = useSelector((state) => state.usuarios);
+  const { dataCarreras } = useSelector((state) => state.carreras);
   const { dataMaterias } = useSelector((state) => state.materias);
-
-  const [carrera, setCarrera] = useState('');
 
   const dispatch = useDispatch();
 
@@ -23,13 +23,11 @@ const MateriasUsuarios = ({
     const materiasCarreras = [];
 
     for (const materia of dataMaterias) {
-      // console.log(materia);
       if (materia.nombre_carrera === nombreCarrera) {
         materiasCarreras.push(materia._id);
       }
     }
 
-    // console.log(materiasCarreras);
     setMaterias(materiasCarreras);
   };
 
@@ -52,8 +50,9 @@ const MateriasUsuarios = ({
   }, []);
 
   useEffect(() => {
-    setMaterias('');
+    setMaterias([]);
     setCarrera('');
+    // console.log({ carrera, materias });
   }, [tipoUser]);
 
   if (tipoUser === 'docente') {

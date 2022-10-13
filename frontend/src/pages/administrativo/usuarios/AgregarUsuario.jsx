@@ -1,5 +1,5 @@
 import { Field, Formik, Form } from 'formik';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -7,20 +7,20 @@ import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
+import { limpiarMensajesUsuarios } from '../../../redux/actions/administrativos/carrerasAction';
 import { postDataUsuario } from '../../../redux/actions/administrativos/usuariosAction';
 import MateriasUsuarios from './MateriasUsuarios';
 
 const AgregarUsuario = () => {
   const [tipoUser, setTipoUser] = useState('');
   const [materias, setMaterias] = useState([]);
+  const [carrera, setCarrera] = useState('');
 
   const dispatch = useDispatch();
 
-  const {
-    enviandoDatosUsuario,
-    guardadoExistosoUsuario,
-    erroresGuardadoUsuario,
-  } = useSelector((state) => state.usuarios);
+  const { erroresUsuarios, loadingUsuarios, mensajeUsuarios } = useSelector(
+    (state) => state.usuarios
+  );
 
   // esquema de validacion
   const schemaAgregarUsuario = Yup.object({
@@ -105,6 +105,12 @@ const AgregarUsuario = () => {
     console.log(usuarioRegistrar);
     dispatch(postDataUsuario(usuarioRegistrar));
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(limpiarMensajesUsuarios());
+    };
+  }, []);
 
   return (
     <Container>
@@ -331,19 +337,6 @@ const AgregarUsuario = () => {
                   />
                   <MensajeErrorInput name="nombre_usuario" />
                 </div>
-                {/* <div className="mb-3">
-                  <label htmlFor="password_usuario" className="form-label">
-                    Password Persona
-                  </label>
-                  <Field
-                    type="text"
-                    className="form-control"
-                    id="password_usuario"
-                    name="password_usuario"
-                    placeholder="Ingrese una contraseña para la persona"
-                  />
-                  <MensajeErrorInput name="password_usuario" />
-                </div> */}
                 <div className="mb-3">
                   <label htmlFor="roles" className="form-label">
                     Rol Persona
@@ -373,6 +366,8 @@ const AgregarUsuario = () => {
                   tipoUser={tipoUser}
                   materias={materias}
                   setMaterias={setMaterias}
+                  carrera={carrera}
+                  setCarrera={setCarrera}
                 />
 
                 <button type="submit" className="btn btn-success mb-3">
@@ -383,10 +378,10 @@ const AgregarUsuario = () => {
                     Volver Atras
                   </button>
                 </NavLink>
-                {enviandoDatosUsuario && <Spinner />}
+                {loadingUsuarios && <Spinner />}
 
-                {erroresGuardadoUsuario?.length > 0 &&
-                  erroresGuardadoUsuario.map((error, i) => (
+                {erroresUsuarios?.length > 0 &&
+                  erroresUsuarios.map((error, i) => (
                     <Alerta
                       clase={'alert-danger'}
                       key={i}
@@ -394,11 +389,8 @@ const AgregarUsuario = () => {
                     />
                   ))}
 
-                {guardadoExistosoUsuario && (
-                  <Alerta
-                    clase={'alert-success'}
-                    mensaje={'Usuario agregado correctamente'}
-                  />
+                {mensajeUsuarios && (
+                  <Alerta clase={'alert-success'} mensaje={mensajeUsuarios} />
                 )}
               </Form>
             )}

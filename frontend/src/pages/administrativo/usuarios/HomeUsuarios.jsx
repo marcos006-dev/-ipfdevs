@@ -3,45 +3,52 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataUsuarios } from '../../../redux/actions/administrativos/usuariosAction';
+import {
+  activarUsuario,
+  desactivarUsuario,
+  getDataUsuarios,
+  limpiarMensajesUsuarios,
+} from '../../../redux/actions/administrativos/usuariosAction';
+import Swal from 'sweetalert2';
+import Alerta from '../../../components/Alerta';
 
 const TablaUsuarios = ({ dataUsuarios }) => {
-  //   const dispatch = useDispatch();
-  //   const materia = useSelector((state) => state.materias);
+  const dispatch = useDispatch();
+  const usuarios = useSelector((state) => state.usuarios);
 
-  //   const handleChangeActiveMateria = (id) => {
-  //     Swal.fire({
-  //       title: '¿Desea activar esta materia?',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3085d6',
-  //       cancelButtonColor: '#d33',
-  //       confirmButtonText: 'Si activar!',
-  //       cancelButtonText: 'No, cancelar!',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         dispatch(activarMateria(id));
-  //         // dispatch(getDataMaterias());
-  //       }
-  //     });
-  //   };
+  const handleChangeActiveUsuario = (id) => {
+    Swal.fire({
+      title: '¿Desea activar este usuario?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si activar!',
+      cancelButtonText: 'No, cancelar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(activarUsuario(id));
+        // dispatch(getDataMaterias());
+      }
+    });
+  };
 
-  //   const handleChangeDesactivateMateria = (id) => {
-  //     Swal.fire({
-  //       title: '¿Desea desactivar esta materia?',
-  //       icon: 'warning',
-  //       showCancelButton: true,
-  //       confirmButtonColor: '#3085d6',
-  //       cancelButtonColor: '#d33',
-  //       confirmButtonText: 'Si desactivar!',
-  //       cancelButtonText: 'No, cancelar!',
-  //     }).then((result) => {
-  //       if (result.isConfirmed) {
-  //         dispatch(desactivarMateria(id));
-  //         // dispatch(getDataMaterias());
-  //       }
-  //     });
-  //   };
+  const handleChangeDesactivateUsuario = (id) => {
+    Swal.fire({
+      title: '¿Desea desactivar este usuario?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si desactivar!',
+      cancelButtonText: 'No, cancelar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(desactivarUsuario(id));
+        // dispatch(getDataUsuarios());
+      }
+    });
+  };
 
   return (
     <>
@@ -51,7 +58,7 @@ const TablaUsuarios = ({ dataUsuarios }) => {
             <th scope="col">Nombre Apellido</th>
             <th scope="col">Dni</th>
             <th scope="col">Tipo Usuario</th>
-            <th scope="col">Detalle</th>
+            {/* <th scope="col">Detalle</th> */}
             <th scope="col">Editar</th>
             <th scope="col">Otras Opciones</th>
           </tr>
@@ -64,7 +71,7 @@ const TablaUsuarios = ({ dataUsuarios }) => {
               </td>
               <td>{usuario.dni_persona}</td>
               <td>{usuario.roles.descripcion_rol}</td>
-              <td>
+              {/* <td>
                 <NavLink
                   key={usuario._id}
                   state={usuario}
@@ -73,7 +80,7 @@ const TablaUsuarios = ({ dataUsuarios }) => {
                 >
                   Detalle
                 </NavLink>
-              </td>
+              </td> */}
               <td>
                 <NavLink
                   key={usuario._id}
@@ -85,69 +92,43 @@ const TablaUsuarios = ({ dataUsuarios }) => {
                 </NavLink>
               </td>
 
-              {/* <td>
-                {materia.activo ? (
+              <td>
+                {usuario.activo ? (
                   <NavLink
-                    key={materia._id}
+                    key={usuario._id}
                     className="btn btn-danger"
-                    onClick={() => handleChangeDesactivateMateria(materia._id)}
+                    onClick={() => handleChangeDesactivateUsuario(usuario._id)}
                   >
                     Desactivar
                   </NavLink>
                 ) : (
                   <NavLink
-                    key={materia._id}
+                    key={usuario._id}
                     style={{ backgroundColor: 'blue' }}
                     className="btn btn-secondary"
-                    onClick={() => handleChangeActiveMateria(materia._id)}
+                    onClick={() => handleChangeActiveUsuario(usuario._id)}
                   >
                     Activar
                   </NavLink>
                 )}
-              </td> */}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
-      {/* {materia.activandoDatosMateria && <Spinner />}
-
-      {materia.erroresActivarMateria?.length > 0 &&
-        materia.erroresActivarMateria.map((error, i) => (
-          <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />
-        ))}
-
-      {materia.activadoExistosoMateria && (
-        <Alerta
-          clase={'alert-success'}
-          mensaje={'Materia activada correctamente'}
-        />
-      )} */}
-
-      {/* {materia.desactivandoDatosMateria && <Spinner />}
-
-      {materia.erroresDesactivarMateria?.length > 0 &&
-        materia.erroresDesactivarMateria.map((error, i) => (
-          <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />
-        ))}
-
-      {materia.desactivadoExistosoMateria && (
-        <Alerta
-          clase={'alert-success'}
-          mensaje={'Materia desactivada correctamente'}
-        />
-      )} */}
     </>
   );
 };
 
 const HomeUsuarios = () => {
-  const { loadingUsuarios, erroresUsuarios, dataUsuarios } = useSelector(
-    (state) => state.usuarios
-  );
+  const { loadingUsuarios, erroresUsuarios, dataUsuarios, mensajeUsuarios } =
+    useSelector((state) => state.usuarios);
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(getDataUsuarios());
+    return () => {
+      dispatch(limpiarMensajesUsuarios());
+    };
   }, []);
 
   return (
@@ -174,6 +155,10 @@ const HomeUsuarios = () => {
 
                 {dataUsuarios.length > 0 && (
                   <TablaUsuarios dataUsuarios={dataUsuarios} />
+                )}
+
+                {mensajeUsuarios && (
+                  <Alerta clase={'alert-success'} mensaje={mensajeUsuarios} />
                 )}
               </div>
             </div>
