@@ -310,22 +310,18 @@ export const postAdministrativoMidd = [
 
 export const putAdministrativoMidd = [
   param("id")
-    .custom((id) => {
-      // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(async (idAdministrativo) => {
-      // console.log(idAdministrativo);
+    .custom(async (id) => {
+      console.log(id);
       try {
-        if (!Types.ObjectId.isValid(idAdministrativo)) return;
+        // console.log(id);
+        if (!Types.ObjectId.isValid(id)) {
+          return Promise.reject(
+            "El id enviado no es un id valido de mongo",
+          );
+        }
 
         const administrativo = await PersonaModel.countDocuments({
-          _id: idAdministrativo,
+          _id: id,
         });
         // console.log(administrativo);
         if (administrativo === 0) {
@@ -333,6 +329,7 @@ export const putAdministrativoMidd = [
             "El id enviado no pertenece a ningun registro en la bd",
           );
         }
+        // return true;
       } catch (error) {
         console.log(error);
       }
@@ -529,7 +526,7 @@ export const putAdministrativoMidd = [
         return Promise.reject(error);
       }
     }),
-  check("_materia").custom((_materia, { req }) => {
+  check("_materia").custom(async (_materia, { req }) => {
     try {
       const isArray = _materia instanceof Array;
       if (!isArray) {
@@ -548,17 +545,18 @@ export const putAdministrativoMidd = [
         return Promise.reject("Se deben enviar materias");
       }
 
-      _materia.forEach(async ({ _idMateria }) => {
-        // validar si es un id valido de mongo
-        if (!Types.ObjectId.isValid(_idMateria)) {
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < _materia.length; i++) {
+        if (!Types.ObjectId.isValid(_materia[i])) {
           return Promise.reject(
             "El id enviado no es un id valido de mongo",
           );
         }
 
         // verificar si existe el id en la db
+        /* eslint-disable no-await-in-loop */
         const resultMaterias = await MateriaModel.countDocuments({
-          _id: _idMateria,
+          _id: _materia[i],
         });
 
         if (resultMaterias === 0) {
@@ -566,12 +564,11 @@ export const putAdministrativoMidd = [
             "El id de materia enviado no coincide con los registros del sistema",
           );
         }
-      });
+      }
     } catch (error) {
       console.log(error);
       return Promise.reject(error);
     }
-    return true;
   }),
   check("nombre_usuario")
     .exists()
@@ -612,13 +609,15 @@ export const putAdministrativoMidd = [
 export const deleteAdministrativoMidd = [
   param("id")
     .custom((id) => {
-      // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
+      try {
+        // console.log(id);
+        if (!Types.ObjectId.isValid(id)) {
+          return Promise.reject("El id enviado no es un id valido de mongo");
+        }
+        return true;
+      } catch (error) {
+        console.log(error);
       }
-      return true;
     })
     .custom(async (idAdministrativo) => {
       // console.log(idAdministrativo);

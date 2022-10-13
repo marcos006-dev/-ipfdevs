@@ -3,9 +3,14 @@ import { PersonaModel } from "../models/Persona.model.js";
 
 export const getAdministrativos = async (req, res) => {
   try {
-    const administrativos = await PersonaModel.find().select(
-      "_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario roles",
-    );
+    const administrativos = await PersonaModel.find()
+      .select(
+        "_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario roles _materia activo",
+      )
+      .populate({
+        path: "_materia",
+        select: "descripcion_materia nombre_carrera horarios",
+      });
 
     // console.log(administrativos);
     return res.status(200).json(administrativos);
@@ -21,8 +26,11 @@ export const getAdministrativo = async (req, res) => {
     const { id } = req.params;
 
     const administrativo = await PersonaModel.findById(id).select(
-      "_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario roles",
-    );
+      "_id direccion_persona nombre_persona apellido_persona dni_persona cuil_persona fecha_nac_persona sexo_persona correo_persona telefono_persona nombre_usuario roles _materia activo",
+    ).populate({
+      path: "_materia",
+      select: "descripcion_materia nombre_carrera horarios",
+    });
 
     // console.log(administrativo);
     return res.status(200).json(administrativo);
@@ -43,6 +51,7 @@ export const postAdministrativo = async (req, res) => {
     sexo_persona,
     correo_persona,
     telefono_persona,
+    _materia,
     direccion_persona,
     nombre_usuario,
     roles,
@@ -51,11 +60,29 @@ export const postAdministrativo = async (req, res) => {
     descripcion_rol: roles,
   };
   if (roles === "administrativo") {
-    tipoUsuario.acceso_endpoint = ["notas", "materias", "administrativos", "avisos", "materias-carrera"];
+    tipoUsuario.acceso_endpoint = [
+      "notas",
+      "materias",
+      "administrativos",
+      "avisos",
+      "materias-carrera",
+    ];
   } else if (roles === "docente") {
-    tipoUsuario.acceso_endpoint = ["avisos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas"];
+    tipoUsuario.acceso_endpoint = [
+      "avisos",
+      "materias-docentes",
+      "cargar-notas",
+      "editar-notas",
+      "eliminar-notas",
+    ];
   } else if (roles === "alumno") {
-    tipoUsuario.acceso_endpoint = ["inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos"];
+    tipoUsuario.acceso_endpoint = [
+      "inasistencias-alumnos",
+      "notas-alumnos",
+      "avisos-alumnos",
+      "tipos-docum-alumnos",
+      "horarios-alumnos",
+    ];
   }
 
   try {
@@ -70,6 +97,7 @@ export const postAdministrativo = async (req, res) => {
       fecha_nac_persona,
       sexo_persona,
       correo_persona,
+      _materia,
       telefono_persona,
       direccion_persona,
       nombre_usuario,
@@ -115,11 +143,30 @@ export const putAdministrativo = async (req, res) => {
       descripcion_rol: roles,
     };
     if (roles === "administrativo") {
-      tipoUsuario.acceso_endpoint = ["notas", "materias", "administrativos", "avisos", "materias-carrera", "carreras"];
+      tipoUsuario.acceso_endpoint = [
+        "notas",
+        "materias",
+        "administrativos",
+        "avisos",
+        "materias-carrera",
+        "carreras",
+      ];
     } else if (roles === "docente") {
-      tipoUsuario.acceso_endpoint = ["avisos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas"];
+      tipoUsuario.acceso_endpoint = [
+        "avisos",
+        "materias-docentes",
+        "cargar-notas",
+        "editar-notas",
+        "eliminar-notas",
+      ];
     } else if (roles === "alumno") {
-      tipoUsuario.acceso_endpoint = ["inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos"];
+      tipoUsuario.acceso_endpoint = [
+        "inasistencias-alumnos",
+        "notas-alumnos",
+        "avisos-alumnos",
+        "tipos-docum-alumnos",
+        "horarios-alumnos",
+      ];
     }
 
     await PersonaModel.findByIdAndUpdate(id, {
