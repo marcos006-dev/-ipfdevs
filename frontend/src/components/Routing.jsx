@@ -17,6 +17,7 @@ import EditarUsuario from '../pages/administrativo/usuarios/EditarUsuario';
 import HomeUsuarios from '../pages/administrativo/usuarios/HomeUsuarios';
 import Login from '../pages/auth/Login';
 import { fetchCargarDatosUsuario } from '../redux/actions/authAction';
+import VerAvisos from '../pages/estudiante/avisos/VerAvisos';
 
 const RoutesAdministrativos = () => {
   return (
@@ -54,6 +55,7 @@ const RoutesAlumnos = () => {
   return (
     <Routes>
       <Route path="/inicio-docentes" element={<HomeAdministrativo />} />
+      <Route path="/avisos-alumnos" element={<VerAvisos />} />
       <Route path="*" element={<HomeAdministrativo />} />
     </Routes>
   );

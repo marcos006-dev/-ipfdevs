@@ -253,6 +253,37 @@ export const getDataAvisosDocente = () => {
   };
 };
 
+
+export const getDataAvisosAlumno = () => {
+  return async (dispatch) => {
+    try {
+      dispatch(getAvisosRequest());
+
+      const response = await fetch(`${BASE_URL}/avisos-alumnos`, {
+        headers: getHeadersFetch(),
+      });
+
+      const dataAvisosAlumno = await response.json();
+      if (dataAvisosAlumno.length === 0) {
+        return dispatch(
+          getAvisosFallido([
+            {
+              errors: {
+                msg: 'No hay avisos cargados',
+              },
+            },
+          ])
+        );
+      }
+      dispatch(getAvisosExito(dataAvisosAlumno));
+    } catch (error) {
+      console.log(error);
+      dispatch(getAvisosFallido(error.error));
+    }
+  };
+};
+
+
 // limpiar mensajes
 export const limpiarMensajesAvisos = () => {
   return {
