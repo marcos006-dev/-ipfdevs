@@ -18,7 +18,7 @@ export const getInasistenciaAlumno = async (req, res) => {
 
 export const getNotaAlumno = async (req, res) => {
   try {
-    const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
+    const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota  fecha_alta").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
 
     // console.log(notas);
     return res.status(200).json(notas);
@@ -31,12 +31,12 @@ export const getNotaAlumno = async (req, res) => {
 
 export const getAvisoAlumno = async (req, res) => {
   try {
-    const idAlumno = req.params.id;
+    const { _id } = req.decoded;
 
     // console.log(idAlumno);
     // buscar los avisos y obtener los docentes que la publicaron
 
-    const { _materia } = await PersonaModel.findById(idAlumno).select("_materia -_id");
+    const { _materia } = await PersonaModel.findById(_id).select("_materia -_id");
     const avisosAlumno = {
       avisoGeneral: [],
       avisoParticular: [],
