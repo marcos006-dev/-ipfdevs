@@ -5,7 +5,11 @@ import { PersonaModel } from "../models/Persona.model.js";
 
 export const getInasistenciaAlumno = async (req, res) => {
   try {
-    const inasistencias = await PersonaModel.find().select("_id inasistencias");
+    const { _id } = req.decoded;
+
+    const inasistencias = await PersonaModel.findOne({ _id }).select(
+      "_id inasistencias",
+    );
 
     // console.log(inasistencias);
     return res.status(200).json(inasistencias);
@@ -18,7 +22,13 @@ export const getInasistenciaAlumno = async (req, res) => {
 
 export const getNotaAlumno = async (req, res) => {
   try {
-    const notas = await NotaModel.find().select("_id tipo_nota descripcion_materia estado_nota  fecha_alta").populate({ path: "_materia", select: "descripcion_materia nombre_carrera horarios" });
+    const { _id } = req.decoded;
+    const notas = await NotaModel.find({ _persona: _id })
+      .select("_id tipo_nota descripcion_materia estado_nota")
+      .populate({
+        path: "_materia",
+        select: "descripcion_materia nombre_carrera -_id",
+      });
 
     // console.log(notas);
     return res.status(200).json(notas);
@@ -36,18 +46,28 @@ export const getAvisoAlumno = async (req, res) => {
     // console.log(idAlumno);
     // buscar los avisos y obtener los docentes que la publicaron
 
-    const { _materia } = await PersonaModel.findById(_id).select("_materia -_id");
+    const { _materia } = await PersonaModel.findById(_id).select(
+      "_materia -_id",
+    );
     const avisosAlumno = {
       avisoGeneral: [],
       avisoParticular: [],
     };
 
     // avisos particulares
-    avisosAlumno.avisoParticular = await AvisoModel.find({ _materia: { $in: _materia } }).select("descripcion_aviso tipo_aviso fecha_alta -_id").sort({ fecha_alta: "desc" });
+    avisosAlumno.avisoParticular = await AvisoModel.find({
+      _materia: { $in: _materia },
+    })
+      .select("descripcion_aviso tipo_aviso fecha_alta -_id")
+      .sort({ fecha_alta: "desc" });
 
     // avisos generales
 
-    avisosAlumno.avisoGeneral = await AvisoModel.find({ tipo_aviso: "general" }).select("descripcion_aviso tipo_aviso fecha_alta -_id").sort({ fecha_alta: "desc" });
+    avisosAlumno.avisoGeneral = await AvisoModel.find({
+      tipo_aviso: "general",
+    })
+      .select("descripcion_aviso tipo_aviso fecha_alta -_id")
+      .sort({ fecha_alta: "desc" });
 
     // console.log(avisosAlumno.avisoGeneral);
 
@@ -64,7 +84,9 @@ export const getTiposDocumAlumno = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const tiposDocumentos = await PersonaModel.schema.path("documentaciones.0.tipo_documento").enumValues;
+    const tiposDocumentos = await PersonaModel.schema.path(
+      "documentaciones.0.tipo_documento",
+    ).enumValues;
 
     // buscar si el alumno ya posee esos documentos
 
@@ -97,7 +119,9 @@ export const putTiposDocumAlumno = async (req, res) => {
     const { id } = req.params;
     const { documentos } = req.body;
 
-    await PersonaModel.findByIdAndUpdate(id, { documentaciones: [...documentos] });
+    await PersonaModel.findByIdAndUpdate(id, {
+      documentaciones: [...documentos],
+    });
 
     return res.status(200).json("documentosAlumno");
   } catch (error) {
@@ -112,7 +136,12 @@ export const getHorariosAlumno = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { _materia } = await PersonaModel.findById(id).select("_materias -_id").populate({ path: "_materia", select: "descripcion_materia horarios -_id" });
+    const { _materia } = await PersonaModel.findById(id)
+      .select("_materias -_id")
+      .populate({
+        path: "_materia",
+        select: "descripcion_materia horarios -_id",
+      });
 
     // console.log({ horarios: _materia });
     return res.status(200).json({ horarios: _materia });

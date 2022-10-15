@@ -1,15 +1,15 @@
 import { Schema, model } from "mongoose";
 
 const NotaSchema = new Schema({
-  _materia: [{
+  _materia: {
     type: Schema.Types.ObjectId,
     ref: "Materia",
-  }],
+  },
 
-  _persona: [{
+  _persona: {
     type: Schema.Types.ObjectId,
     ref: "Persona",
-  }],
+  },
 
   descripcion_nota: {
     type: Schema.Types.Number,

@@ -3,16 +3,16 @@ import {
   getAvisoAlumno, getHorariosAlumno, getInasistenciaAlumno, getNotaAlumno, getTiposDocumAlumno, putTiposDocumAlumno,
 } from "../controllers/alumnos.controllers.js";
 import {
-  getHorariosAlumnoMidd, getInasistenciaAlumnoMidd, getNotaAlumnoMidd, getTiposDocumAlumnoMidd, putTiposDocumAlumnoMidd,
+  getHorariosAlumnoMidd, getTiposDocumAlumnoMidd, putTiposDocumAlumnoMidd,
 } from "../middlewares/alumnos.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
 
 const router = Router();
 
-router.get("/inasistencias-alumnos/:id", verificarToken, verificarRoles, getInasistenciaAlumnoMidd, getInasistenciaAlumno);
+router.get("/inasistencias-alumnos", verificarToken, verificarRoles, getInasistenciaAlumno);
 
-router.get("/notas-alumnos/:id", verificarToken, verificarRoles, getNotaAlumnoMidd, getNotaAlumno);
+router.get("/notas-alumnos", verificarToken, verificarRoles, getNotaAlumno);
 
 router.get("/avisos-alumnos", verificarToken, verificarRoles, getAvisoAlumno);
 
