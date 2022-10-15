@@ -13,15 +13,12 @@ dayjs.locale('es');
 dayjs.extend(relativeTime);
 
 const CardAviso = ({ aviso }) => {
-  const date1 = dayjs(aviso.fecha_alta);
-  const date2 = dayjs();
-  let horas = date1.diff(date2, 'hours');
-  const days = Math.floor(horas / 24);
-  horas = horas - days * 24;
-  // console.log(horas);
+  // const date1 = dayjs(aviso.fecha_alta);
+  // const date2 = dayjs();
+  let mismoDia = dayjs().isSame(aviso.fecha_alta, 'day')
   return (
     <div
-      className={`alert alert-${horas < 24 ? 'warning' : 'dark'}`}
+      className={`alert alert-${mismoDia ? 'warning' : 'dark'}`}
       role="alert"
     >
       <b>{aviso.descripcion_aviso}</b> <br />
