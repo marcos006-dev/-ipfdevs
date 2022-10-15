@@ -4,7 +4,10 @@ import { NavLink } from 'react-router-dom';
 import dayjs from 'dayjs';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataInasistencias } from '../../../redux/actions/administrativos/inasistenciasAction';
+import {
+  getDataInasistencias,
+  limpiarMensajesUsuarios,
+} from '../../../redux/actions/alumnos/inasistenciasAction';
 
 const CardInasistencia = ({ inasistencia }) => {
   const fechaInasistencia = dayjs(inasistencia.fecha).format('DD-MM-YYYY');
@@ -19,10 +22,14 @@ const CardInasistencia = ({ inasistencia }) => {
 const VerInasistencias = () => {
   const { dataInasistencias, erroresInasistencias, loadingInasistencias } =
     useSelector((state) => state.inasistenciasAlumnos);
-  //   console.log(dataInasistencias);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDataInasistencias());
+
+    return () => {
+      dispatch(limpiarMensajesUsuarios());
+    };
   }, []);
 
   return (
@@ -47,10 +54,10 @@ const VerInasistencias = () => {
                 ))}
               <h6 className="mt-4">
                 Total de inasistencias:{' '}
-                {dataInasistencias?.inasistencias.length}
+                {dataInasistencias?.inasistencias?.length}
               </h6>
               <div className="col-md-12 col-lg-12 col-md-12 mt-3">
-                {dataInasistencias?.inasistencias.length > 0 &&
+                {dataInasistencias?.inasistencias?.length > 0 &&
                   dataInasistencias?.inasistencias.map((inasistencia) => (
                     <CardInasistencia
                       inasistencia={inasistencia}
