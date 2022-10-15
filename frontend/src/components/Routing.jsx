@@ -18,6 +18,7 @@ import HomeUsuarios from '../pages/administrativo/usuarios/HomeUsuarios';
 import Login from '../pages/auth/Login';
 import { fetchCargarDatosUsuario } from '../redux/actions/authAction';
 import VerAvisos from '../pages/estudiante/avisos/VerAvisos';
+import VerInasistencias from '../pages/estudiante/inasistencias/VerInasistencias';
 
 const RoutesAdministrativos = () => {
   return (
@@ -54,8 +55,9 @@ const RoutesDocentes = () => {
 const RoutesAlumnos = () => {
   return (
     <Routes>
-      <Route path="/inicio-docentes" element={<HomeAdministrativo />} />
+      <Route path="/inicio-alumnos" element={<HomeAdministrativo />} />
       <Route path="/avisos-alumnos" element={<VerAvisos />} />
+      <Route path="/inasistencias-alumnos" element={<VerInasistencias />} />
       <Route path="*" element={<HomeAdministrativo />} />
     </Routes>
   );

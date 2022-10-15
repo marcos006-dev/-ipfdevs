@@ -15,16 +15,17 @@ dayjs.extend(relativeTime);
 const CardAviso = ({ aviso }) => {
   const date1 = dayjs(aviso.fecha_alta);
   const date2 = dayjs();
-  let horas = date2.diff(date1, 'hours');
+  let horas = date1.diff(date2, 'hours');
   const days = Math.floor(horas / 24);
   horas = horas - days * 24;
+  // console.log(horas);
   return (
     <div
       className={`alert alert-${horas < 24 ? 'warning' : 'dark'}`}
       role="alert"
     >
       <b>{aviso.descripcion_aviso}</b> <br />
-      <small>{aviso.fecha_alta}</small> <br />
+      {/* <small>{aviso.fecha_alta}</small> <br /> */}
       <small>{dayjs().to(dayjs(aviso.fecha_alta))}</small>
     </div>
   );

@@ -160,7 +160,7 @@ const Sidebar = ({ toggle }) => {
               </NavLink>
 
               <NavLink
-                to="/inasistencias"
+                to="/inasistencias-alumnos"
                 className={({ isActive }) =>
                   isActive ? claseCssActivo : claseCssInactivo
                 }
