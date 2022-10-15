@@ -2,7 +2,7 @@ import {
   GET_INASISTENCIAS_EXITOSO,
   GET_INASISTENCIAS_FALLIDO,
   GET_INASISTENCIAS_REQUEST,
-  LIMPIAR_MENSAJES_AVISOS,
+  LIMPIAR_MENSAJES_INASISTENCIAS,
 } from '../../types';
 
 const initialState = {
@@ -33,7 +33,7 @@ export default function (state = initialState, action) {
         loadingInasistencias: false,
         erroresInasistencias: payload,
       };
-    case LIMPIAR_MENSAJES_AVISOS:
+    case LIMPIAR_MENSAJES_INASISTENCIAS:
       return {
         ...state,
         erroresInasistencias: '',

@@ -6,6 +6,7 @@ import carrerasReducer from './administrativos/carrerasReducer';
 import avisosAdministrativosReducer from './administrativos/avisosReducer';
 import inasistenciasAlumnosReducer from './alumnos/inasistenciasReducer';
 import horariosAlumnoReducer from './alumnos/horariosReducer';
+import notasAlumnoReducer from './alumnos/notasReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   avisosAdministrativos: avisosAdministrativosReducer,
   inasistenciasAlumnos: inasistenciasAlumnosReducer,
   horariosAlumnos: horariosAlumnoReducer,
+  notasAlumnos: notasAlumnoReducer,
 });
 
 export default rootReducer;

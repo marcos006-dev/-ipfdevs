@@ -44,7 +44,7 @@ const VerInasistencias = () => {
               </NavLink>
               {loadingInasistencias && <Spinner />}
 
-              {erroresInasistencias.length > 0 &&
+              {erroresInasistencias?.length > 0 &&
                 erroresInasistencias.map(({ errors }, i) => (
                   <Alerta
                     clase={'alert-danger mt-2'}
