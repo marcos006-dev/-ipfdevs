@@ -3,7 +3,7 @@ import {
   getAvisoAlumno, getHorariosAlumno, getInasistenciaAlumno, getNotaAlumno, getTiposDocumAlumno, putTiposDocumAlumno,
 } from "../controllers/alumnos.controllers.js";
 import {
-  getHorariosAlumnoMidd, getTiposDocumAlumnoMidd, putTiposDocumAlumnoMidd,
+  getTiposDocumAlumnoMidd, putTiposDocumAlumnoMidd,
 } from "../middlewares/alumnos.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
@@ -20,7 +20,7 @@ router.get("/tipos-docum-alumnos/:id", verificarToken, verificarRoles, getTiposD
 
 router.put("/tipos-docum-alumnos/:id", verificarToken, verificarRoles, putTiposDocumAlumnoMidd, putTiposDocumAlumno);
 
-router.get("/horarios-alumnos/:id", verificarToken, verificarRoles, getHorariosAlumnoMidd, getHorariosAlumno);
+router.get("/horarios-alumnos", verificarToken, verificarRoles, getHorariosAlumno);
 // router.get("/alumnos/:id", verificarToken, verificarRoles, getAdministrativoMidd, getAdministrativo);
 // router.post("/administrativos", verificarToken, verificarRoles, postAdministrativoMidd, postAdministrativo);
 // router.put("/administrativos/:id", verificarToken, verificarRoles, putAdministrativoMidd, putAdministrativo);

@@ -134,13 +134,13 @@ export const putTiposDocumAlumno = async (req, res) => {
 
 export const getHorariosAlumno = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { _id } = req.decoded;
 
-    const { _materia } = await PersonaModel.findById(id)
-      .select("_materias -_id")
+    const { _materia } = await PersonaModel.findById(_id)
+      .select("_materias")
       .populate({
         path: "_materia",
-        select: "descripcion_materia horarios -_id",
+        select: "descripcion_materia horarios",
       });
 
     // console.log({ horarios: _materia });

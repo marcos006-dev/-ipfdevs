@@ -177,28 +177,28 @@ export const putTiposDocumAlumnoMidd = [
   verificarCampos,
 ];
 
-export const getHorariosAlumnoMidd = [
-  param("id")
-    .custom(async (id) => {
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
+// export const getHorariosAlumnoMidd = [
+//   param("id")
+//     .custom(async (id) => {
+//       if (!Types.ObjectId.isValid(id)) {
+//         return Promise.reject(
+//           "El id enviado no es un id valido de mongo",
+//         );
+//       }
 
-      try {
-        if (!Types.ObjectId.isValid(id)) return;
+//       try {
+//         if (!Types.ObjectId.isValid(id)) return;
 
-        const alumno = await PersonaModel.countDocuments({ _id: id });
-        // console.log(alumno);
-        if (alumno === 0) {
-          return Promise.reject(
-            "El id enviado no pertenece a ningun registro en la bd",
-          );
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }),
-  verificarCampos,
-];
+//         const alumno = await PersonaModel.countDocuments({ _id: id });
+//         // console.log(alumno);
+//         if (alumno === 0) {
+//           return Promise.reject(
+//             "El id enviado no pertenece a ningun registro en la bd",
+//           );
+//         }
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     }),
+//   verificarCampos,
+// ];
