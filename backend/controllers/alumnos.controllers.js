@@ -23,12 +23,13 @@ export const getInasistenciaAlumno = async (req, res) => {
 export const getNotaAlumno = async (req, res) => {
   try {
     const { _id } = req.decoded;
-    const notas = await NotaModel.find({ _persona: _id })
-      .select("_id tipo_nota descripcion_materia estado_nota")
-      .populate({
-        path: "_materia",
-        select: "descripcion_materia nombre_carrera -_id",
-      });
+    const notas = await NotaModel.find({
+      _persona: _id,
+      estado_nota: "publicado",
+    })
+      .select(
+        "_id tipo_nota descripcion_materia estado_nota descripcion_nota",
+      );
 
     // console.log(notas);
     return res.status(200).json(notas);
