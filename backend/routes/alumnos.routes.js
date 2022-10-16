@@ -2,9 +2,9 @@ import { Router } from "express";
 import {
   getAvisoAlumno, getHorariosAlumno, getInasistenciaAlumno, getNotaAlumno, getTiposDocumAlumno, putTiposDocumAlumno,
 } from "../controllers/alumnos.controllers.js";
-import {
-  getTiposDocumAlumnoMidd, putTiposDocumAlumnoMidd,
-} from "../middlewares/alumnos.middlewares.js";
+// import {
+//   putTiposDocumAlumnoMidd,
+// } from "../middlewares/alumnos.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
 
@@ -16,9 +16,9 @@ router.get("/notas-alumnos", verificarToken, verificarRoles, getNotaAlumno);
 
 router.get("/avisos-alumnos", verificarToken, verificarRoles, getAvisoAlumno);
 
-router.get("/tipos-docum-alumnos/:id", verificarToken, verificarRoles, getTiposDocumAlumnoMidd, getTiposDocumAlumno);
+router.get("/tipos-docum-alumnos", verificarToken, verificarRoles, getTiposDocumAlumno);
 
-router.put("/tipos-docum-alumnos/:id", verificarToken, verificarRoles, putTiposDocumAlumnoMidd, putTiposDocumAlumno);
+router.put("/tipos-docum-alumnos", verificarToken, verificarRoles, putTiposDocumAlumno);
 
 router.get("/horarios-alumnos", verificarToken, verificarRoles, getHorariosAlumno);
 // router.get("/alumnos/:id", verificarToken, verificarRoles, getAdministrativoMidd, getAdministrativo);

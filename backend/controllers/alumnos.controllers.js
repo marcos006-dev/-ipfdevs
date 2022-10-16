@@ -26,10 +26,9 @@ export const getNotaAlumno = async (req, res) => {
     const notas = await NotaModel.find({
       _persona: _id,
       estado_nota: "publicado",
-    })
-      .select(
-        "_id tipo_nota descripcion_materia estado_nota descripcion_nota",
-      );
+    }).select(
+      "_id tipo_nota descripcion_materia estado_nota descripcion_nota",
+    );
 
     // console.log(notas);
     return res.status(200).json(notas);
@@ -83,29 +82,28 @@ export const getAvisoAlumno = async (req, res) => {
 
 export const getTiposDocumAlumno = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { _id } = req.decoded;
 
     const tiposDocumentos = await PersonaModel.schema.path(
       "documentaciones.0.tipo_documento",
     ).enumValues;
 
     // buscar si el alumno ya posee esos documentos
-
-    const { documentaciones } = await PersonaModel.findById(id);
+    const { documentaciones } = await PersonaModel.findById(_id);
 
     const documentosAlumno = {};
 
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < tiposDocumentos.length; i++) {
-      // eslint-disable-next-line no-plusplus
-      for (let j = 0; j < documentaciones.length; j++) {
-        if (tiposDocumentos[i] === documentaciones[j].tipo_documento) {
-          documentosAlumno[tiposDocumentos[i]] = documentaciones[j];
-        } else {
-          documentosAlumno[tiposDocumentos[i]] = {};
-        }
+    tiposDocumentos.forEach((tipoDocumento) => {
+      documentosAlumno[tipoDocumento] = {};
+    });
+
+    Object.values(documentaciones).forEach((value) => {
+      if (tiposDocumentos.includes(value.tipo_documento)) {
+        documentosAlumno[value.tipo_documento] = value;
       }
-    }
+    });
+
+    // console.log(documentosAlumno);
     return res.status(200).json(documentosAlumno);
   } catch (error) {
     console.log(error);
@@ -117,13 +115,18 @@ export const getTiposDocumAlumno = async (req, res) => {
 
 export const putTiposDocumAlumno = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { documentos } = req.body;
+    const { _id } = req.decoded;
+    const documentos = req.body;
 
-    await PersonaModel.findByIdAndUpdate(id, {
-      documentaciones: [...documentos],
+    const documentosAlumno = [];
+
+    Object.keys(documentos).forEach((documentoKey) => {
+      documentosAlumno.push(documentos[documentoKey]);
     });
 
+    await PersonaModel.findByIdAndUpdate(_id, {
+      documentaciones: documentosAlumno,
+    });
     return res.status(200).json("documentosAlumno");
   } catch (error) {
     console.log(error);
