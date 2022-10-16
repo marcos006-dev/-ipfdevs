@@ -21,6 +21,7 @@ import VerAvisos from '../pages/estudiante/avisos/VerAvisos';
 import VerInasistencias from '../pages/estudiante/inasistencias/VerInasistencias';
 import VerHorarios from '../pages/estudiante/horarios/VerHorarios';
 import VerNotas from '../pages/estudiante/notas/VerNotas';
+import VerDocumentos from '../pages/estudiante/documentos/VerDocumentos';
 
 const RoutesAdministrativos = () => {
   return (
@@ -62,6 +63,7 @@ const RoutesAlumnos = () => {
       <Route path="/inasistencias-alumnos" element={<VerInasistencias />} />
       <Route path="/horarios-alumnos" element={<VerHorarios />} />
       <Route path="/notas-alumnos" element={<VerNotas />} />
+      <Route path="/documentos-alumnos" element={<VerDocumentos />} />
       <Route path="*" element={<HomeAdministrativo />} />
     </Routes>
   );

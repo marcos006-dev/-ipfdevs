@@ -196,12 +196,12 @@ const Sidebar = ({ toggle }) => {
               </NavLink>
 
               <NavLink
-                to="/perfil-alumno"
+                to="/documentos-alumnos"
                 className={({ isActive }) =>
                   isActive ? claseCssActivo : claseCssInactivo
                 }
               >
-                <i className="fa fa-user me-2"></i>Ver Mi Perfil
+                <i className="fa fa-user me-2"></i>Ver Documentaciones
               </NavLink>
             </>
           )}
