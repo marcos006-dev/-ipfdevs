@@ -71,9 +71,14 @@ const HorariosMaterias = ({
   };
 
   const verifyObjectOfArray = (horario) => {
+
+    // console.log(horario)
     // if (horariosSemanaSelected.length === 0) return;
     for (const horarioSelected of horariosSemanaSelected) {
+      if(horarioSelected.hasOwnProperty('_id')) delete horarioSelected._id
+
       if (JSON.stringify(horarioSelected) === JSON.stringify(horario))
+      // console.log("first")
         return true;
     }
   };
