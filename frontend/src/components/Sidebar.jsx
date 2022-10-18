@@ -117,7 +117,7 @@ const Sidebar = ({ toggle }) => {
               </NavLink>
 
               <NavLink
-                to="/horarios-alumnos"
+                to="/horarios-docentes"
                 className={({ isActive }) =>
                   isActive ? claseCssActivo : claseCssInactivo
                 }
