@@ -7,40 +7,80 @@ import { MateriaModel } from "../models/Materia.model.js";
 import { NotaModel } from "../models/Nota.model.js";
 import { PersonaModel } from "../models/Persona.model.js";
 
-export const getMateriasDocenteMidd = [
+export const getNotasMateriasDocenteMidd = [
   param("id")
-    .custom((id) => {
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
     .custom(
-      async (idPersona) => {
+      async (materiaTipoNota) => {
         try {
-          if (!Types.ObjectId.isValid(idPersona)) return;
+          const materiaTipoNotaParsed = JSON.parse(materiaTipoNota);
+          // verificar si es un objeto el parametro enviado
+          if (typeof materiaTipoNotaParsed !== "object") {
+            return Promise.reject(
+              "No se a enviado un objeto por favor verifique",
+            );
+          }
 
-          const alumno = await PersonaModel.find({ _id: idPersona });
-          //   console.log(alumno);
-          if (alumno.length === 0) {
+          // verificar si existe la propiedad de materia
+
+          if (!Object.prototype.hasOwnProperty.call(materiaTipoNotaParsed, "_materia")) {
+            return Promise.reject(
+              "No se a enviado la propiedad de _materia",
+            );
+          }
+
+          // verificar si existe la propiedad de tipo nota
+
+          if (!Object.prototype.hasOwnProperty.call(materiaTipoNotaParsed, "tipo_nota")) {
+            return Promise.reject(
+              "No se a enviado la propiedad de tipo_nota",
+            );
+          }
+
+          // verificar si el valor enviado en _materia es un id valido de mongo y esta en la bd
+
+          if (!Types.ObjectId.isValid(materiaTipoNotaParsed._materia)) {
+            return Promise.reject(
+              "El id enviado no es un id valido de mongo",
+            );
+          }
+
+          const materia = await MateriaModel.countDocuments({ _id: materiaTipoNotaParsed._materia });
+          // console.log(materia);
+          if (materia === 0) {
             return Promise.reject(
               "El id enviado no pertenece a ningun registro en la bd",
             );
           }
 
-          if (!alumno[0]?.activo) {
+          // verificar si existe el valor enviado en tipo_nota
+          const opcionesNotas = NotaModel.schema.path("tipo_nota").enumValues;
+          // console.log(opcionesNotas);
+          if (!opcionesNotas.includes(materiaTipoNotaParsed.tipo_nota)) {
             return Promise.reject(
-              "El id enviado no esta activo",
+              "El tipo de nota enviado no coincide los permitidos por el sistema",
             );
           }
+          // if (!Types.ObjectId.isValid(idPersona)) return;
 
-          if (!alumno[0]?._materia.length === 0) {
-            return Promise.reject(
-              "El id enviado no posee materias a su cargo",
-            );
-          }
+          // const alumno = await PersonaModel.find({ _id: idPersona });
+          // //   console.log(alumno);
+          // if (alumno.length === 0) {
+          //   return Promise.reject(
+          //     "El id enviado no pertenece a ningun registro en la bd",
+          //   );
+          // }
+
+          // if (!alumno[0]?.activo) {
+          //   return Promise.reject(
+          //     "El id enviado no esta activo",
+          //   );
+          // }
+
+          // if (!alumno[0]?._materia.length === 0) {
+          //   return Promise.reject(
+          //     "El id enviado no posee materias a su cargo",
+          //   );
+          // }
         } catch (error) {
         //   console.log(error);
         }

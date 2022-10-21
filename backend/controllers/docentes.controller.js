@@ -48,6 +48,27 @@ export const getNotasDocente = async (req, res) => {
   }
 };
 
+export const getNotasMateriasDocente = async (req, res) => {
+  try {
+    // const { _id } = req.decoded;
+    const { _materia, tipo_nota } = JSON.parse(req.params.id);
+
+    // console.log(materiaTipoNota);
+
+    const notas = await NotaModel.find({ _materia, tipo_nota }).populate({
+      path: "_persona",
+      select: "nombre_persona apellido_persona dni_persona",
+    });
+    console.log(notas);
+    // ]);
+    return res.status(200).json(notas);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const postNotasDocente = async (req, res) => {
   try {
     const {

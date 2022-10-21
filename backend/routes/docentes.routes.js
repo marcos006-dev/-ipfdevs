@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  deleteNotasDocente, getMateriasDocente, getNotasDocente, postNotasDocente, putNotasDocente,
+  deleteNotasDocente, getMateriasDocente, getNotasDocente, getNotasMateriasDocente, postNotasDocente, putNotasDocente,
 } from "../controllers/docentes.controller.js";
 import {
-  deleteNotasDocenteMidd, postNotasDocenteMidd, putNotasDocenteMidd,
+  deleteNotasDocenteMidd, getNotasMateriasDocenteMidd, postNotasDocenteMidd, putNotasDocenteMidd,
 } from "../middlewares/docentes.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
@@ -12,6 +12,7 @@ const router = Router();
 
 router.get("/materias-docentes", verificarToken, verificarRoles, getMateriasDocente);
 router.get("/notas-docentes", verificarToken, verificarRoles, getNotasDocente);
+router.get("/notas-materias-docentes/:id", verificarToken, verificarRoles, getNotasMateriasDocenteMidd, getNotasMateriasDocente);
 
 router.post("/cargar-notas", verificarToken, verificarRoles, postNotasDocenteMidd, postNotasDocente);
 

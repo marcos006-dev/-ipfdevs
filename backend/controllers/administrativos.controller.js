@@ -76,6 +76,7 @@ export const postAdministrativo = async (req, res) => {
       "eliminar-notas",
       "avisos-docentes",
       "notas-docentes",
+      "notas-materias-docentes",
     ];
   } else if (roles === "alumno") {
     tipoUsuario.acceso_endpoint = [
