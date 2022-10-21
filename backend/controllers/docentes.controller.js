@@ -16,6 +16,38 @@ export const getMateriasDocente = async (req, res) => {
   }
 };
 
+export const getNotasDocente = async (req, res) => {
+  try {
+    const { _id } = req.decoded;
+
+    // obtener materias docente
+
+    const { _materia } = await PersonaModel.findById(_id);
+
+    console.log(_materia);
+    // const notas = await NotaModel.find({ _materia }).select("_materia -_id estado_nota tipo_nota").distinct("tipo_nota");
+
+    const notas = await NotaModel.aggregate(
+      [
+        {
+          $group: {
+            _id: "$_materia",
+            tipo_nota: { $first: "$tipo_nota" },
+            estado_nota: { $first: "$estado_nota" },
+            descripcion_materia: { $first: "$descripcion_materia" },
+          },
+        },
+      ],
+    );
+    console.log(notas);
+    return res.status(200).json(notas);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 export const postNotasDocente = async (req, res) => {
   try {
     const {

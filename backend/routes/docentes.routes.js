@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  deleteNotasDocente, getMateriasDocente, postNotasDocente, putNotasDocente,
+  deleteNotasDocente, getMateriasDocente, getNotasDocente, postNotasDocente, putNotasDocente,
 } from "../controllers/docentes.controller.js";
 import {
   deleteNotasDocenteMidd, postNotasDocenteMidd, putNotasDocenteMidd,
@@ -11,6 +11,7 @@ import verificarToken from "../middlewares/verificarToken.js";
 const router = Router();
 
 router.get("/materias-docentes", verificarToken, verificarRoles, getMateriasDocente);
+router.get("/notas-docentes", verificarToken, verificarRoles, getNotasDocente);
 
 router.post("/cargar-notas", verificarToken, verificarRoles, postNotasDocenteMidd, postNotasDocente);
 
