@@ -9,7 +9,7 @@ import horariosAlumnoReducer from './alumnos/horariosReducer';
 import notasAlumnoReducer from './alumnos/notasReducer';
 import documentosAlumnoReducer from './alumnos/documentosReducer';
 import horariosDocenteReducer from './docentes/horariosReducer';
-
+import notasDocenteReducer from './docentes/notasReducer';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -22,6 +22,7 @@ const rootReducer = combineReducers({
   notasAlumnos: notasAlumnoReducer,
   documentosAlumnos: documentosAlumnoReducer,
   horariosDocentes: horariosDocenteReducer,
+  notasDocentes: notasDocenteReducer,
 });
 
 export default rootReducer;

@@ -108,7 +108,7 @@ const Sidebar = ({ toggle }) => {
               </NavLink>
 
               <NavLink
-                to="/cargar-notas"
+                to="/notas-docentes"
                 className={({ isActive }) =>
                   isActive ? claseCssActivo : claseCssInactivo
                 }
