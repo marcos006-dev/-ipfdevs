@@ -24,6 +24,7 @@ import VerNotas from '../pages/estudiante/notas/VerNotas';
 import VerDocumentos from '../pages/estudiante/documentos/VerDocumentos';
 import VerHorariosDocente from '../pages/docente/horarios/VerHorariosDocentes';
 import HomeNotasDocente from '../pages/docente/notas/HomeNotasDocente';
+import AgregarNotaDocente from '../pages/docente/notas/AgregarNotaDocente';
 
 const RoutesAdministrativos = () => {
   return (
@@ -54,6 +55,7 @@ const RoutesDocentes = () => {
       <Route path="/enviar-avisos/editar" element={<EditarAvisoDocente />} />
       <Route path="/horarios-docentes" element={<VerHorariosDocente />} />
       <Route path="/notas-docentes" element={<HomeNotasDocente />} />
+      <Route path="/cargar-nota" element={<AgregarNotaDocente />} />
       <Route path="*" element={<HomeAdministrativo />} />
     </Routes>
   );
