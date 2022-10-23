@@ -129,8 +129,7 @@ export default function (state = initialState, action) {
       };
     case LIMPIAR_MENSAJES_MATERIAS:
       return {
-        ...state,
-        mensajesMaterias: '',
+        ...initialState,
       };
     case RESET_MATERIAS:
       return {

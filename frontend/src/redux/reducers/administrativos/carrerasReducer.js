@@ -27,9 +27,7 @@ export default function (state = initialState, action) {
       };
     case GET_CARRERAS_FALLIDO:
       return {
-        ...state,
-        loadingCarreras: false,
-        erroresCarreras: payload,
+        ...initialState,
       };
 
     default:

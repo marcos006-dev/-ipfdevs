@@ -3,12 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 // import { NavLink } from 'react-router-dom';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataHorariosDocente } from '../../../redux/actions/docentes/horariosAction';
+import {
+  getDataHorariosDocente,
+  limpiarMensajesHorariosDocente,
+} from '../../../redux/actions/docentes/horariosAction';
 
 const CardHorariosDocente = ({ horario }) => {
   return (
     <div className={`alert alert-warning`} role="alert">
-      <b>Materia: {horario.descripcion_materia}</b> || <b>Carrera: {horario.nombre_carrera}</b> <br />
+      <b>Materia: {horario.descripcion_materia}</b> ||{' '}
+      <b>Carrera: {horario.nombre_carrera}</b> <br />
       {horario.horarios.map((horario) => (
         <small key={horario._id}>
           *Dia: <b>{horario.dia_semana}</b>---------Hora:{' '}
@@ -21,11 +25,18 @@ const CardHorariosDocente = ({ horario }) => {
 };
 
 const VerHorariosDocente = () => {
-  const { dataHorariosDocente, erroresHorariosDocente, loadingHorariosDocente } =
-    useSelector((state) => state.horariosDocentes);
+  const {
+    dataHorariosDocente,
+    erroresHorariosDocente,
+    loadingHorariosDocente,
+  } = useSelector((state) => state.horariosDocentes);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDataHorariosDocente());
+
+    return () => {
+      dispatch(limpiarMensajesHorariosDocente());
+    };
   }, []);
 
   return (

@@ -59,9 +59,7 @@ export default function (state = initialState, action) {
       };
     case LIMPIAR_MENSAJES_DOCUMENTOS_ALUMNO:
       return {
-        ...state,
-        erroresDocumentosAlumno: '',
-        mensajeDocumentosAlumno: '',
+        ...initialState,
       };
     default:
       return state;

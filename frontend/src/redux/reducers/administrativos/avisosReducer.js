@@ -105,9 +105,7 @@ export default function (state = initialState, action) {
       };
     case LIMPIAR_MENSAJES_AVISOS:
       return {
-        ...state,
-        mensajeAvisos: '',
-        erroresAvisos: '',
+        ...initialState,
       };
     default:
       return state;

@@ -35,9 +35,7 @@ export default function (state = initialState, action) {
       };
     case LIMPIAR_MENSAJES_INASISTENCIAS:
       return {
-        ...state,
-        erroresInasistencias: '',
-        mensajeInasistencias: '',
+        ...initialState,
       };
     default:
       return state;

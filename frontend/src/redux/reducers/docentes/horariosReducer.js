@@ -35,9 +35,7 @@ export default function (state = initialState, action) {
       };
     case LIMPIAR_MENSAJES_HORARIOS_DOCENTE:
       return {
-        ...state,
-        erroresHorariosDocente: '',
-        mensajeHorariosDocente: '',
+        ...initialState,
       };
     default:
       return state;

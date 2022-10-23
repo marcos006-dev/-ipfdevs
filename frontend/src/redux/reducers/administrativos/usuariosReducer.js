@@ -126,8 +126,7 @@ export default function (state = initialState, action) {
       };
     case LIMPIAR_MENSAJES_USUARIOS:
       return {
-        ...state,
-        mensajeUsuarios: '',
+        ...initialState,
       };
     default:
       return state;

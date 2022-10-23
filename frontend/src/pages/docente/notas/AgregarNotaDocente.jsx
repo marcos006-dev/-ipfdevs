@@ -2,28 +2,42 @@ import { Field, Form, Formik } from 'formik';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Container from '../../../layouts/Container';
 import { getDataHorariosDocente } from '../../../redux/actions/docentes/horariosAction';
+import {
+  getDataNotasMateriasDocente,
+  limpiarMensajesNotasDocente,
+  putNotasDocente,
+} from '../../../redux/actions/docentes/notasAction';
+import TablaNotasAlumnos from './TablaNotasAlumnos';
 
 const AgregarNotaDocente = () => {
-  const [materiaTipoNota, setMateriaTipoNota] = useState({
-    _materia: '',
-    tipo_nota: '',
-  });
-
   const {
     dataHorariosDocente,
     erroresHorariosDocente,
     loadingHorariosDocente,
   } = useSelector((state) => state.horariosDocentes);
 
+  const {
+    dataNotasMateriasDocente,
+    erroresNotasDocente,
+    loadingNotasDocente,
+    mensajeNotasDocente,
+  } = useSelector((state) => state.notasDocentes);
+
+  const [materiaTipoNota, setMateriaTipoNota] = useState({
+    _materia: '',
+    tipo_nota: '',
+  });
+
+  const [errorNotaAlumno, setErrorNotaAlumno] = useState('');
+
+  const [notasMateriasAlumnos, setNotasMateriasAlumnos] = useState([]);
+
   const materiasDocente = Object.values(dataHorariosDocente)[0];
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getDataHorariosDocente());
-  }, []);
 
   const handleChangeParamsNota = (e) => {
     const { name } = e.target;
@@ -34,12 +48,36 @@ const AgregarNotaDocente = () => {
     setMateriaTipoNota(newMateriaTipoNota);
   };
 
-  useEffect(() => {
-    if (materiaTipoNota?._materia === '' || materiaTipoNota?.tipo_nota === '')
-      return;
+  const handleSubmit = () => {
+    dispatch(putNotasDocente({ dataMateriaPut: notasMateriasAlumnos }));
+  };
 
-    console.log('fetch');
+  useEffect(() => {
+    dispatch(getDataHorariosDocente());
+
+    return () => {
+      dispatch(limpiarMensajesNotasDocente());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (materiaTipoNota?._materia === '' || materiaTipoNota?.tipo_nota === '') {
+      setNotasMateriasAlumnos([]);
+      return;
+    }
+
+    dispatch(getDataNotasMateriasDocente(materiaTipoNota));
+    return () => {
+      dispatch(limpiarMensajesNotasDocente());
+    };
   }, [materiaTipoNota]);
+
+  // useEffect(() => {
+  //   setNotasMateriasAlumnos(dataNotasMateriasDocente);
+  //   return () => {
+  //     dispatch(limpiarMensajesNotasDocente());
+  //   };
+  // }, [dataNotasMateriasDocente]);
 
   return (
     <Container>
@@ -52,7 +90,7 @@ const AgregarNotaDocente = () => {
               tipo_nota: '',
             }}
             // validationSchema={schemaAgregarMateria}
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
           >
             {({ isSubmitting, handleChange }) => (
               <Form>
@@ -61,16 +99,12 @@ const AgregarNotaDocente = () => {
                     Materia
                   </label>
 
-                  {loadingHorariosDocente && <h1>Cargando Materias</h1>}
+                  {loadingHorariosDocente && <h6>Cargando Materias</h6>}
 
                   {erroresHorariosDocente?.length > 0 &&
-                    erroresHorariosDocente.map((error, i) => (
-                      <Alerta
-                        clase={'alert-danger'}
-                        key={i}
-                        mensaje={error.msg}
-                      />
-                    ))}
+                    erroresHorariosDocente.map((error, i) =>
+                      console.log(error)
+                    )}
 
                   {materiasDocente?.length > 0 && (
                     <>
@@ -88,10 +122,7 @@ const AgregarNotaDocente = () => {
                           Seleccione una opcion
                         </option>
                         {materiasDocente?.map((materia) => (
-                          <option
-                            value={materia.descripcion_materia}
-                            key={materia._id}
-                          >
+                          <option value={materia._id} key={materia._id}>
                             {materia.descripcion_materia} -{' '}
                             {materia.nombre_carrera}
                           </option>
@@ -132,15 +163,23 @@ const AgregarNotaDocente = () => {
                   <MensajeErrorInput name="tipo_nota" />
                 </div>
 
-                {/* <HorariosMaterias
-                  diasSemanaSelected={diasSemanaSelected}
-                  setDiasSemanaSelected={setDiasSemanaSelected}
-                  horariosSemanaSelected={horariosSemanaSelected}
-                  setHorariosSemanaSelected={setHorariosSemanaSelected}
-                  horariosError={horariosError}
-                  handleChange={handleChange}
-                /> */}
-                <button type="submit" className="btn btn-success mb-3">
+                {loadingNotasDocente && <h6>Cargando Notas de Alumno</h6>}
+
+                {dataNotasMateriasDocente?.length > 0 && (
+                  <TablaNotasAlumnos
+                    dataNotasMateriasDocente={dataNotasMateriasDocente}
+                    errorNotaAlumno={errorNotaAlumno}
+                    setErrorNotaAlumno={setErrorNotaAlumno}
+                    notasMateriasAlumnos={notasMateriasAlumnos}
+                    setNotasMateriasAlumnos={setNotasMateriasAlumnos}
+                  />
+                )}
+
+                <button
+                  type="submit"
+                  className="btn btn-success mb-3"
+                  disabled={errorNotaAlumno !== ''}
+                >
                   Guardar
                 </button>
                 <NavLink to="/notas-docentes">
@@ -148,20 +187,21 @@ const AgregarNotaDocente = () => {
                     Volver Atras
                   </button>
                 </NavLink>
-                {/* {loadingMaterias && <Spinner />}
 
-                {erroresMaterias?.length > 0 &&
-                  erroresMaterias.map((error, i) => (
+                {erroresNotasDocente?.length > 0 &&
+                  erroresNotasDocente.map((error, i) => (
                     <Alerta
                       clase={'alert-danger'}
                       key={i}
                       mensaje={error.msg}
                     />
                   ))}
-
-                {mensajesMaterias && (
-                  <Alerta clase={'alert-success'} mensaje={mensajesMaterias} />
-                )} */}
+                {mensajeNotasDocente && (
+                  <Alerta
+                    clase={'alert-success'}
+                    mensaje={mensajeNotasDocente}
+                  />
+                )}
               </Form>
             )}
           </Formik>
