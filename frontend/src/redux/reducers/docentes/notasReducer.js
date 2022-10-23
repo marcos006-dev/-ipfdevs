@@ -73,7 +73,7 @@ export default function (state = initialState, action) {
         ...state,
         loadingNotasDocente: false,
         erroresNotasDocente: [],
-        mensajeNotasDocente: 'Notas de alumnos cargadas correctamente',
+        mensajeNotasDocente: 'Cambios realizados correctamente',
       };
     case EDITAR_NOTAS_DOCENTE_FALLIDO:
       return {

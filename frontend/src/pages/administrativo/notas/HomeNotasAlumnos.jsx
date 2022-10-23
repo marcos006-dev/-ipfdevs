@@ -6,27 +6,43 @@ import Alerta from '../../../components/Alerta';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
 import {
-  eliminarNotaDocente,
   getDataNotasDocente,
   limpiarMensajesNotasDocente,
+  putNotasEstadoDocente,
 } from '../../../redux/actions/docentes/notasAction';
 
 const TablaNotasDocentes = ({ dataNotasDocente }) => {
   const dispatch = useDispatch();
 
-  const handleChangeDeleteNotaDocente = (materiaTipoNota) => {
-    console.log(materiaTipoNota);
+  const handleChangePublicarNota = (materiaTipoNota) => {
     Swal.fire({
-      title: '¿Desea borrar estas notas?',
+      title: '¿Desea publicar estas notas?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si borrar!',
+      confirmButtonText: 'Si publicar!',
       cancelButtonText: 'No, cancelar!',
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(eliminarNotaDocente(materiaTipoNota));
+        dispatch(putNotasEstadoDocente(materiaTipoNota));
+      }
+    });
+  };
+
+
+  const handleChangeDespublicarNota = (materiaTipoNota) => {
+    Swal.fire({
+      title: '¿Desea despublicar estas notas?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si despublicar!',
+      cancelButtonText: 'No, cancelar!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(putNotasEstadoDocente(materiaTipoNota));
       }
     });
   };
@@ -40,8 +56,7 @@ const TablaNotasDocentes = ({ dataNotasDocente }) => {
             <th scope="col">Estado Nota</th>
             <th scope="col">Tipo Nota</th>
             <th scope="col">Detalle</th>
-            {/* <th scope="col">Editar</th> */}
-            <th scope="col">Eliminar</th>
+            <th scope="col">Opciones</th>
           </tr>
         </thead>
         <tbody>
@@ -69,18 +84,32 @@ const TablaNotasDocentes = ({ dataNotasDocente }) => {
                   <NavLink
                     key={notaDocente._id}
                     state={notaDocente._id}
-                    className="btn btn-danger"
+                    className="btn btn-success"
                     onClick={() =>
-                      handleChangeDeleteNotaDocente({
+                      handleChangePublicarNota({
                         _materia: notaDocente._materia,
                         tipo_nota: notaDocente.tipo_nota,
+                        estado_nota: "publicado"
                       })
                     }
                   >
-                    Eliminar
+                    Publicar
                   </NavLink>
                 ) : (
-                  <h6 className="text-danger">No disponible</h6>
+                  <NavLink
+                    key={notaDocente._id}
+                    state={notaDocente._id}
+                    className="btn btn-warning"
+                    onClick={() =>
+                      handleChangeDespublicarNota({
+                        _materia: notaDocente._materia,
+                        tipo_nota: notaDocente.tipo_nota,
+                        estado_nota: "en revision"
+                      })
+                    }
+                  >
+                    Despublicar
+                  </NavLink>
                 )}
               </td>
             </tr>
@@ -91,7 +120,7 @@ const TablaNotasDocentes = ({ dataNotasDocente }) => {
   );
 };
 
-const HomeNotasDocente = () => {
+const HomeNotasAlumnos = () => {
   const {
     dataNotasDocente,
     erroresNotasDocente,
@@ -109,24 +138,13 @@ const HomeNotasDocente = () => {
     };
   }, []);
 
-  useEffect(() => {
-    dispatch(getDataNotasDocente());
-
-    return () => {
-      dispatch(limpiarMensajesNotasDocente());
-    };
-  }, [mensajeNotasDocente]);
-
   return (
     <Container>
       <div className="container-fluid pt-4 px-4">
         <div className="row g-4">
           <div className="col-12">
             <div className="bg-light rounded h-100 p-4">
-              <h3 className="mb-4 text-center">Listado de notas</h3>
-              <NavLink to="/cargar-nota" className="btn btn-success">
-                Cargar Nota
-              </NavLink>
+              <h3 className="mb-4 text-center">Listado de Notas Cargadas</h3>
               <div className="table-responsive">
                 {loadingNotasDocente && <Spinner />}
 
@@ -144,11 +162,11 @@ const HomeNotasDocente = () => {
                 )}
 
                 {mensajeNotasDocente && (
-                  <Alerta
-                    clase={'alert-success'}
-                    mensaje={mensajeNotasDocente}
-                  />
-                )}
+                <Alerta
+                  clase={'alert-success'}
+                  mensaje={mensajeNotasDocente}
+                />
+              )}
               </div>
             </div>
           </div>
@@ -158,4 +176,4 @@ const HomeNotasDocente = () => {
   );
 };
 
-export default HomeNotasDocente;
+export default HomeNotasAlumnos;

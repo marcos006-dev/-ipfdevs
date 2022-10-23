@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
+import Alerta from '../../../components/Alerta';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
 import { getDataNotasMateriasDocente, limpiarMensajesNotasDocente } from '../../../redux/actions/docentes/notasAction';
@@ -14,7 +15,7 @@ const DetalleNotasDocente = () => {
   const { state } = useLocation();
   const { _materia, tipo_nota, descripcionMateria } = state;
   useEffect(() => {
-    dispatch(getDataNotasMateriasDocente({ _materia, tipo_nota }));
+    dispatch(getDataNotasMateriasDocente({ _materia, tipo_nota, detalle:true }));
     return () => {
       dispatch(limpiarMensajesNotasDocente());
     };
@@ -59,9 +60,9 @@ const DetalleNotasDocente = () => {
               </table>
             </div>
           )}
-          <NavLink to="/notas-docentes">
+          {/* <NavLink to="/notas-docentes">
             <button className="btn btn-info mb-3 ms-2">Volver Atras</button>
-          </NavLink>
+          </NavLink> */}
           {erroresNotasDocente?.length > 0 &&
             erroresNotasDocente.map((error, i) => (
               <Alerta clase={'alert-danger'} key={i} mensaje={error.msg} />

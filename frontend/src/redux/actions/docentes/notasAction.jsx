@@ -203,6 +203,35 @@ export const eliminarNotaDocente = (materiaTipoNota) => {
 };
 
 
+// cambiar estado notas
+
+export const putNotasEstadoDocente = (materiaTipoNota) => {
+  return async (dispatch) => {
+    try {
+      dispatch(editarNotasDocenteRequest());
+
+      const response = await fetch(`${BASE_URL}/notas/${JSON.stringify(
+        materiaTipoNota
+      )}`, {
+        method: 'PUT',
+        headers: getHeadersFetch(),
+      });
+
+      const notasDocenteEditarResult = await response.json();
+      if (!response.ok) {
+        return dispatch(editarNotasDocenteFallido(notasDocenteEditarResult));
+      }
+      dispatch(editarNotasDocenteExito());
+      dispatch(getDataNotasDocente());
+    } catch (error) {
+      console.log(error);
+      dispatch(editarNotasDocenteFallido(error.error));
+    }
+  };
+};
+
+
+
 export const limpiarMensajesNotasDocente = () => {
   return {
     type: LIMPIAR_MENSAJES_NOTAS_DOCENTE,
