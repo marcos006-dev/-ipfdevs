@@ -18,20 +18,11 @@ export const getMateriasDocente = async (req, res) => {
 
 export const getNotasDocente = async (req, res) => {
   try {
-    // const { _id } = req.decoded;
-
-    // obtener materias docente
-
-    // const { _materia } = await PersonaModel.findById(_id);
-
-    // console.log(_materia);
-    // const notas = await NotaModel.find({ _materia }).select("_materia -_id estado_nota tipo_nota").distinct("tipo_nota");
-
     const notas = await NotaModel.aggregate(
       [
         {
           $group: {
-            _id: "$_materia",
+            _id: "$tipo_nota",
             tipo_nota: { $first: "$tipo_nota" },
             estado_nota: { $first: "$estado_nota" },
             descripcion_materia: { $first: "$descripcion_materia" },
@@ -51,7 +42,6 @@ export const getNotasDocente = async (req, res) => {
 
 export const getNotasMateriasDocente = async (req, res) => {
   try {
-    // const { _id } = req.decoded;
     const { _materia, tipo_nota } = JSON.parse(req.params.id);
 
     // obtener alumnos asociados a una materia
@@ -91,7 +81,7 @@ export const getNotasMateriasDocente = async (req, res) => {
         totalAlumnoNotas.push(addNotaAlumnoArray);
       }
     }
-
+    // console.log(totalAlumnoNotas);
     return res.status(200).json(totalAlumnoNotas);
   } catch (error) {
     return res.status(500).json({
@@ -102,13 +92,9 @@ export const getNotasMateriasDocente = async (req, res) => {
 
 export const putNotasDocente = async (req, res) => {
   try {
-    // const { id } = req.params;
-
     const {
       dataMateriaPut,
     } = req.body;
-
-    // console.log(dataMateriaPut);
 
     // eslint-disable-next-line no-restricted-syntax
     for (const materiaItem of dataMateriaPut) {
@@ -153,13 +139,11 @@ export const putNotasDocente = async (req, res) => {
 export const deleteNotasDocente = async (req, res) => {
   try {
     const { _materia, tipo_nota } = JSON.parse(req.params.id);
-    // await NotaModel.findByIdAndDelete(id);
-    // console.log(_materia);
+
     const notasEliminar = await NotaModel.find({ _materia, tipo_nota });
 
     // eslint-disable-next-line no-restricted-syntax
     for (const materiaItemEliminar of notasEliminar) {
-      // console.log(materiaItemEliminar);
       // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
       await NotaModel.findByIdAndDelete(materiaItemEliminar._id);
     }
