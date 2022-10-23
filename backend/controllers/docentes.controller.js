@@ -18,20 +18,57 @@ export const getMateriasDocente = async (req, res) => {
 
 export const getNotasDocente = async (req, res) => {
   try {
-    const notas = await NotaModel.aggregate(
-      [
-        {
-          $group: {
-            _id: "$tipo_nota",
-            tipo_nota: { $first: "$tipo_nota" },
-            estado_nota: { $first: "$estado_nota" },
-            descripcion_materia: { $first: "$descripcion_materia" },
-            _materia: { $first: "$_materia" },
+    const { _id } = req.decoded;
+
+    // obtener rol de usuario
+
+    const { roles, _materia } = await PersonaModel.findById(_id);
+    let notas = null;
+    if (roles.descripcion_rol === "administrativo") {
+      notas = await NotaModel.aggregate(
+        [
+          {
+            $group: {
+              _id: {
+                tipo_nota: "$tipo_nota",
+                _materia: "$_materia",
+              },
+              tipo_nota: { $first: "$tipo_nota" },
+              estado_nota: { $first: "$estado_nota" },
+              descripcion_materia: { $first: "$descripcion_materia" },
+              _materia: { $first: "$_materia" },
+              _idNota: { $first: "$_id" },
+            },
           },
-        },
-      ],
-    );
-    // console.log(notas);
+        ],
+      );
+    } else {
+      notas = await NotaModel.aggregate(
+        [
+          {
+            $group: {
+              _id: {
+                tipo_nota: "$tipo_nota",
+                _materia: "$_materia",
+              },
+              tipo_nota: { $first: "$tipo_nota" },
+              estado_nota: { $first: "$estado_nota" },
+              descripcion_materia: { $first: "$descripcion_materia" },
+              _materia: { $first: "$_materia" },
+              _idNota: { $first: "$_id" },
+            },
+
+          },
+          {
+            $match: {
+              _materia: { $in: _materia },
+            },
+          },
+        ],
+      );
+    }
+
+    console.log(notas);
     return res.status(200).json(notas);
   } catch (error) {
     return res.status(500).json({

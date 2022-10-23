@@ -62,13 +62,14 @@ export const getNotasMateriasDocenteMidd = [
           }
 
           // verificar que las notas no esten con el estado publicado
+          if (!Object.prototype.hasOwnProperty.call(materiaTipoNotaParsed, "detalle")) {
+            const resultNotas = await NotaModel.count({ _materia: materiaTipoNotaParsed._materia, tipo_nota: materiaTipoNotaParsed.tipo_nota, estado_nota: "publicado" });
 
-          const resultNotas = await NotaModel.count({ _materia: materiaTipoNotaParsed._materia, tipo_nota: materiaTipoNotaParsed.tipo_nota, estado_nota: "publicado" });
-
-          if (resultNotas > 0) {
-            return Promise.reject(
-              "Los parametros enviados coinciden con registros de notas ya publicadas",
-            );
+            if (resultNotas > 0) {
+              return Promise.reject(
+                "Los parametros enviados coinciden con registros de notas ya publicadas",
+              );
+            }
           }
         } catch (error) {
         //   console.log(error);

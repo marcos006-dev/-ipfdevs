@@ -1,283 +1,75 @@
-import { check, param } from "express-validator";
+/* eslint no-underscore-dangle: 0 */
+
+import { param } from "express-validator";
 import { Types } from "mongoose";
 import { verificarCampos } from "../helpers/verificarCampos.js";
 import { MateriaModel } from "../models/Materia.model.js";
 import { NotaModel } from "../models/Nota.model.js";
-import { PersonaModel } from "../models/Persona.model.js";
-
-export const getNotasMidd = [verificarCampos];
-
-export const getNotaMidd = [
-  param("id")
-    .custom((id) => {
-      // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idNota) => {
-        // console.log(idNota);
-        try {
-          if (!Types.ObjectId.isValid(idNota)) return;
-
-          const nota = await NotaModel.countDocuments({ _id: idNota });
-          //   console.log(nota);
-          if (nota === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    ),
-  verificarCampos,
-];
-
-export const postNotaMidd = [
-  check("_materia")
-    .custom((id) => {
-    // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idMateria) => {
-        // console.log(idMateria);
-        try {
-          if (!Types.ObjectId.isValid(idMateria)) return;
-
-          const materia = await MateriaModel.countDocuments({ _id: idMateria });
-          // console.log(materia);
-          if (materia === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    ),
-  check("_persona")
-    .custom((id) => {
-    // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idPersona) => {
-        // console.log(idPersona);
-        try {
-          if (!Types.ObjectId.isValid(idPersona)) return;
-
-          const persona = await PersonaModel.findOne({ _id: idPersona });
-
-          if (!persona) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-          if (persona.roles.descripcion_rol !== "alumno") {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun alumno en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    ),
-  check("descripcion_nota")
-    .exists()
-    .not()
-    .isEmpty()
-    .withMessage("La nota es requerida")
-    .isInt({ min: 1, max: 10 })
-    .withMessage("La nota debe estar comprendida entre 1 y 10"),
-  check("tipo_nota")
-    .custom(async (tipo_nota) => {
-      try {
-        const opcionesNotas = NotaModel.schema.path("tipo_nota").enumValues;
-        // console.log(opcionesNotas);
-        if (!opcionesNotas.includes(tipo_nota)) {
-          return Promise.reject(
-            "El tipo de nota enviado no coincide los permitidos por el sistema",
-          );
-        }
-      } catch (error) {
-        return Promise.reject(error);
-      }
-    }),
-  verificarCampos,
-];
 
 export const putNotaMidd = [
   param("id")
-    .custom((id) => {
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
     .custom(
-      async (idNota) => {
+      async (materiaTipoNota) => {
         try {
-          if (!Types.ObjectId.isValid(idNota)) return;
-
-          const nota = await NotaModel.countDocuments({ _id: idNota });
-          if (nota === 0) {
+          const materiaTipoNotaParsed = JSON.parse(materiaTipoNota);
+          // verificar si es un objeto el parametro enviado
+          if (typeof materiaTipoNotaParsed !== "object") {
             return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
+              "No se a enviado un objeto por favor verifique",
             );
           }
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    ),
-  check("_materia")
-    .custom((id) => {
-    // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idMateria) => {
-        // console.log(idMateria);
-        try {
-          if (!Types.ObjectId.isValid(idMateria)) return;
 
-          const materia = await MateriaModel.countDocuments({ _id: idMateria });
+          // verificar si existe la propiedad de materia
+
+          if (!Object.prototype.hasOwnProperty.call(materiaTipoNotaParsed, "_materia")) {
+            return Promise.reject(
+              "No se a enviado la propiedad de _materia",
+            );
+          }
+
+          // verificar si existe la propiedad de tipo nota
+
+          if (!Object.prototype.hasOwnProperty.call(materiaTipoNotaParsed, "tipo_nota")) {
+            return Promise.reject(
+              "No se a enviado la propiedad de tipo_nota",
+            );
+          }
+
+          // verificar si el valor enviado en _materia es un id valido de mongo y esta en la bd
+
+          if (!Types.ObjectId.isValid(materiaTipoNotaParsed._materia)) {
+            return Promise.reject(
+              "El id enviado no es un id valido de mongo",
+            );
+          }
+
+          const materia = await MateriaModel.countDocuments({ _id: materiaTipoNotaParsed._materia });
           // console.log(materia);
           if (materia === 0) {
             return Promise.reject(
               "El id enviado no pertenece a ningun registro en la bd",
             );
           }
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    ),
-  check("_persona")
-    .custom((id) => {
-    // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idPersona) => {
-        // console.log(idPersona);
-        try {
-          if (!Types.ObjectId.isValid(idPersona)) return;
 
-          const persona = await PersonaModel.findOne({ _id: idPersona });
-
-          if (!persona) {
+          // verificar si existe el valor enviado en tipo_nota
+          const opcionesNotas = NotaModel.schema.path("tipo_nota").enumValues;
+          // console.log(opcionesNotas);
+          if (!opcionesNotas.includes(materiaTipoNotaParsed.tipo_nota)) {
             return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
+              "El tipo de nota enviado no coincide los permitidos por el sistema",
             );
           }
-          if (persona.roles.descripcion_rol !== "alumno") {
+
+          // verificar si existe el valor enviado en estado_nota
+          const opcionesEstadosNotas = NotaModel.schema.path("estado_nota").enumValues;
+          // console.log(opcionesEstadosNotas);
+          if (!opcionesEstadosNotas.includes(materiaTipoNotaParsed.estado_nota)) {
             return Promise.reject(
-              "El id enviado no pertenece a ningun alumno en la bd",
+              "El estado de nota enviado no coincide los permitidos por el sistema",
             );
           }
         } catch (error) {
-          console.log(error);
-        }
-      },
-    ),
-  check("descripcion_nota")
-    .exists()
-    .not()
-    .isEmpty()
-    .withMessage("La nota es requerida")
-    .isInt({ min: 1, max: 10 })
-    .withMessage("La nota debe estar comprendida entre 1 y 10"),
-  check("tipo_nota")
-    .custom(async (tipo_nota, { req }) => {
-      try {
-        const idNota = req.params.id;
-
-        const opcionesNotas = NotaModel.schema.path("tipo_nota").enumValues;
-
-        // console.log(opcionesNotas);
-
-        if (!opcionesNotas.includes(tipo_nota)) {
-          return Promise.reject(
-            "El tipo de nota enviado no coincide los permitidos por el sistema",
-          );
-        }
-
-        const nota = await NotaModel.countDocuments({ tipo_nota, _id: { $ne: idNota } });
-
-        // console.log(nota);
-
-        if (nota > 0) {
-          return Promise.reject(
-            "La nota ingresada ya posee un registro duplicado en la bd",
-          );
-        }
-      } catch (error) {
-        return Promise.reject(error);
-      }
-    }),
-
-  verificarCampos,
-];
-
-export const deleteNotaMidd = [
-
-  param("id")
-    .custom((id) => {
-      // console.log(id);
-      if (!Types.ObjectId.isValid(id)) {
-        return Promise.reject(
-          "El id enviado no es un id valido de mongo",
-        );
-      }
-      return true;
-    })
-    .custom(
-      async (idNota) => {
-        // console.log(idNota);
-        try {
-          if (!Types.ObjectId.isValid(idNota)) return;
-
-          const nota = await NotaModel.countDocuments({ _id: idNota });
-          // console.log(nota);
-          if (nota === 0) {
-            return Promise.reject(
-              "El id enviado no pertenece a ningun registro en la bd",
-            );
-          }
-        } catch (error) {
-          console.log(error);
+        //   console.log(error);
         }
       },
     ),

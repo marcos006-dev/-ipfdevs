@@ -107,7 +107,7 @@ beforeAll(async () => {
       password_usuario: "$2a$10$EpEgugumkVGnWpgpVw9bjeCpGbC1GhJTAhW0WG9qX/xFMFVKJvPA6",
       roles: {
         descripcion_rol: "docente",
-        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas", "materias-carrera", "carreras", "avisos-docentes", "notas-docentes", "notas-materias-docentes"],
+        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas", "materias-carrera", "carreras", "avisos-docentes", "notas-docentes", "notas-materias-docentes", "notas-docentes"],
       },
     });
 
@@ -144,7 +144,7 @@ beforeAll(async () => {
       password_usuario: "$2a$10$EpEgugumkVGnWpgpVw9bjeCpGbC1GhJTAhW0WG9qX/xFMFVKJvPA6",
       roles: {
         descripcion_rol: "alumno",
-        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas", "materias-carrera", "carreras", "avisos-docentes", "notas-docentes", "notas-materias-docentes"],
+        acceso_endpoint: ["administrativos", "materias", "notas", "avisos", "alumnos", "inasistencias-alumnos", "notas-alumnos", "avisos-alumnos", "tipos-docum-alumnos", "horarios-alumnos", "materias-docentes", "cargar-notas", "editar-notas", "eliminar-notas", "materias-carrera", "carreras", "avisos-docentes", "notas-docentes", "notas-materias-docentes", "notas-docentes"],
       },
     });
 

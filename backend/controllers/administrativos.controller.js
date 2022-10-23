@@ -153,6 +153,7 @@ export const putAdministrativo = async (req, res) => {
         "avisos",
         "materias-carrera",
         "carreras",
+        "notas-materias-docentes",
       ];
     } else if (roles === "docente") {
       tipoUsuario.acceso_endpoint = [
@@ -161,6 +162,7 @@ export const putAdministrativo = async (req, res) => {
         "cargar-notas",
         "editar-notas",
         "eliminar-notas",
+        "notas-materias-docentes",
       ];
     } else if (roles === "alumno") {
       tipoUsuario.acceso_endpoint = [
