@@ -128,7 +128,7 @@ export const putNotasDocente = async (req, res) => {
       if (!notaAlumno) {
         // crear nota
         materiaItem.descripcion_materia = descripcion_materia;
-        materiaItem.estadoNota = estadoNota;
+        materiaItem.estado_nota = estadoNota;
 
         // eslint-disable-next-line no-await-in-loop
         await NotaModel.create(materiaItem);
