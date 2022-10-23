@@ -1,10 +1,8 @@
 import { Router } from "express";
 import {
-  deleteNotasDocente, getMateriasDocente, getNotasDocente, getNotasMateriasDocente, postNotasDocente, putNotasDocente,
+  deleteNotasDocente, getMateriasDocente, getNotasDocente, getNotasMateriasDocente, putNotasDocente,
 } from "../controllers/docentes.controller.js";
-import {
-  deleteNotasDocenteMidd, getNotasMateriasDocenteMidd, postNotasDocenteMidd, putNotasDocenteMidd,
-} from "../middlewares/docentes.middlewares.js";
+import { getNotasMateriasDocenteMidd, putNotasDocenteMidd } from "../middlewares/docentes.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
 
@@ -14,11 +12,11 @@ router.get("/materias-docentes", verificarToken, verificarRoles, getMateriasDoce
 router.get("/notas-docentes", verificarToken, verificarRoles, getNotasDocente);
 router.get("/notas-materias-docentes/:id", verificarToken, verificarRoles, getNotasMateriasDocenteMidd, getNotasMateriasDocente);
 
-router.post("/cargar-notas", verificarToken, verificarRoles, postNotasDocenteMidd, postNotasDocente);
+// router.post("/cargar-notas", verificarToken, verificarRoles, postNotasDocenteMidd, postNotasDocente);
 
-router.put("/editar-notas/:id", verificarToken, verificarRoles, putNotasDocenteMidd, putNotasDocente);
+router.put("/editar-notas", verificarToken, verificarRoles, putNotasDocenteMidd, putNotasDocente);
 
-router.delete("/eliminar-notas/:id", verificarToken, verificarRoles, deleteNotasDocenteMidd, deleteNotasDocente);
+router.delete("/eliminar-notas/:id", verificarToken, verificarRoles, deleteNotasDocente);
 
 // router.get("/avisos-alumnos/:id", verificarToken, verificarRoles, getAvisoAlumnoMidd, getAvisoAlumno);
 
