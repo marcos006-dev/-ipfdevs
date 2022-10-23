@@ -18,7 +18,7 @@ const EditarAvisoDocente = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   if (!state) return navigate('/enviar-avisos');
-  // console.log(state._materia);
+
   const { loadingAvisos, erroresAvisos, mensajeAvisos } = useSelector(
     (state) => state.avisosAdministrativos
   );

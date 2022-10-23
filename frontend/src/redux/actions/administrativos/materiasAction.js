@@ -17,7 +17,6 @@ import {
   GUARDAR_MATERIA_FALLIDO,
   GUARDAR_MATERIA_REQUEST,
   LIMPIAR_MENSAJES_MATERIAS,
-  RESET_MATERIAS,
 } from '../../types';
 
 // OBTENER LISTADO DE MATERIAS
@@ -246,13 +245,6 @@ export const desactivarMateria = (id) => {
   };
 };
 
-// limpiar mensajes
-export const limpiarMensajesMateria = () => {
-  return {
-    type: LIMPIAR_MENSAJES_MATERIAS,
-  };
-};
-
 // OBTENER LISTADO DE MATERIAS DOCENTES
 export const fetchMateriaDocenteRequest = () => {
   return {
@@ -304,9 +296,9 @@ export const getDataMateriasDocentes = () => {
   };
 };
 
-// restart materias
-export const restartMaterias = () => {
+// limpiar mensajes
+export const limpiarMensajesMateria = () => {
   return {
-    type: RESET_MATERIAS,
+    type: LIMPIAR_MENSAJES_MATERIAS,
   };
 };

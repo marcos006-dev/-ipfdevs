@@ -7,8 +7,11 @@ import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { limpiarMensajesUsuarios } from '../../../redux/actions/administrativos/carrerasAction';
-import { postDataUsuario } from '../../../redux/actions/administrativos/usuariosAction';
+import { limpiarMensajesCarreras } from '../../../redux/actions/administrativos/carrerasAction';
+import {
+  limpiarMensajesUsuarios,
+  postDataUsuario,
+} from '../../../redux/actions/administrativos/usuariosAction';
 import MateriasUsuarios from './MateriasUsuarios';
 
 const AgregarUsuario = () => {
@@ -109,6 +112,7 @@ const AgregarUsuario = () => {
   useEffect(() => {
     return () => {
       dispatch(limpiarMensajesUsuarios());
+      dispatch(limpiarMensajesCarreras());
     };
   }, []);
 

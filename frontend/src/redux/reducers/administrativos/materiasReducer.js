@@ -15,7 +15,6 @@ import {
   GUARDAR_MATERIA_FALLIDO,
   GUARDAR_MATERIA_REQUEST,
   LIMPIAR_MENSAJES_MATERIAS,
-  RESET_MATERIAS,
 } from '../../types';
 
 const initialState = {
@@ -130,10 +129,6 @@ export default function (state = initialState, action) {
     case LIMPIAR_MENSAJES_MATERIAS:
       return {
         ...initialState,
-      };
-    case RESET_MATERIAS:
-      return {
-        initialState,
       };
     default:
       return state;

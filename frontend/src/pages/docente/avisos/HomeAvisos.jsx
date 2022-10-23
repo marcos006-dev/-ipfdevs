@@ -85,13 +85,8 @@ const HomeAvisosDocentes = () => {
 
     return () => {
       dispatch(limpiarMensajesAvisos());
-      // console.log('first');
     };
   }, []);
-
-  // useEffect(() => {
-  //   dispatch(getDataAvisosDocente());
-  // }, [mensajeAvisos]);
 
   return (
     <Container>

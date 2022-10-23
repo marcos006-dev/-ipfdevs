@@ -57,7 +57,7 @@ export const getDataInasistencias = () => {
   };
 };
 
-export const limpiarMensajesUsuarios = () => {
+export const limpiarMensajesInasistencias = () => {
   return {
     type: LIMPIAR_MENSAJES_INASISTENCIAS,
   };

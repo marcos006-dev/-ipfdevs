@@ -36,7 +36,6 @@ const AgregarAvisoDocente = () => {
       descripcion_aviso,
       _materia,
     };
-    // console.log(avisoRegistrar);
     dispatch(postDataAviso(avisoRegistrar));
   };
 

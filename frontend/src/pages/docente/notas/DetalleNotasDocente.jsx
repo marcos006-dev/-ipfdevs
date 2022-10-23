@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataNotasMateriasDocente } from '../../../redux/actions/docentes/notasAction';
+import { getDataNotasMateriasDocente, limpiarMensajesNotasDocente } from '../../../redux/actions/docentes/notasAction';
 
 const DetalleNotasDocente = () => {
   const { dataNotasMateriasDocente, erroresNotasDocente, loadingNotasDocente } =
@@ -15,6 +15,9 @@ const DetalleNotasDocente = () => {
   const { _materia, tipo_nota, descripcionMateria } = state;
   useEffect(() => {
     dispatch(getDataNotasMateriasDocente({ _materia, tipo_nota }));
+    return () => {
+      dispatch(limpiarMensajesNotasDocente());
+    };
   }, []);
 
   return (

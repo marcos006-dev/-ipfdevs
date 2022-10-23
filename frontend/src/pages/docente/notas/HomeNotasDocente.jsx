@@ -76,19 +76,23 @@ const TablaNotasDocentes = ({ dataNotasDocente }) => {
               </td> */}
 
               <td>
-                <NavLink
-                  key={notaDocente._id}
-                  state={notaDocente._id}
-                  className="btn btn-danger"
-                  onClick={() =>
-                    handleChangeDeleteNotaDocente({
-                      _materia: notaDocente._materia,
-                      tipo_nota: notaDocente.tipo_nota,
-                    })
-                  }
-                >
-                  Eliminar
-                </NavLink>
+                {notaDocente.estado_nota === 'en revision' ? (
+                  <NavLink
+                    key={notaDocente._id}
+                    state={notaDocente._id}
+                    className="btn btn-danger"
+                    onClick={() =>
+                      handleChangeDeleteNotaDocente({
+                        _materia: notaDocente._materia,
+                        tipo_nota: notaDocente.tipo_nota,
+                      })
+                    }
+                  >
+                    Eliminar
+                  </NavLink>
+                ) : (
+                  <h6 className="text-danger">No disponible</h6>
+                )}
               </td>
             </tr>
           ))}

@@ -17,7 +17,6 @@ const Login = () => {
 
   useEffect(() => {
     if (token !== null) {
-      console.log('dasd');
       navigate('/inicio-administrativo');
     }
   }, [token]);

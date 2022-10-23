@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataHorariosAlumno } from '../../../redux/actions/alumnos/horariosAction';
+import { getDataHorariosAlumno, limpiarMensajesHorariosAlumno } from '../../../redux/actions/alumnos/horariosAction';
 
 const CardHorariosAlumno = ({ horario }) => {
   return (
@@ -26,6 +26,9 @@ const VerHorarios = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDataHorariosAlumno());
+    return () => {
+      dispatch(limpiarMensajesHorariosAlumno());
+    };
   }, []);
 
   return (

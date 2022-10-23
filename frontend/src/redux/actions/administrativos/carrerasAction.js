@@ -4,6 +4,7 @@ import {
   GET_CARRERAS_EXITOSO,
   GET_CARRERAS_FALLIDO,
   GET_CARRERAS_REQUEST,
+  LIMPIAR_MENSAJES_CARRERAS,
   LIMPIAR_MENSAJES_USUARIOS,
 } from '../../types';
 
@@ -58,8 +59,8 @@ export const getDataCarreras = () => {
   };
 };
 
-export const limpiarMensajesUsuarios = () => {
+export const limpiarMensajesCarreras = () => {
   return {
-    type: LIMPIAR_MENSAJES_USUARIOS,
+    type: LIMPIAR_MENSAJES_CARRERAS,
   };
 };

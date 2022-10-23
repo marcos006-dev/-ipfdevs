@@ -7,6 +7,7 @@ import Container from '../../../layouts/Container';
 import {
   borrarAviso,
   getDataAvisos,
+  limpiarMensajesAvisos,
 } from '../../../redux/actions/administrativos/avisosActions';
 import Swal from 'sweetalert2';
 
@@ -85,6 +86,10 @@ const HomeAvisos = () => {
 
   useEffect(() => {
     dispatch(getDataAvisos());
+
+    return () => {
+      dispatch(limpiarMensajesAvisos());
+    };
   }, []);
 
   return (

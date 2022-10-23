@@ -121,7 +121,6 @@ const HomeMaterias = () => {
     dispatch(getDataMaterias());
     return () => {
       dispatch(limpiarMensajesMateria());
-      // dispatch(restartMaterias());
     };
   }, []);
 

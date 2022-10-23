@@ -2,6 +2,7 @@ import {
   GET_CARRERAS_EXITOSO,
   GET_CARRERAS_FALLIDO,
   GET_CARRERAS_REQUEST,
+  LIMPIAR_MENSAJES_CARRERAS,
 } from '../../types';
 
 const initialState = {
@@ -26,6 +27,12 @@ export default function (state = initialState, action) {
         dataCarreras: payload,
       };
     case GET_CARRERAS_FALLIDO:
+      return {
+        ...state,
+        loadingCarreras: false,
+        erroresCarreras: payload,
+      };
+    case LIMPIAR_MENSAJES_CARRERAS:
       return {
         ...initialState,
       };

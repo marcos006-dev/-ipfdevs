@@ -11,6 +11,7 @@ import {
 } from '../../../redux/actions/administrativos/usuariosAction';
 import Swal from 'sweetalert2';
 import Alerta from '../../../components/Alerta';
+import { limpiarMensajesCarreras } from '../../../redux/actions/administrativos/carrerasAction';
 
 const TablaUsuarios = ({ dataUsuarios }) => {
   const dispatch = useDispatch();
@@ -118,6 +119,7 @@ const HomeUsuarios = () => {
     dispatch(getDataUsuarios());
     return () => {
       dispatch(limpiarMensajesUsuarios());
+      dispatch(limpiarMensajesCarreras());
     };
   }, []);
 

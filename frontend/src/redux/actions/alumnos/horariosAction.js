@@ -6,6 +6,7 @@ import {
   GET_HORARIOS_ALUMNO_EXITOSO,
   GET_HORARIOS_ALUMNO_FALLIDO,
   GET_HORARIOS_ALUMNO_REQUEST,
+  LIMPIAR_MENSAJES_HORARIOS_ALUMNO,
 } from '../../types';
 
 export const getHorariosAlumnoRequest = () => {
@@ -55,5 +56,12 @@ export const getDataHorariosAlumno = () => {
       console.log(error);
       dispatch(getHorariosAlumnoFallido(error.error));
     }
+  };
+};
+
+// limpiar mensajes
+export const limpiarMensajesHorariosAlumno = () => {
+  return {
+    type: LIMPIAR_MENSAJES_HORARIOS_ALUMNO,
   };
 };

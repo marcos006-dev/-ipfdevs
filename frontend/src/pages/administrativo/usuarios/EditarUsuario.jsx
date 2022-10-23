@@ -7,7 +7,11 @@ import Alerta from '../../../components/Alerta';
 import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { putUsuario } from '../../../redux/actions/administrativos/usuariosAction';
+import { limpiarMensajesCarreras } from '../../../redux/actions/administrativos/carrerasAction';
+import {
+  limpiarMensajesUsuarios,
+  putUsuario,
+} from '../../../redux/actions/administrativos/usuariosAction';
 import MateriasUsuarios from './MateriasUsuarios';
 
 const EditarUsuario = () => {
@@ -119,6 +123,11 @@ const EditarUsuario = () => {
       setCarrera('');
     }
     setMaterias(materiasId);
+
+    return () => {
+      dispatch(limpiarMensajesUsuarios());
+      dispatch(limpiarMensajesCarreras());
+    };
   }, []);
 
   return (

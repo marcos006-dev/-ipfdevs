@@ -9,6 +9,16 @@ import {
   CERRAR_SESION,
   BORRAR_DATOS_USUARIO,
 } from '../types';
+import { limpiarMensajesAvisos } from './administrativos/avisosActions';
+import { limpiarMensajesCarreras } from './administrativos/carrerasAction';
+import { limpiarMensajesMateria } from './administrativos/materiasAction';
+import { limpiarMensajesUsuarios } from './administrativos/usuariosAction';
+import { limpiarMensajesDocumentosAlumno } from './alumnos/documentosAction';
+import { limpiarMensajesHorariosAlumno } from './alumnos/horariosAction';
+import { limpiarMensajesInasistencias } from './alumnos/inasistenciasAction';
+import { limpiarMensajesNotasAlumno } from './alumnos/notasAction';
+import { limpiarMensajesHorariosDocente } from './docentes/horariosAction';
+import { limpiarMensajesNotasDocente } from './docentes/notasAction';
 
 // ACTION CREATORS
 
@@ -122,4 +132,15 @@ export const cerrarSesion = (dispatch) => {
   dispatch({
     type: BORRAR_DATOS_USUARIO,
   });
+
+  dispatch(limpiarMensajesAvisos());
+  dispatch(limpiarMensajesCarreras());
+  dispatch(limpiarMensajesMateria());
+  dispatch(limpiarMensajesUsuarios());
+  dispatch(limpiarMensajesDocumentosAlumno());
+  dispatch(limpiarMensajesHorariosAlumno());
+  dispatch(limpiarMensajesInasistencias());
+  dispatch(limpiarMensajesNotasAlumno());
+  dispatch(limpiarMensajesHorariosDocente());
+  dispatch(limpiarMensajesNotasDocente());
 };

@@ -7,7 +7,7 @@ import { es } from 'dayjs/locale/es';
 import Alerta from '../../../components/Alerta';
 import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
-import { getDataAvisosAlumno } from '../../../redux/actions/administrativos/avisosActions';
+import { getDataAvisosAlumno, limpiarMensajesAvisos } from '../../../redux/actions/administrativos/avisosActions';
 
 dayjs.locale('es');
 dayjs.extend(relativeTime);
@@ -37,6 +37,9 @@ const VerAvisos = () => {
   //   console.log(dataAvisos);
   useEffect(() => {
     dispatch(getDataAvisosAlumno());
+    return () => {
+      dispatch(limpiarMensajesAvisos());
+    };
   }, []);
 
   return (

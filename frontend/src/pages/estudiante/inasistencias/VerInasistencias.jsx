@@ -6,7 +6,7 @@ import Spinner from '../../../components/Spinner';
 import Container from '../../../layouts/Container';
 import {
   getDataInasistencias,
-  limpiarMensajesUsuarios,
+  limpiarMensajesInasistencias,
 } from '../../../redux/actions/alumnos/inasistenciasAction';
 
 const CardInasistencia = ({ inasistencia }) => {
@@ -28,7 +28,7 @@ const VerInasistencias = () => {
     dispatch(getDataInasistencias());
 
     return () => {
-      dispatch(limpiarMensajesUsuarios());
+      dispatch(limpiarMensajesInasistencias());
     };
   }, []);
 
