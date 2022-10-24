@@ -1,11 +1,11 @@
 import { Router } from "express";
 import {
-  putAdministrativo, postAdministrativo, getAdministrativos, getAdministrativo, deleteAdministrativo, activarAdministrativo,
+  putAdministrativo, postAdministrativo, getAdministrativos, getAdministrativo, deleteAdministrativo, activarAdministrativo, getAsistenciasAlumno,
 } from "../controllers/administrativos.controller.js";
 import {
   activarAdministrativoMidd,
   deleteAdministrativoMidd,
-  getAdministrativoMidd, getAdministrativosMidd, postAdministrativoMidd, putAdministrativoMidd,
+  getAdministrativoMidd, getAdministrativosMidd, getInasistenciasMidd, postAdministrativoMidd, putAdministrativoMidd,
 } from "../middlewares/administrativos.middlewares.js";
 import { verificarRoles } from "../middlewares/verificarRoles.middlewares.js";
 import verificarToken from "../middlewares/verificarToken.js";
@@ -18,5 +18,7 @@ router.post("/administrativos", verificarToken, verificarRoles, postAdministrati
 router.put("/administrativos/:id", verificarToken, verificarRoles, putAdministrativoMidd, putAdministrativo);
 router.patch("/administrativos/:id", verificarToken, verificarRoles, activarAdministrativoMidd, activarAdministrativo);
 router.delete("/administrativos/:id", verificarToken, verificarRoles, deleteAdministrativoMidd, deleteAdministrativo);
+
+router.get("/inasistencias/:id", verificarToken, verificarRoles, getInasistenciasMidd, getAsistenciasAlumno);
 
 export default router;

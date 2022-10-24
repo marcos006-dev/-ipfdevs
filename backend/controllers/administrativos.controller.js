@@ -228,3 +228,25 @@ export const activarAdministrativo = async (req, res) => {
     });
   }
 };
+
+export const getAsistenciasAlumno = async (req, res) => {
+  try {
+    const { carrera, fecha } = JSON.parse(req.params.id);
+
+    console.log({ carrera, fecha });
+
+    // const notasEliminar = await NotaModel.find({ _materia, tipo_nota });
+
+    // // eslint-disable-next-line no-restricted-syntax
+    // for (const materiaItemEliminar of notasEliminar) {
+    //   // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
+    //   await NotaModel.findByIdAndDelete(materiaItemEliminar._id);
+    // }
+
+    return res.status(200).json("Notas eliminadas correctamente");
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

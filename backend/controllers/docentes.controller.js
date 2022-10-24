@@ -68,7 +68,7 @@ export const getNotasDocente = async (req, res) => {
       );
     }
 
-    console.log(notas);
+    // console.log(notas);
     return res.status(200).json(notas);
   } catch (error) {
     return res.status(500).json({

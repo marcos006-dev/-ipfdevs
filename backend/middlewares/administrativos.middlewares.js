@@ -1,6 +1,7 @@
+/* eslint no-underscore-dangle: 0 */
+
 import { check, param } from "express-validator";
 import { Types } from "mongoose";
-// import { validarFecha } from "../helpers/validarFechas.js";
 import { verificarCampos } from "../helpers/verificarCampos.js";
 import { MateriaModel } from "../models/Materia.model.js";
 import { PersonaModel } from "../models/Persona.model.js";
@@ -672,5 +673,50 @@ export const activarAdministrativoMidd = [
         console.log(error);
       }
     }),
+  verificarCampos,
+];
+
+export const getInasistenciasMidd = [
+  param("id")
+    .custom(
+      async (carreraFechaAsistencia) => {
+        try {
+          const carreraFechaAsistenciaParsed = JSON.parse(carreraFechaAsistencia);
+          // verificar si es un objeto el parametro enviado
+          if (typeof carreraFechaAsistenciaParsed !== "object") {
+            return Promise.reject(
+              "No se a enviado un objeto por favor verifique",
+            );
+          }
+
+          // verificar si existe la propiedad de materia
+
+          if (!Object.prototype.hasOwnProperty.call(carreraFechaAsistenciaParsed, "carrera")) {
+            return Promise.reject(
+              "No se a enviado la propiedad de carrera",
+            );
+          }
+
+          // verificar si existe la propiedad de tipo nota
+
+          if (!Object.prototype.hasOwnProperty.call(carreraFechaAsistenciaParsed, "fecha")) {
+            return Promise.reject(
+              "No se a enviado la propiedad de fecha",
+            );
+          }
+
+          // verificar si existe el valor enviado en carrera
+          const opcionesCarreras = MateriaModel.schema.path("nombre_carrera").enumValues;
+          // console.log(opcionesCarreras);
+          if (!opcionesCarreras.includes(carreraFechaAsistenciaParsed.carrera)) {
+            return Promise.reject(
+              "El tipo de nota enviado no coincide los permitidos por el sistema",
+            );
+          }
+        } catch (error) {
+        //   console.log(error);
+        }
+      },
+    ),
   verificarCampos,
 ];
