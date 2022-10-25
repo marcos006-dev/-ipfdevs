@@ -3,14 +3,19 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import dayjs from 'dayjs';
-import MensajeErrorInput from '../../../components/MensajeErrorInput';
+// import MensajeErrorInput from '../../../components/MensajeErrorInput';
 import Container from '../../../layouts/Container';
 import {
   getDataCarreras,
   limpiarMensajesCarreras,
 } from '../../../redux/actions/administrativos/carrerasAction';
 import Alerta from '../../../components/Alerta';
-import { getDataAsistenciasAlumnos } from '../../../redux/actions/administrativos/asistenciasActions';
+import {
+  getDataAsistenciasAlumnos,
+  limpiarMensajesAsistenciasAlumnos,
+  putDataAsistenciasAlumnos,
+} from '../../../redux/actions/administrativos/asistenciasActions';
+import TablaAsistencias from './TablaAsistencias';
 
 const HomeAsistencias = () => {
   const [carrera, setCarrera] = useState('');
@@ -20,6 +25,15 @@ const HomeAsistencias = () => {
   const { dataCarreras, erroresCarreras, loadingCarreras } = useSelector(
     (state) => state.carreras
   );
+
+  const {
+    dataAsistenciasAlumno,
+    erroresAsistenciasAlumno,
+    loadingAsistenciasAlumno,
+    mensajeAsistenciasAlumno,
+  } = useSelector((state) => state.asistenciasAlumno);
+
+  const [dataAsistenciaAlumno, setDataAsistenciaAlumno] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -36,7 +50,6 @@ const HomeAsistencias = () => {
 
   const handleChangeFecha = (e) => {
     const fecha = e.target.value;
-    console.log();
     if (!dayjs().isSame(fecha, 'year')) {
       setError('El año de la fecha debe coincidir con el año actual');
     } else {
@@ -48,21 +61,37 @@ const HomeAsistencias = () => {
 
   const handleSubmit = () => {
     console.log('Guardar Inasistencias');
+
+    dispatch(
+      putDataAsistenciasAlumnos({ carrera, fecha }, { dataAsistenciaAlumno })
+    );
   };
 
   useEffect(() => {
     dispatch(getDataCarreras());
 
     return () => {
-      dispatch(limpiarMensajesCarreras());
+      dispatch(limpiarMensajesAsistenciasAlumnos());
+      setDataAsistenciaAlumno([]);
     };
   }, []);
 
   useEffect(() => {
-    if (error) return;
-    console.log('Llamar api');
-    dispatch(getDataAsistenciasAlumnos({carrera, fecha}))
+    if (error || carrera === '' || fecha === '') return;
+    dispatch(getDataAsistenciasAlumnos({ carrera, fecha }));
+    // return () => {
+    //   dispatch(limpiarMensajesAsistenciasAlumnos());
+    //   setDataAsistenciaAlumno([]);
+    // };
   }, [carrera, fecha]);
+
+  useEffect(() => {
+    setDataAsistenciaAlumno(dataAsistenciasAlumno);
+    // return () => {
+    //   dispatch(limpiarMensajesAsistenciasAlumnos());
+    //   setDataAsistenciaAlumno([]);
+    // };
+  }, [dataAsistenciasAlumno]);
 
   return (
     <Container>
@@ -74,7 +103,6 @@ const HomeAsistencias = () => {
               carrera: '',
               fecha: '',
             }}
-            // validationSchema={schemaAgregarMateria}
             onSubmit={handleSubmit}
           >
             {({ isSubmitting, handleChange }) => (
@@ -84,7 +112,11 @@ const HomeAsistencias = () => {
                     <b>Seleccione una carrera:</b>
                   </label>
 
-                  {loadingCarreras && <h6>Cargando Carreras</h6>}
+                  {loadingCarreras && (
+                    <h6 className="text-center text-warning">
+                      Cargando Carreras
+                    </h6>
+                  )}
 
                   {erroresCarreras?.length > 0 &&
                     erroresCarreras.map((error, i) => console.log(error))}
@@ -130,19 +162,24 @@ const HomeAsistencias = () => {
                   />
                 </div>
 
-                {/* {loadingNotasDocente && <h6>Cargando Notas de Alumno</h6>}
+                {loadingAsistenciasAlumno && (
+                  <h6 className="text-center text-warning">
+                    Cargando Asistencias de Alumno
+                  </h6>
+                )}
 
-            {dataNotasMateriasDocente?.length > 0 && (
-              <TablaNotasAlumnos
-                dataNotasMateriasDocente={dataNotasMateriasDocente}
-                errorNotaAlumno={errorNotaAlumno}
-                setErrorNotaAlumno={setErrorNotaAlumno}
-                notasMateriasAlumnos={notasMateriasAlumnos}
-                setNotasMateriasAlumnos={setNotasMateriasAlumnos}
-              />
-            )} */}
-
-                <button type="submit" className="btn btn-success mb-3">
+                {dataAsistenciasAlumno?.length > 0 && (
+                  <TablaAsistencias
+                    dataAsistenciaAlumno={dataAsistenciaAlumno}
+                    setDataAsistenciaAlumno={setDataAsistenciaAlumno}
+                    fecha={fecha}
+                  />
+                )}
+                <button
+                  type="submit"
+                  className="btn btn-success mb-3"
+                  disabled={dataAsistenciaAlumno.length === 0}
+                >
                   Guardar
                 </button>
                 <NavLink to="/notas-docentes">
@@ -153,20 +190,20 @@ const HomeAsistencias = () => {
 
                 {error && <Alerta clase={'alert-danger'} mensaje={error} />}
 
-                {/* {erroresNotasDocente?.length > 0 &&
-              erroresNotasDocente.map((error, i) => (
-                <Alerta
-                  clase={'alert-danger'}
-                  key={i}
-                  mensaje={error.msg}
-                />
-              ))}
-            {mensajeNotasDocente && (
-              <Alerta
-                clase={'alert-success'}
-                mensaje={mensajeNotasDocente}
-              />
-            )} */}
+                {erroresAsistenciasAlumno?.length > 0 &&
+                  erroresAsistenciasAlumno.map((error, i) => (
+                    <Alerta
+                      clase={'alert-danger'}
+                      key={i}
+                      mensaje={error.msg}
+                    />
+                  ))}
+                {mensajeAsistenciasAlumno && (
+                  <Alerta
+                    clase={'alert-success'}
+                    mensaje={mensajeAsistenciasAlumno}
+                  />
+                )}
               </Form>
             )}
           </Formik>
