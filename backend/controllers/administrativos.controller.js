@@ -233,17 +233,83 @@ export const getAsistenciasAlumno = async (req, res) => {
   try {
     const { carrera, fecha } = JSON.parse(req.params.id);
 
-    console.log({ carrera, fecha });
+    const alumnos = await PersonaModel.find({ "roles.descripcion_rol": "alumno" }).populate({ path: "_materia", match: { nombre_carrera: carrera } });
 
-    // const notasEliminar = await NotaModel.find({ _materia, tipo_nota });
+    if (!alumnos) {
+      return res.status(400).json("No hay alumnos");
+    }
 
-    // // eslint-disable-next-line no-restricted-syntax
-    // for (const materiaItemEliminar of notasEliminar) {
-    //   // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
-    //   await NotaModel.findByIdAndDelete(materiaItemEliminar._id);
-    // }
+    const asistencias = [];
 
-    return res.status(200).json("Notas eliminadas correctamente");
+    // eslint-disable-next-line no-restricted-syntax
+    for (const alumno of alumnos) {
+      const {
+        _id, nombre_persona, apellido_persona, inasistencias,
+      } = alumno;
+
+      const hayInasistencia = inasistencias.some((inasistencia) => new Date(inasistencia.fecha || "").toISOString().split("T")[0] === fecha);
+
+      if (hayInasistencia) {
+        asistencias.push({
+          _id, nombre_persona, apellido_persona, fechaInasistencia: fecha,
+        });
+      } else {
+        asistencias.push({
+          _id, nombre_persona, apellido_persona, fechaInasistencia: "",
+        });
+      }
+    }
+
+    // console.log(asistencias);
+
+    return res.status(200).json(asistencias);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const putAsistenciasAlumno = async (req, res) => {
+  try {
+    const { fecha } = JSON.parse(req.params.id);
+
+    const { dataAsistenciaAlumno } = req.body;
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const alumno of dataAsistenciaAlumno) {
+      if (alumno.fechaInasistencia === "") {
+        // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
+        const alumnoSearch = await PersonaModel.findById(alumno._id);
+
+        const { inasistencias } = alumnoSearch;
+
+        // eslint-disable-next-line no-loop-func
+        const inasistenciasFiltradas = inasistencias.filter((inasistencia) => new Date(inasistencia.fecha).toISOString().split("T")[0] !== fecha);
+
+        // console.log(inasistenciasFiltradas);
+
+        // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
+        await PersonaModel.findByIdAndUpdate(alumno._id, { inasistencias: inasistenciasFiltradas });
+      } else {
+        // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
+        const alumnoSearch = await PersonaModel.findById(alumno._id);
+
+        const { inasistencias } = alumnoSearch;
+
+        const inasistenciasFiltradas = [...inasistencias, {
+          fecha: new Date(fecha).toISOString(),
+        }];
+
+        // console.log(inasistenciasFiltradas);
+        // eslint-disable-next-line no-await-in-loop, no-underscore-dangle
+        await PersonaModel.findByIdAndUpdate(alumno._id, { inasistencias: inasistenciasFiltradas });
+      }
+    }
+
+    // console.log(asistencias);
+
+    return res.status(200).json("Asistencias actualizadas correctamente");
   } catch (error) {
     return res.status(500).json({
       message: error.message,

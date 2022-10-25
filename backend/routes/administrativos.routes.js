@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  putAdministrativo, postAdministrativo, getAdministrativos, getAdministrativo, deleteAdministrativo, activarAdministrativo, getAsistenciasAlumno,
+  putAdministrativo, postAdministrativo, getAdministrativos, getAdministrativo, deleteAdministrativo, activarAdministrativo, getAsistenciasAlumno, putAsistenciasAlumno,
 } from "../controllers/administrativos.controller.js";
 import {
   activarAdministrativoMidd,
@@ -20,5 +20,6 @@ router.patch("/administrativos/:id", verificarToken, verificarRoles, activarAdmi
 router.delete("/administrativos/:id", verificarToken, verificarRoles, deleteAdministrativoMidd, deleteAdministrativo);
 
 router.get("/inasistencias/:id", verificarToken, verificarRoles, getInasistenciasMidd, getAsistenciasAlumno);
+router.put("/inasistencias/:id", verificarToken, verificarRoles, getInasistenciasMidd, putAsistenciasAlumno);
 
 export default router;
